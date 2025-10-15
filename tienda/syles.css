@@ -1,0 +1,20 @@
+body {
+    /* Empuja el contenido hacia abajo para que no quede oculto por la navbar fija */
+    padding-top: 70px; 
+}
+
+#heroCarousel .carousel-item {
+    /* VH = Viewport Height. 60vh significa el 60% de la altura de la pantalla */
+    max-height: 60vh; 
+}
+
+#heroCarousel .carousel-item img {
+    /* Asegura que la imagen cubra el espacio sin deformarse */
+    object-fit: cover; 
+    max-height: 60vh;
+}
+
+footer .social-icon:hover i {
+    transform: scale(1.5); /* Ponle un valor grande para notar el cambio */
+    transition: transform 0.2s;
+}
