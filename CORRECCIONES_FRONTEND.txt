@@ -1,0 +1,454 @@
+=========================================================
+ CORRECCIONES Y MEJORAS DEL FRONTEND - FANKIT
+ Fecha: 14 de octubre de 2025
+=========================================================
+
+📋 ÍNDICE DE CORRECCIONES
+-------------------------
+FASE 1: Correcciones Críticas
+FASE 2: Iconos y UX Básica
+
+
+=========================================================
+ FASE 1: CORRECCIONES CRÍTICAS
+=========================================================
+
+-----------------------------------------------------------
+1. CORRECCIÓN: Nombre del archivo CSS
+-----------------------------------------------------------
+PROBLEMA: 
+  - El archivo se llama "syles.css" (error de tipeo)
+  - Pero en el HTML se referencia como "style.css"
+  - Esto causa que los estilos NO se carguen correctamente
+
+SOLUCIÓN:
+  - Renombrar "syles.css" → "style.css"
+
+APRENDIZAJE:
+  Los nombres de archivos deben coincidir EXACTAMENTE con las referencias 
+  en el HTML. CSS es case-sensitive y sensible a errores de tipeo.
+
+-----------------------------------------------------------
+2. CORRECCIÓN: Bootstrap cargado dos veces
+-----------------------------------------------------------
+PROBLEMA:
+  En TODAS las páginas, el script de Bootstrap aparece duplicado al final:
+  
+  <script src="https://cdn.jsdelivr.net/.../bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/.../bootstrap.bundle.min.js"></script>
+  
+  Esto causa:
+  - Carga innecesaria de recursos (página más lenta)
+  - Posibles conflictos de JavaScript
+  - Mal rendimiento
+
+SOLUCIÓN:
+  - Eliminar una de las dos líneas en cada archivo HTML
+
+APRENDIZAJE:
+  Nunca cargues la misma librería dos veces. Usa las herramientas de 
+  desarrollador del navegador (F12) para ver qué scripts se están cargando.
+
+ARCHIVOS AFECTADOS:
+  ✓ index.html (líneas 213-214)
+  ✓ catalogo.html (línea duplicada al final)
+  ✓ contacto.html (líneas 158-159)
+  ✓ retros.html (líneas 227-228)
+
+-----------------------------------------------------------
+3. CORRECCIÓN: Enlaces rotos a retros.html
+-----------------------------------------------------------
+PROBLEMA:
+  En index.html y contacto.html, el enlace del menú lateral 
+  "Camisetas Retro" apunta a "#" en lugar de "retros.html"
+
+UBICACIÓN:
+  - index.html, línea 207
+  - contacto.html, línea 152
+
+SOLUCIÓN:
+  Cambiar:
+    <a href="#" class="text-decoration-none text-dark">Camisetas Retro</a>
+  
+  Por:
+    <a href="retros.html" class="text-decoration-none text-dark">Camisetas Retro</a>
+
+APRENDIZAJE:
+  Los enlaces con "#" son placeholders temporales. En un sitio terminado,
+  todos los enlaces deben apuntar a destinos reales.
+
+-----------------------------------------------------------
+4. CORRECCIÓN: Formato de precio inconsistente
+-----------------------------------------------------------
+PROBLEMA:
+  En index.html, línea 131, un precio aparece como "$110.0"
+  Los demás precios usan formato "$XX.XX" con dos decimales
+
+SOLUCIÓN:
+  Cambiar: $110.0
+  Por: $110.00
+
+APRENDIZAJE:
+  La consistencia en el formato de precios es crucial para:
+  - Profesionalidad visual
+  - Evitar confusión del usuario
+  - Facilitar futuros cálculos con JavaScript
+
+
+=========================================================
+ FASE 2: ICONOS Y UX BÁSICA
+=========================================================
+
+-----------------------------------------------------------
+5. MEJORA: Iconos en la navegación
+-----------------------------------------------------------
+¿POR QUÉ?
+  Los iconos mejoran la usabilidad porque:
+  - Son más rápidos de reconocer que el texto
+  - Mejoran la accesibilidad visual
+  - Dan un aspecto más profesional
+  - Son un estándar en e-commerce
+
+ICONOS AGREGADOS:
+  🛒 Carrito de compras: <i class="fas fa-shopping-cart"></i>
+  👤 Usuario/Login: <i class="fas fa-user"></i>
+  👤 Registrarse: <i class="fas fa-user-plus"></i>
+  🔍 Búsqueda: <i class="fas fa-search"></i>
+  📋 Categorías: <i class="fas fa-bars"></i>
+
+CÓDIGO ANTES:
+  <a class="nav-link" href="#">Carrito (0)</a>
+
+CÓDIGO DESPUÉS:
+  <a class="nav-link" href="#">
+    <i class="fas fa-shopping-cart"></i> Carrito <span class="badge bg-primary">0</span>
+  </a>
+
+ARCHIVOS MODIFICADOS:
+  ✓ index.html
+  ✓ catalogo.html
+  ✓ contacto.html
+  ✓ retros.html
+
+-----------------------------------------------------------
+6. MEJORA: Badge contador en el carrito
+-----------------------------------------------------------
+¿QUÉ ES UN BADGE?
+  Es una pequeña etiqueta visual (generalmente un círculo con número)
+  que muestra información importante de forma destacada.
+
+ANTES: Carrito (0)
+AHORA: Carrito [0] <- El número aparece en un círculo azul
+
+VENTAJAS:
+  - Más visible
+  - Estilo moderno (usado por Amazon, MercadoLibre, etc.)
+  - Fácil de actualizar con JavaScript más adelante
+
+CÓDIGO:
+  <span class="badge bg-primary">0</span>
+
+CLASES BOOTSTRAP USADAS:
+  - badge: Estilo de insignia
+  - bg-primary: Color de fondo azul (color principal del tema)
+
+-----------------------------------------------------------
+7. MEJORA: Efectos hover en tarjetas de productos
+-----------------------------------------------------------
+¿QUÉ ES HOVER?
+  Es el efecto que ocurre cuando pasas el mouse por encima de un elemento.
+
+EFECTOS AGREGADOS:
+  1. Sombra más pronunciada (elevación)
+  2. Transformación suave (se eleva ligeramente)
+  3. Transición animada
+
+CSS AGREGADO:
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+EXPLICACIÓN:
+  - transition: Define QUÉ propiedades se animan y en cuánto tiempo
+  - transform: translateY(-10px): Mueve la card 10px hacia arriba
+  - box-shadow: Crea una sombra más grande
+  - ease: Tipo de animación (suave al inicio y al final)
+
+TAMBIÉN SE AGREGÓ:
+  Efecto en botones "Añadir al Carrito" con icono:
+  <i class="fas fa-cart-plus"></i> Añadir al Carrito
+
+-----------------------------------------------------------
+8. MEJORA: Indicador de página activa en navbar
+-----------------------------------------------------------
+¿POR QUÉ ES IMPORTANTE?
+  El usuario debe saber en qué página está navegando sin tener que adivinarlo.
+
+SOLUCIÓN:
+  Agregar la clase "active" al enlace de la página actual en el navbar.
+
+EJEMPLO EN catalogo.html:
+  <li class="nav-item">
+    <a class="nav-link active" href="catalogo.html">Catálogo</a>
+  </li>
+
+ESTILO VISUAL:
+  El enlace activo se verá con un color diferente y/o subrayado,
+  indicando claramente al usuario dónde está.
+
+CSS AGREGADO:
+  .nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid #0d6efd;
+  }
+
+CADA PÁGINA TIENE SU PROPIO ENLACE ACTIVO:
+  - index.html: Ninguno (es la home)
+  - catalogo.html: "Catálogo" activo
+  - contacto.html: "Contacto" activo
+  - retros.html: "Catálogo" activo (porque es una subcategoría)
+
+-----------------------------------------------------------
+9. MEJORA: Favicon agregado
+-----------------------------------------------------------
+¿QUÉ ES UN FAVICON?
+  Es el pequeño icono que aparece en la pestaña del navegador,
+  junto al título de la página.
+
+VENTAJAS:
+  - Profesionalidad
+  - Fácil identificación cuando tienes múltiples pestañas abiertas
+  - Branding de tu marca
+
+CÓDIGO AGREGADO (en el <head> de cada página):
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+
+EXPLICACIÓN:
+  - Usa un emoji ⚽ como favicon temporal
+  - Formato SVG (escalable, se ve bien en cualquier tamaño)
+  - data:image permite incrustar el SVG directamente sin archivo externo
+
+PARA EL FUTURO:
+  Puedes crear un favicon.ico profesional en sitios como:
+  - favicon.io
+  - canva.com
+  - Adobe Express
+
+
+=========================================================
+ RESUMEN DE CAMBIOS REALIZADOS
+=========================================================
+
+ARCHIVOS MODIFICADOS:
+  ✓ syles.css → renombrado a style.css
+  ✓ style.css (nuevo contenido CSS agregado)
+  ✓ index.html
+  ✓ catalogo.html
+  ✓ contacto.html
+  ✓ retros.html
+
+TOTAL DE MEJORAS: 9
+
+IMPACTO VISUAL: ⭐⭐⭐⭐⭐
+  El sitio ahora se ve mucho más profesional y moderno
+
+PRÓXIMOS PASOS OPCIONALES:
+  - Fase 3: Pulido Visual (breadcrumbs, más transiciones)
+  - Fase 4: SEO y Meta tags
+  - Agregar JavaScript para interactividad
+
+
+=========================================================
+ NOTAS IMPORTANTES
+=========================================================
+
+🎓 PARA APRENDER MÁS:
+  - Bootstrap Icons: https://icons.getbootstrap.com/
+  - Font Awesome: https://fontawesome.com/icons
+  - CSS Transitions: https://developer.mozilla.org/es/docs/Web/CSS/transition
+  - Bootstrap Badges: https://getbootstrap.com/docs/5.3/components/badge/
+
+🔍 CÓMO PROBAR LOS CAMBIOS:
+  1. Abre el sitio con Live Server
+  2. Abre las herramientas de desarrollador (F12)
+  3. Ve a la pestaña "Console" para ver si hay errores
+  4. Ve a "Network" para ver qué archivos se cargan
+
+💡 TIP PROFESIONAL:
+  Siempre prueba tu sitio en:
+  - Chrome
+  - Firefox
+  - Edge
+  - Versión móvil (usa el modo responsive en F12)
+
+
+=========================================================
+ CHECKLIST DE CORRECCIONES APLICADAS
+=========================================================
+
+✅ FASE 1: CORRECCIONES CRÍTICAS
+  ✓ Archivo CSS renombrado: syles.css → style.css
+  ✓ Bootstrap duplicado eliminado en todas las páginas
+  ✓ Enlaces a retros.html corregidos (index.html, contacto.html)
+  ✓ Formato de precio corregido: $110.0 → $110.00
+
+✅ FASE 2: ICONOS Y UX BÁSICA
+  ✓ Favicon agregado a todas las páginas (emoji ⚽)
+  ✓ Títulos específicos por página:
+    - index.html: "FanKit - Tienda de Camisetas de Fútbol"
+    - catalogo.html: "Catálogo - FanKit"
+    - contacto.html: "Contacto - FanKit"
+    - retros.html: "Camisetas Retro - FanKit"
+  
+  ✓ Iconos agregados en navegación:
+    - 🛒 Carrito con badge contador
+    - 👤 Iniciar Sesión
+    - 👤 Registrarse
+    - 🔍 Botón de búsqueda
+    - 📋 Botón de categorías
+  
+  ✓ Iconos en botones:
+    - 🛒 "Añadir al Carrito" en todas las tarjetas de productos
+    - ✉️ "Enviar Mensaje" en formulario de contacto
+    - 📍 📧 📞 Información de contacto
+  
+  ✓ Efectos CSS agregados:
+    - Hover en tarjetas (elevación y sombra)
+    - Hover en botones (escala)
+    - Transiciones suaves
+  
+  ✓ Indicador de página activa:
+    - catalogo.html: enlace "Catálogo" marcado como activo
+    - contacto.html: enlace "Contacto" marcado como activo
+    - retros.html: enlace "Catálogo" marcado como activo
+
+
+=========================================================
+ ANTES Y DESPUÉS - EJEMPLOS DE CÓDIGO
+=========================================================
+
+EJEMPLO 1: Navegación con iconos
+---------------------------------
+ANTES:
+<a class="nav-link" href="#">Carrito (0)</a>
+
+DESPUÉS:
+<a class="nav-link" href="#">
+  <i class="fas fa-shopping-cart"></i> Carrito <span class="badge bg-primary">0</span>
+</a>
+
+
+EJEMPLO 2: Botones con iconos
+-------------------------------
+ANTES:
+<a href="#" class="btn btn-primary">Añadir al Carrito</a>
+
+DESPUÉS:
+<a href="#" class="btn btn-primary">
+  <i class="fas fa-cart-plus"></i> Añadir al Carrito
+</a>
+
+
+EJEMPLO 3: CSS con efectos hover
+---------------------------------
+NUEVO CÓDIGO AGREGADO:
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+=========================================================
+ CÓMO PROBAR LOS CAMBIOS
+=========================================================
+
+1. Abre el proyecto con Live Server (click derecho > "Open with Live Server")
+
+2. Verifica estos puntos:
+   ✓ El favicon (⚽) aparece en la pestaña del navegador
+   ✓ Los iconos se ven en la barra de navegación
+   ✓ El contador del carrito tiene un badge azul con "0"
+   ✓ Al pasar el mouse sobre las tarjetas, se elevan
+   ✓ Al pasar el mouse sobre los botones, se agrandan
+   ✓ Los títulos de las páginas son específicos (míralos en la pestaña)
+   ✓ El enlace activo en el navbar tiene borde azul abajo
+   ✓ El enlace "Camisetas Retro" funciona correctamente
+
+3. Prueba la responsividad:
+   - Presiona F12
+   - Click en el ícono de dispositivos móviles
+   - Prueba diferentes tamaños de pantalla
+
+
+=========================================================
+ ARCHIVOS MODIFICADOS (RESUMEN)
+=========================================================
+
+📄 style.css (NUEVO - antes syles.css)
+   - Efectos hover en tarjetas
+   - Efectos hover en botones
+   - Estilos para página activa
+   - Estilos para badges
+
+📄 index.html
+   - Favicon agregado
+   - Título actualizado
+   - Iconos en navegación
+   - Iconos en botones
+   - Bootstrap duplicado eliminado
+   - Enlace retros.html corregido
+   - Precio $110.00 corregido
+
+📄 catalogo.html
+   - Favicon agregado
+   - Título actualizado
+   - Iconos en navegación
+   - Iconos en botones (8 productos)
+   - Página activa marcada
+   - Enlace retros.html corregido
+
+📄 contacto.html
+   - Favicon agregado
+   - Título actualizado
+   - Iconos en navegación
+   - Iconos en formulario
+   - Iconos en información de contacto
+   - Bootstrap duplicado eliminado
+   - Enlace retros.html corregido
+   - Página activa marcada
+
+📄 retros.html
+   - Favicon agregado
+   - Título actualizado
+   - Iconos en navegación
+   - Iconos en botones (8 productos retro)
+   - Bootstrap duplicado eliminado
+   - Página activa marcada
+
+
+=========================================================
+ COMPARACIÓN: ANTES VS AHORA
+=========================================================
+
+ASPECTO PROFESIONAL:        ⭐⭐⭐ → ⭐⭐⭐⭐⭐
+USABILIDAD:                 ⭐⭐⭐ → ⭐⭐⭐⭐⭐
+EXPERIENCIA VISUAL:         ⭐⭐⭐ → ⭐⭐⭐⭐⭐
+CONSISTENCIA:               ⭐⭐ → ⭐⭐⭐⭐⭐
+INTERACTIVIDAD:             ⭐⭐ → ⭐⭐⭐⭐⭐
+
+
+=========================================================
+ FIN DEL DOCUMENTO
+=========================================================
+
