@@ -1,0 +1,1360 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║        🚀 GUÍA BACKEND FANKIT - PASO A PASO 🚀              ║
+║                                                               ║
+║           CHECKLIST COMPLETO PARA IMPLEMENTAR                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📋 RESUMEN EJECUTIVO                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+🎯 OBJETIVO: Crear un backend completo para FanKit
+⏱️ TIEMPO ESTIMADO: 3-4 semanas
+💻 LENGUAJE: Node.js + Express.js
+🗄️ BASE DE DATOS: MySQL
+🔐 AUTENTICACIÓN: JWT (JSON Web Tokens)
+💳 PAGOS: MercadoPago
+☁️ DESPLIEGUE: Heroku/DigitalOcean
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📦 FASE 1: PREPARACIÓN DEL ENTORNO (Día 1)              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 1.1: INSTALAR NODE.JS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Ir a https://nodejs.org/
+  2. Descargar la versión LTS (Long Term Support)
+  3. Instalar siguiendo el asistente
+  4. Verificar instalación: abrir terminal y escribir:
+     node --version
+     npm --version
+
+📝 RESULTADO ESPERADO:
+   - Node.js v18.x o superior
+   - npm v9.x o superior
+
+✅ PASO 1.2: INSTALAR MYSQL
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Ir a https://dev.mysql.com/downloads/mysql/
+  2. Descargar MySQL Community Server
+  3. Instalar con configuración por defecto
+  4. Recordar la contraseña del root
+  5. Instalar MySQL Workbench (opcional pero recomendado)
+
+📝 RESULTADO ESPERADO:
+   - MySQL Server funcionando
+   - Acceso desde terminal: mysql -u root -p
+
+✅ PASO 1.3: CONFIGURAR PROYECTO BACKEND
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Abrir terminal en la carpeta del proyecto
+  2. Navegar a la carpeta backend:
+     cd backend
+  3. Inicializar proyecto Node.js:
+     npm init -y
+  4. Instalar dependencias principales:
+     npm install express cors helmet morgan dotenv
+  5. Instalar dependencias de autenticación:
+     npm install bcryptjs jsonwebtoken
+  6. Instalar dependencias de base de datos:
+     npm install mysql2
+  7. Instalar dependencias de archivos:
+     npm install multer
+  8. Instalar dependencias de validación:
+     npm install express-validator
+  9. Instalar dependencias de desarrollo:
+     npm install -D nodemon
+
+📝 RESULTADO ESPERADO:
+   - Carpeta backend/ con node_modules/
+   - package.json configurado
+   - Todas las dependencias instaladas
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📁 FASE 2: ESTRUCTURA DEL PROYECTO (Día 1-2)           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 2.1: CREAR ESTRUCTURA DE CARPETAS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear las siguientes carpetas en backend/:
+     mkdir src
+     mkdir src/controllers
+     mkdir src/models
+     mkdir src/routes
+     mkdir src/middleware
+     mkdir src/utils
+     mkdir uploads
+     mkdir tests
+
+📁 ESTRUCTURA FINAL:
+   backend/
+   ├── src/
+   │   ├── controllers/
+   │   ├── models/
+   │   ├── routes/
+   │   ├── middleware/
+   │   └── utils/
+   ├── uploads/
+   ├── tests/
+   ├── package.json
+   └── server.js
+
+✅ PASO 2.2: CREAR ARCHIVO PRINCIPAL (server.js)
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo server.js en la raíz de backend/
+  2. Copiar el siguiente código:
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(morgan('combined'));
+app.use(express.json());
+app.use(express.static('uploads'));
+
+// Rutas
+app.use('/api/auth', require('./src/routes/auth'));
+app.use('/api/products', require('./src/routes/products'));
+app.use('/api/cart', require('./src/routes/cart'));
+app.use('/api/orders', require('./src/routes/orders'));
+
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+});
+```
+
+✅ PASO 2.3: CREAR ARCHIVO DE CONFIGURACIÓN (.env)
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo .env en la raíz de backend/
+  2. Agregar las siguientes variables:
+
+```env
+# Configuración del servidor
+PORT=3000
+NODE_ENV=development
+
+# Base de datos
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=tu_password_mysql
+DB_NAME=fankit_db
+
+# JWT
+JWT_SECRET=tu_jwt_secret_muy_seguro_aqui
+JWT_EXPIRES_IN=7d
+
+# MercadoPago (más adelante)
+MP_ACCESS_TOKEN=tu_token_mercadopago
+MP_PUBLIC_KEY=tu_public_key_mercadopago
+```
+
+✅ PASO 2.4: CONFIGURAR PACKAGE.JSON
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Editar package.json en backend/
+  2. Agregar scripts:
+
+```json
+{
+  "name": "fankit-backend",
+  "version": "1.0.0",
+  "description": "Backend para FanKit - Tienda de Camisetas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["ecommerce", "nodejs", "express", "mysql"],
+  "author": "Facundo Pintado",
+  "license": "Private"
+}
+```
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🗄️ FASE 3: BASE DE DATOS (Día 2-3)                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 3.1: CREAR BASE DE DATOS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Abrir MySQL Workbench o terminal
+  2. Conectarse como root
+  3. Ejecutar los siguientes comandos:
+
+```sql
+-- Crear base de datos
+CREATE DATABASE fankit_db;
+USE fankit_db;
+
+-- Crear tabla de usuarios
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    newsletter BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Crear tabla de categorías
+CREATE TABLE categories (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Crear tabla de productos
+CREATE TABLE products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    image_url VARCHAR(500),
+    stock INT DEFAULT 0,
+    sizes JSON,
+    category_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- Crear tabla de carrito
+CREATE TABLE cart_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    product_id INT,
+    size VARCHAR(10),
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Crear tabla de pedidos
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    status ENUM('pending', 'paid', 'shipped', 'delivered') DEFAULT 'pending',
+    payment_method VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Crear tabla de items de pedidos
+CREATE TABLE order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    product_id INT,
+    size VARCHAR(10),
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+```
+
+✅ PASO 3.2: INSERTAR DATOS INICIALES
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Insertar categorías:
+
+```sql
+INSERT INTO categories (name, description) VALUES
+('Camisetas Actuales', 'Camisetas de equipos actuales'),
+('Camisetas Retro', 'Camisetas vintage y retro'),
+('Accesorios', 'Accesorios de fútbol');
+```
+
+2. Insertar productos de ejemplo:
+
+```sql
+INSERT INTO products (name, description, price, image_url, stock, sizes, category_id) VALUES
+('Camiseta Selección Local 2025', 'Camiseta oficial de la selección local', 89.99, 'assets/images/camiseta_seleccion_local.jpg.webp', 15, '["S", "M", "L", "XL"]', 1),
+('Camiseta Retro 90s', 'Camiseta vintage de los años 90', 129.99, 'https://placehold.co/300x300/FF6B6B/FFFFFF?text=Retro+1', 10, '["S", "M", "L", "XL"]', 2);
+```
+
+✅ PASO 3.3: CREAR CONEXIÓN A BASE DE DATOS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/utils/database.js:
+
+```javascript
+const mysql = require('mysql2');
+require('dotenv').config();
+
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+connection.connect((err) => {
+    if (err) {
+        console.error('❌ Error conectando a la base de datos:', err);
+        return;
+    }
+    console.log('✅ Conectado a la base de datos MySQL');
+});
+
+module.exports = connection;
+```
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🔐 FASE 4: AUTENTICACIÓN (Día 3-5)                      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 4.1: CREAR MODELO DE USUARIO
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/models/User.js:
+
+```javascript
+const db = require('../utils/database');
+const bcrypt = require('bcryptjs');
+
+class User {
+    static async create(userData) {
+        const { email, password, first_name, last_name, phone, newsletter } = userData;
+        
+        // Encriptar contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const query = `
+            INSERT INTO users (email, password, first_name, last_name, phone, newsletter)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [email, hashedPassword, first_name, last_name, phone, newsletter], 
+                (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result.insertId);
+                }
+            );
+        });
+    }
+    
+    static async findByEmail(email) {
+        const query = 'SELECT * FROM users WHERE email = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [email], (err, result) => {
+                if (err) reject(err);
+                else resolve(result[0]);
+            });
+        });
+    }
+    
+    static async findById(id) {
+        const query = 'SELECT id, email, first_name, last_name, phone, newsletter, created_at FROM users WHERE id = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, result) => {
+                if (err) reject(err);
+                else resolve(result[0]);
+            });
+        });
+    }
+    
+    static async update(id, userData) {
+        const { first_name, last_name, phone, newsletter } = userData;
+        
+        const query = `
+            UPDATE users 
+            SET first_name = ?, last_name = ?, phone = ?, newsletter = ?
+            WHERE id = ?
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [first_name, last_name, phone, newsletter, id], 
+                (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                }
+            );
+        });
+    }
+}
+
+module.exports = User;
+```
+
+✅ PASO 4.2: CREAR MIDDLEWARE DE AUTENTICACIÓN
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/middleware/auth.js:
+
+```javascript
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const authenticateToken = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ 
+            success: false, 
+            message: 'Token de acceso requerido' 
+        });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Usuario no encontrado' 
+            });
+        }
+        
+        req.user = user;
+        next();
+    } catch (error) {
+        return res.status(403).json({ 
+            success: false, 
+            message: 'Token inválido' 
+        });
+    }
+};
+
+module.exports = { authenticateToken };
+```
+
+✅ PASO 4.3: CREAR CONTROLADOR DE AUTENTICACIÓN
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/controllers/authController.js:
+
+```javascript
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+class AuthController {
+    // Registro de usuario
+    static async register(req, res) {
+        try {
+            const { email, password, first_name, last_name, phone, newsletter } = req.body;
+            
+            // Validar que el email no exista
+            const existingUser = await User.findByEmail(email);
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'El email ya está registrado'
+                });
+            }
+            
+            // Crear usuario
+            const userId = await User.create({
+                email,
+                password,
+                first_name,
+                last_name,
+                phone,
+                newsletter: newsletter || false
+            });
+            
+            // Generar token
+            const token = jwt.sign(
+                { userId },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_EXPIRES_IN }
+            );
+            
+            res.status(201).json({
+                success: true,
+                message: 'Usuario registrado exitosamente',
+                token,
+                user: {
+                    id: userId,
+                    email,
+                    first_name,
+                    last_name
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error en registro:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Login de usuario
+    static async login(req, res) {
+        try {
+            const { email, password } = req.body;
+            
+            // Buscar usuario
+            const user = await User.findByEmail(email);
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Credenciales inválidas'
+                });
+            }
+            
+            // Verificar contraseña
+            const isValidPassword = await bcrypt.compare(password, user.password);
+            if (!isValidPassword) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Credenciales inválidas'
+                });
+            }
+            
+            // Generar token
+            const token = jwt.sign(
+                { userId: user.id },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_EXPIRES_IN }
+            );
+            
+            res.json({
+                success: true,
+                message: 'Login exitoso',
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error en login:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Obtener perfil del usuario
+    static async getProfile(req, res) {
+        try {
+            res.json({
+                success: true,
+                user: req.user
+            });
+        } catch (error) {
+            console.error('Error obteniendo perfil:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Actualizar perfil del usuario
+    static async updateProfile(req, res) {
+        try {
+            const { first_name, last_name, phone, newsletter } = req.body;
+            
+            await User.update(req.user.id, {
+                first_name,
+                last_name,
+                phone,
+                newsletter
+            });
+            
+            res.json({
+                success: true,
+                message: 'Perfil actualizado exitosamente'
+            });
+            
+        } catch (error) {
+            console.error('Error actualizando perfil:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+}
+
+module.exports = AuthController;
+```
+
+✅ PASO 4.4: CREAR RUTAS DE AUTENTICACIÓN
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/routes/auth.js:
+
+```javascript
+const express = require('express');
+const { body } = require('express-validator');
+const AuthController = require('../controllers/authController');
+const { authenticateToken } = require('../middleware/auth');
+
+const router = express.Router();
+
+// Validaciones
+const registerValidation = [
+    body('email').isEmail().normalizeEmail(),
+    body('password').isLength({ min: 6 }),
+    body('first_name').notEmpty().trim(),
+    body('last_name').notEmpty().trim()
+];
+
+const loginValidation = [
+    body('email').isEmail().normalizeEmail(),
+    body('password').notEmpty()
+];
+
+// Rutas
+router.post('/register', registerValidation, AuthController.register);
+router.post('/login', loginValidation, AuthController.login);
+router.get('/profile', authenticateToken, AuthController.getProfile);
+router.put('/profile', authenticateToken, AuthController.updateProfile);
+
+module.exports = router;
+```
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🛍️ FASE 5: PRODUCTOS (Día 5-7)                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 5.1: CREAR MODELO DE PRODUCTO
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/models/Product.js:
+
+```javascript
+const db = require('../utils/database');
+
+class Product {
+    static async getAll() {
+        const query = `
+            SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id
+            ORDER BY p.created_at DESC
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    static async getById(id) {
+        const query = `
+            SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE p.id = ?
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, result) => {
+                if (err) reject(err);
+                else resolve(result[0]);
+            });
+        });
+    }
+    
+    static async search(searchTerm) {
+        const query = `
+            SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE p.name LIKE ? OR p.description LIKE ?
+            ORDER BY p.created_at DESC
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    static async create(productData) {
+        const { name, description, price, image_url, stock, sizes, category_id } = productData;
+        
+        const query = `
+            INSERT INTO products (name, description, price, image_url, stock, sizes, category_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [name, description, price, image_url, stock, JSON.stringify(sizes), category_id], 
+                (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result.insertId);
+                }
+            );
+        });
+    }
+    
+    static async update(id, productData) {
+        const { name, description, price, image_url, stock, sizes, category_id } = productData;
+        
+        const query = `
+            UPDATE products 
+            SET name = ?, description = ?, price = ?, image_url = ?, stock = ?, sizes = ?, category_id = ?
+            WHERE id = ?
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [name, description, price, image_url, stock, JSON.stringify(sizes), category_id, id], 
+                (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                }
+            );
+        });
+    }
+    
+    static async delete(id) {
+        const query = 'DELETE FROM products WHERE id = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+}
+
+module.exports = Product;
+```
+
+✅ PASO 5.2: CREAR CONTROLADOR DE PRODUCTOS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/controllers/productController.js:
+
+```javascript
+const Product = require('../models/Product');
+
+class ProductController {
+    // Obtener todos los productos
+    static async getAll(req, res) {
+        try {
+            const products = await Product.getAll();
+            
+            // Convertir sizes de JSON string a array
+            const formattedProducts = products.map(product => ({
+                ...product,
+                sizes: JSON.parse(product.sizes || '[]')
+            }));
+            
+            res.json({
+                success: true,
+                products: formattedProducts
+            });
+            
+        } catch (error) {
+            console.error('Error obteniendo productos:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Obtener producto por ID
+    static async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const product = await Product.getById(id);
+            
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Producto no encontrado'
+                });
+            }
+            
+            // Convertir sizes de JSON string a array
+            product.sizes = JSON.parse(product.sizes || '[]');
+            
+            res.json({
+                success: true,
+                product
+            });
+            
+        } catch (error) {
+            console.error('Error obteniendo producto:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Buscar productos
+    static async search(req, res) {
+        try {
+            const { q } = req.query;
+            
+            if (!q) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Término de búsqueda requerido'
+                });
+            }
+            
+            const products = await Product.search(q);
+            
+            // Convertir sizes de JSON string a array
+            const formattedProducts = products.map(product => ({
+                ...product,
+                sizes: JSON.parse(product.sizes || '[]')
+            }));
+            
+            res.json({
+                success: true,
+                products: formattedProducts,
+                searchTerm: q
+            });
+            
+        } catch (error) {
+            console.error('Error buscando productos:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Crear producto (admin)
+    static async create(req, res) {
+        try {
+            const { name, description, price, image_url, stock, sizes, category_id } = req.body;
+            
+            const productId = await Product.create({
+                name,
+                description,
+                price,
+                image_url,
+                stock,
+                sizes,
+                category_id
+            });
+            
+            res.status(201).json({
+                success: true,
+                message: 'Producto creado exitosamente',
+                productId
+            });
+            
+        } catch (error) {
+            console.error('Error creando producto:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Actualizar producto (admin)
+    static async update(req, res) {
+        try {
+            const { id } = req.params;
+            const { name, description, price, image_url, stock, sizes, category_id } = req.body;
+            
+            await Product.update(id, {
+                name,
+                description,
+                price,
+                image_url,
+                stock,
+                sizes,
+                category_id
+            });
+            
+            res.json({
+                success: true,
+                message: 'Producto actualizado exitosamente'
+            });
+            
+        } catch (error) {
+            console.error('Error actualizando producto:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Eliminar producto (admin)
+    static async delete(req, res) {
+        try {
+            const { id } = req.params;
+            
+            await Product.delete(id);
+            
+            res.json({
+                success: true,
+                message: 'Producto eliminado exitosamente'
+            });
+            
+        } catch (error) {
+            console.error('Error eliminando producto:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+}
+
+module.exports = ProductController;
+```
+
+✅ PASO 5.3: CREAR RUTAS DE PRODUCTOS
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/routes/products.js:
+
+```javascript
+const express = require('express');
+const ProductController = require('../controllers/productController');
+
+const router = express.Router();
+
+// Rutas públicas
+router.get('/', ProductController.getAll);
+router.get('/search', ProductController.search);
+router.get('/:id', ProductController.getById);
+
+// Rutas protegidas (admin) - agregar middleware de admin más adelante
+// router.post('/', authenticateToken, isAdmin, ProductController.create);
+// router.put('/:id', authenticateToken, isAdmin, ProductController.update);
+// router.delete('/:id', authenticateToken, isAdmin, ProductController.delete);
+
+module.exports = router;
+```
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🛒 FASE 6: CARRITO (Día 7-9)                           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 6.1: CREAR MODELO DE CARRITO
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/models/Cart.js:
+
+```javascript
+const db = require('../utils/database');
+
+class Cart {
+    static async getByUserId(userId) {
+        const query = `
+            SELECT ci.*, p.name, p.price, p.image_url
+            FROM cart_items ci
+            JOIN products p ON ci.product_id = p.id
+            WHERE ci.user_id = ?
+            ORDER BY ci.created_at DESC
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [userId], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    static async addItem(userId, productId, size, quantity) {
+        // Verificar si el item ya existe
+        const existingItem = await Cart.getItemByProductAndSize(userId, productId, size);
+        
+        if (existingItem) {
+            // Actualizar cantidad
+            return Cart.updateQuantity(existingItem.id, existingItem.quantity + quantity);
+        } else {
+            // Crear nuevo item
+            const query = `
+                INSERT INTO cart_items (user_id, product_id, size, quantity)
+                VALUES (?, ?, ?, ?)
+            `;
+            
+            return new Promise((resolve, reject) => {
+                db.query(query, [userId, productId, size, quantity], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result.insertId);
+                });
+            });
+        }
+    }
+    
+    static async getItemByProductAndSize(userId, productId, size) {
+        const query = `
+            SELECT * FROM cart_items 
+            WHERE user_id = ? AND product_id = ? AND size = ?
+        `;
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [userId, productId, size], (err, result) => {
+                if (err) reject(err);
+                else resolve(result[0]);
+            });
+        });
+    }
+    
+    static async updateQuantity(itemId, quantity) {
+        const query = 'UPDATE cart_items SET quantity = ? WHERE id = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [quantity, itemId], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    static async removeItem(itemId) {
+        const query = 'DELETE FROM cart_items WHERE id = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [itemId], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    static async clearCart(userId) {
+        const query = 'DELETE FROM cart_items WHERE user_id = ?';
+        
+        return new Promise((resolve, reject) => {
+            db.query(query, [userId], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+}
+
+module.exports = Cart;
+```
+
+✅ PASO 6.2: CREAR CONTROLADOR DE CARRITO
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/controllers/cartController.js:
+
+```javascript
+const Cart = require('../models/Cart');
+
+class CartController {
+    // Obtener carrito del usuario
+    static async getCart(req, res) {
+        try {
+            const userId = req.user.id;
+            const cartItems = await Cart.getByUserId(userId);
+            
+            // Calcular totales
+            let subtotal = 0;
+            const itemsWithTotals = cartItems.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                return {
+                    ...item,
+                    itemTotal
+                };
+            });
+            
+            res.json({
+                success: true,
+                items: itemsWithTotals,
+                subtotal: subtotal.toFixed(2),
+                total: subtotal.toFixed(2)
+            });
+            
+        } catch (error) {
+            console.error('Error obteniendo carrito:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Agregar item al carrito
+    static async addItem(req, res) {
+        try {
+            const userId = req.user.id;
+            const { productId, size, quantity } = req.body;
+            
+            await Cart.addItem(userId, productId, size, quantity);
+            
+            res.json({
+                success: true,
+                message: 'Producto agregado al carrito'
+            });
+            
+        } catch (error) {
+            console.error('Error agregando al carrito:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Actualizar cantidad
+    static async updateQuantity(req, res) {
+        try {
+            const { itemId } = req.params;
+            const { quantity } = req.body;
+            
+            await Cart.updateQuantity(itemId, quantity);
+            
+            res.json({
+                success: true,
+                message: 'Cantidad actualizada'
+            });
+            
+        } catch (error) {
+            console.error('Error actualizando cantidad:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Eliminar item del carrito
+    static async removeItem(req, res) {
+        try {
+            const { itemId } = req.params;
+            
+            await Cart.removeItem(itemId);
+            
+            res.json({
+                success: true,
+                message: 'Producto eliminado del carrito'
+            });
+            
+        } catch (error) {
+            console.error('Error eliminando del carrito:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+    
+    // Vaciar carrito
+    static async clearCart(req, res) {
+        try {
+            const userId = req.user.id;
+            
+            await Cart.clearCart(userId);
+            
+            res.json({
+                success: true,
+                message: 'Carrito vaciado'
+            });
+            
+        } catch (error) {
+            console.error('Error vaciando carrito:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+}
+
+module.exports = CartController;
+```
+
+✅ PASO 6.3: CREAR RUTAS DE CARRITO
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Crear archivo src/routes/cart.js:
+
+```javascript
+const express = require('express');
+const CartController = require('../controllers/cartController');
+const { authenticateToken } = require('../middleware/auth');
+
+const router = express.Router();
+
+// Todas las rutas requieren autenticación
+router.use(authenticateToken);
+
+// Rutas
+router.get('/', CartController.getCart);
+router.post('/add', CartController.addItem);
+router.put('/:itemId', CartController.updateQuantity);
+router.delete('/:itemId', CartController.removeItem);
+router.delete('/clear', CartController.clearCart);
+
+module.exports = router;
+```
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🧪 FASE 7: TESTING (Día 9-10)                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PASO 7.1: PROBAR EL SERVIDOR
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Abrir terminal en la carpeta backend
+  2. Ejecutar: npm run dev
+  3. Verificar que aparezca: "🚀 Servidor corriendo en puerto 3000"
+  4. Abrir navegador en: http://localhost:3000
+
+✅ PASO 7.2: PROBAR APIS CON POSTMAN
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Instalar Postman
+  2. Crear colección "FanKit API"
+  3. Probar las siguientes rutas:
+
+📋 RUTAS A PROBAR:
+   • GET http://localhost:3000/api/products
+   • GET http://localhost:3000/api/products/search?q=camiseta
+   • GET http://localhost:3000/api/products/1
+   • POST http://localhost:3000/api/auth/register
+   • POST http://localhost:3000/api/auth/login
+   • GET http://localhost:3000/api/auth/profile (con token)
+
+✅ PASO 7.3: CONECTAR FRONTEND CON BACKEND
+─────────────────────────────────────────────────────────────
+🔧 QUÉ HACER:
+  1. Modificar archivos JavaScript del frontend
+  2. Reemplazar localStorage con llamadas a API
+  3. Implementar autenticación real
+  4. Probar flujo completo
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📋 CHECKLIST DE VERIFICACIÓN                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ PREPARACIÓN:
+  □ Node.js instalado y funcionando
+  □ MySQL instalado y funcionando
+  □ Proyecto backend inicializado
+  □ Dependencias instaladas
+  □ Estructura de carpetas creada
+
+✅ BASE DE DATOS:
+  □ Base de datos fankit_db creada
+  □ Tablas creadas (users, products, categories, cart_items, orders, order_items)
+  □ Datos iniciales insertados
+  □ Conexión funcionando
+
+✅ AUTENTICACIÓN:
+  □ Modelo User creado
+  □ Middleware de autenticación funcionando
+  □ Controlador de autenticación implementado
+  □ Rutas de autenticación funcionando
+  □ Registro y login probados
+
+✅ PRODUCTOS:
+  □ Modelo Product creado
+  □ Controlador de productos implementado
+  □ Rutas de productos funcionando
+  □ Búsqueda implementada
+  □ CRUD básico funcionando
+
+✅ CARRITO:
+  □ Modelo Cart creado
+  □ Controlador de carrito implementado
+  □ Rutas de carrito funcionando
+  □ Agregar/eliminar items funcionando
+  □ Cálculo de totales funcionando
+
+✅ TESTING:
+  □ Servidor funcionando
+  □ APIs probadas con Postman
+  □ Frontend conectado con backend
+  □ Flujo completo funcionando
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🚀 PRÓXIMOS PASOS (FASES AVANZADAS)                    ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 8: PEDIDOS Y PAGOS (Día 10-14)
+  • Implementar modelo de pedidos
+  • Integrar MercadoPago
+  • Crear flujo de checkout
+  • Implementar webhooks
+
+📅 FASE 9: ADMINISTRACIÓN (Día 14-17)
+  • Panel de administración
+  • Gestión de productos
+  • Gestión de usuarios
+  • Dashboard con estadísticas
+
+📅 FASE 10: DESPLIEGUE (Día 17-21)
+  • Configurar servidor de producción
+  • Configurar base de datos en la nube
+  • Configurar dominio y SSL
+  • Monitoreo y logs
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  💡 CONSEJOS IMPORTANTES                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+🔧 DESARROLLO:
+  • Siempre probar cada endpoint antes de continuar
+  • Usar Postman para testing
+  • Mantener logs de errores
+  • Documentar cada función
+
+🔒 SEGURIDAD:
+  • Nunca hardcodear contraseñas
+  • Usar variables de entorno
+  • Validar todos los inputs
+  • Implementar rate limiting
+
+📊 MONITOREO:
+  • Usar console.log para debugging
+  • Implementar manejo de errores
+  • Probar con datos reales
+  • Optimizar consultas de base de datos
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              🎯 ¡LISTO PARA EMPEZAR! 🎯                     ║
+║                                                               ║
+║     Con esta guía tienes todo lo necesario para crear        ║
+║     un backend completo y funcional.                        ║
+║                                                               ║
+║              ¡A PROGRAMAR! 💻                                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝

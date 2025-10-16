@@ -1,0 +1,77 @@
+# ===========================================
+# FANKIT - PROYECTO E-COMMERCE
+# ===========================================
+
+# ===== ARCHIVOS DEL SISTEMA =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== NODE.JS =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ===== ENTORNOS VIRTUALES =====
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===== LOGS =====
+logs/
+*.log
+
+# ===== ARCHIVOS TEMPORALES =====
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ===== IDE/EDITORES =====
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ===== BACKUP FILES =====
+*.bak
+*.backup
+*.old
+
+# ===== ARCHIVOS DE CONFIGURACIÓN SENSIBLES =====
+config/database.js
+config/secrets.js
+*.key
+*.pem
+
+# ===== CARPETAS DE BUILD =====
+dist/
+build/
+out/
+
+# ===== CARPETAS DE TESTING =====
+coverage/
+.nyc_output/
+
+# ===== ARCHIVOS DE BASE DE DATOS =====
+*.sqlite
+*.db
+database.sql
+
+# ===== ARCHIVOS DE UPLOAD =====
+uploads/
+public/uploads/
+
+# ===== ARCHIVOS DE CACHE =====
+.cache/
+.parcel-cache/
+
+# ===== ARCHIVOS DE DEPLOYMENT =====
+.vercel/
+.netlify/

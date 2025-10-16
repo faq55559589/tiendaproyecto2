@@ -1,0 +1,500 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║        🗺️ MAPA GENERAL DEL PROYECTO FANKIT 🗺️               ║
+║                                                               ║
+║           ROADMAP COMPLETO PARA E-COMMERCE                    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📊 ESTADO ACTUAL DEL PROYECTO                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+✅ FRONTEND: COMPLETADO AL 100%
+🔄 BACKEND: PENDIENTE DE IMPLEMENTACIÓN
+🔄 INFRAESTRUCTURA: PENDIENTE DE CONFIGURACIÓN
+🔄 PRODUCCIÓN: PENDIENTE DE DESPLIEGUE
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🎯 OBJETIVO FINAL                                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+Crear una tienda online completa de camisetas de fútbol con:
+• Frontend profesional (✅ COMPLETADO)
+• Backend robusto y escalable
+• Base de datos optimizada
+• Sistema de pagos integrado
+• Seguridad avanzada
+• Despliegue en producción
+• Monitoreo y analytics
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📋 ETAPAS DEL PROYECTO                                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+🎨 ETAPA 1: FRONTEND (✅ COMPLETADO)
+─────────────────────────────────────────────────────────────
+ESTADO: ✅ FINALIZADO
+DURACIÓN: 7 fases completadas
+ARCHIVOS: 8 HTML + 7 JS + 1 CSS
+FUNCIONALIDADES: 100% implementadas
+
+📦 ETAPA 2: BACKEND CORE
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 3-4 semanas
+OBJETIVO: API REST completa
+
+🗄️ ETAPA 3: BASE DE DATOS
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 1 semana
+OBJETIVO: Esquema optimizado y datos
+
+🔐 ETAPA 4: SEGURIDAD Y AUTENTICACIÓN
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 1-2 semanas
+OBJETIVO: Sistema seguro de usuarios
+
+💳 ETAPA 5: SISTEMA DE PAGOS
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 1-2 semanas
+OBJETIVO: Integración MercadoPago
+
+🚀 ETAPA 6: DESPLIEGUE Y PRODUCCIÓN
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 1 semana
+OBJETIVO: Sitio en producción
+
+📊 ETAPA 7: MONITOREO Y ANALYTICS
+─────────────────────────────────────────────────────────────
+ESTADO: 🔄 PENDIENTE
+DURACIÓN ESTIMADA: 1 semana
+OBJETIVO: Métricas y optimización
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📁 ESTRUCTURA FINAL DEL PROYECTO                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📂 fankit-completo/
+├── 📂 frontend/                    (✅ COMPLETADO)
+│   ├── 📄 index.html
+│   ├── 📄 catalogo.html
+│   ├── 📄 producto.html
+│   ├── 📄 login.html
+│   ├── 📄 registro.html
+│   ├── 📄 carrito.html
+│   ├── 📄 contacto.html
+│   ├── 📄 recuperar-contrasena.html
+│   ├── 📂 js/
+│   │   ├── 📄 main.js
+│   │   ├── 📄 product.js
+│   │   ├── 📄 login.js
+│   │   ├── 📄 registro.js
+│   │   ├── 📄 carrito.js
+│   │   ├── 📄 catalogo.js
+│   │   └── 📄 recuperar-contrasena.js
+│   ├── 📄 style.css
+│   └── 📂 assets/
+│       └── 📂 images/
+│
+├── 📂 backend/                     (🔄 PENDIENTE)
+│   ├── 📂 src/
+│   │   ├── 📂 controllers/
+│   │   │   ├── 📄 authController.js
+│   │   │   ├── 📄 productController.js
+│   │   │   ├── 📄 cartController.js
+│   │   │   ├── 📄 orderController.js
+│   │   │   └── 📄 userController.js
+│   │   ├── 📂 models/
+│   │   │   ├── 📄 User.js
+│   │   │   ├── 📄 Product.js
+│   │   │   ├── 📄 Cart.js
+│   │   │   ├── 📄 Order.js
+│   │   │   └── 📄 Category.js
+│   │   ├── 📂 routes/
+│   │   │   ├── 📄 auth.js
+│   │   │   ├── 📄 products.js
+│   │   │   ├── 📄 cart.js
+│   │   │   ├── 📄 orders.js
+│   │   │   └── 📄 users.js
+│   │   ├── 📂 middleware/
+│   │   │   ├── 📄 auth.js
+│   │   │   ├── 📄 validation.js
+│   │   │   ├── 📄 upload.js
+│   │   │   └── 📄 errorHandler.js
+│   │   ├── 📂 utils/
+│   │   │   ├── 📄 database.js
+│   │   │   ├── 📄 email.js
+│   │   │   └── 📄 helpers.js
+│   │   └── 📄 app.js
+│   ├── 📂 uploads/
+│   ├── 📂 tests/
+│   ├── 📄 package.json
+│   ├── 📄 .env
+│   ├── 📄 .gitignore
+│   └── 📄 server.js
+│
+├── 📂 database/                    (🔄 PENDIENTE)
+│   ├── 📄 schema.sql
+│   ├── 📄 seeds.sql
+│   ├── 📄 migrations/
+│   └── 📄 backup/
+│
+├── 📂 deployment/                  (🔄 PENDIENTE)
+│   ├── 📄 docker-compose.yml
+│   ├── 📄 Dockerfile
+│   ├── 📄 nginx.conf
+│   └── 📄 ssl/
+│
+├── 📂 docs/                        (🔄 PENDIENTE)
+│   ├── 📄 api-documentation.md
+│   ├── 📄 deployment-guide.md
+│   ├── 📄 security-guide.md
+│   └── 📄 user-manual.md
+│
+├── 📄 README.md
+├── 📄 .gitignore
+└── 📄 package.json
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🚀 ETAPA 2: BACKEND CORE - PLAN DETALLADO               ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 2.1: CONFIGURACIÓN INICIAL (Semana 1)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Crear estructura de proyecto Node.js
+  • Instalar dependencias principales
+  • Configurar Express.js
+  • Configurar middleware básico
+  • Configurar variables de entorno
+  • Configurar ESLint y Prettier
+
+📦 DEPENDENCIAS A INSTALAR:
+  • express - Framework web
+  • cors - Manejo de CORS
+  • helmet - Seguridad básica
+  • morgan - Logging
+  • dotenv - Variables de entorno
+  • bcryptjs - Encriptación de contraseñas
+  • jsonwebtoken - Tokens JWT
+  • mysql2 - Driver de MySQL
+  • multer - Manejo de archivos
+  • express-validator - Validación
+  • nodemon - Desarrollo
+
+📅 FASE 2.2: CONEXIÓN A BASE DE DATOS (Semana 1)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar conexión MySQL
+  • Crear esquema de base de datos
+  • Implementar modelos básicos
+  • Configurar pool de conexiones
+  • Implementar migraciones
+  • Crear seeds de datos iniciales
+
+🗄️ TABLAS A CREAR:
+  • users - Usuarios del sistema
+  • products - Productos/camisetas
+  • categories - Categorías de productos
+  • cart_items - Items del carrito
+  • orders - Pedidos
+  • order_items - Items de pedidos
+  • reviews - Reseñas de productos
+
+📅 FASE 2.3: API DE AUTENTICACIÓN (Semana 2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar registro de usuarios
+  • Implementar login/logout
+  • Implementar JWT tokens
+  • Implementar middleware de autenticación
+  • Implementar recuperación de contraseña
+  • Implementar validaciones
+  • Implementar rate limiting
+
+🔐 ENDPOINTS A CREAR:
+  • POST /api/auth/register
+  • POST /api/auth/login
+  • POST /api/auth/logout
+  • POST /api/auth/forgot-password
+  • POST /api/auth/reset-password
+  • GET /api/auth/profile
+  • PUT /api/auth/profile
+
+📅 FASE 2.4: API DE PRODUCTOS (Semana 2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar CRUD de productos
+  • Implementar búsqueda y filtrado
+  • Implementar categorías
+  • Implementar subida de imágenes
+  • Implementar gestión de stock
+  • Implementar productos relacionados
+
+🛍️ ENDPOINTS A CREAR:
+  • GET /api/products
+  • GET /api/products/:id
+  • POST /api/products (admin)
+  • PUT /api/products/:id (admin)
+  • DELETE /api/products/:id (admin)
+  • GET /api/products/search
+  • GET /api/categories
+  • POST /api/products/:id/reviews
+
+📅 FASE 2.5: API DE CARRITO Y PEDIDOS (Semana 3)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar gestión de carrito
+  • Implementar creación de pedidos
+  • Implementar cálculo de totales
+  • Implementar gestión de stock
+  • Implementar historial de pedidos
+  • Implementar estados de pedido
+
+🛒 ENDPOINTS A CREAR:
+  • GET /api/cart
+  • POST /api/cart/add
+  • PUT /api/cart/:id
+  • DELETE /api/cart/:id
+  • DELETE /api/cart/clear
+  • POST /api/orders
+  • GET /api/orders
+  • GET /api/orders/:id
+  • PUT /api/orders/:id/status
+
+📅 FASE 2.6: TESTING Y OPTIMIZACIÓN (Semana 4)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar tests unitarios
+  • Implementar tests de integración
+  • Optimizar consultas de base de datos
+  • Implementar caché (Redis)
+  • Implementar logging avanzado
+  • Documentar APIs
+  • Preparar para producción
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🗄️ ETAPA 3: BASE DE DATOS - PLAN DETALLADO              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 3.1: DISEÑO DE ESQUEMA (Días 1-2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Diseñar diagrama ER
+  • Definir relaciones entre tablas
+  • Optimizar índices
+  • Planificar particionado
+  • Definir constraints
+  • Planificar backup strategy
+
+📅 FASE 3.2: IMPLEMENTACIÓN (Días 3-5)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Crear script de creación de BD
+  • Implementar migraciones
+  • Crear triggers y stored procedures
+  • Implementar índices optimizados
+  • Crear vistas útiles
+  • Configurar usuarios y permisos
+
+📅 FASE 3.3: DATOS INICIALES (Días 6-7)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Crear seeds con productos
+  • Crear usuarios de prueba
+  • Crear categorías
+  • Crear datos de ejemplo
+  • Validar integridad
+  • Performance testing
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🔐 ETAPA 4: SEGURIDAD - PLAN DETALLADO                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 4.1: SEGURIDAD BÁSICA (Semana 1)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar HTTPS
+  • Configurar CORS
+  • Implementar rate limiting
+  • Configurar helmet
+  • Implementar validación de inputs
+  • Sanitizar datos
+
+📅 FASE 4.2: AUTENTICACIÓN AVANZADA (Semana 2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar JWT refresh tokens
+  • Implementar 2FA (opcional)
+  • Implementar sesiones seguras
+  • Implementar logout global
+  • Implementar auditoría de login
+  • Implementar bloqueo de cuentas
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  💳 ETAPA 5: SISTEMA DE PAGOS - PLAN DETALLADO           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 5.1: INTEGRACIÓN MERCADOPAGO (Semana 1)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar SDK de MercadoPago
+  • Implementar creación de preferencias
+  • Implementar webhooks
+  • Implementar notificaciones
+  • Manejar estados de pago
+  • Implementar reembolsos
+
+📅 FASE 5.2: FLUJO DE CHECKOUT (Semana 2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Implementar cálculo de envío
+  • Implementar cupones de descuento
+  • Implementar impuestos
+  • Implementar confirmación de pedido
+  • Implementar emails de confirmación
+  • Implementar tracking de pedidos
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+┃  🚀 ETAPA 6: DESPLIEGUE - PLAN DETALLADO                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 6.1: PREPARACIÓN (Días 1-2)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar Docker
+  • Configurar Nginx
+  • Configurar SSL
+  • Configurar variables de producción
+  • Optimizar para producción
+  • Configurar logs
+
+📅 FASE 6.2: DESPLIEGUE (Días 3-5)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar servidor
+  • Desplegar aplicación
+  • Configurar base de datos en producción
+  • Configurar CDN
+  • Configurar backup automático
+  • Testing en producción
+
+📅 FASE 6.3: GO LIVE (Días 6-7)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar dominio
+  • Configurar DNS
+  • Activar SSL
+  • Monitoreo inicial
+  • Testing final
+  • Documentación de producción
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  📊 ETAPA 7: MONITOREO - PLAN DETALLADO                  ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📅 FASE 7.1: ANALYTICS (Días 1-3)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar Google Analytics
+  • Implementar tracking de eventos
+  • Configurar métricas de conversión
+  • Implementar heatmaps
+  • Configurar A/B testing
+  • Implementar funnel analysis
+
+📅 FASE 7.2: MONITOREO TÉCNICO (Días 4-7)
+─────────────────────────────────────────────────────────────
+🔧 TAREAS:
+  • Configurar monitoreo de servidor
+  • Configurar alertas
+  • Implementar logging centralizado
+  • Configurar métricas de performance
+  • Implementar health checks
+  • Configurar backup monitoring
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🛠️ HERRAMIENTAS Y TECNOLOGÍAS NECESARIAS                ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+💻 DESARROLLO:
+  • Node.js (v18+)
+  • npm/yarn
+  • VS Code
+  • Postman
+  • MySQL Workbench
+  • Git
+
+☁️ INFRAESTRUCTURA:
+  • Servidor (DigitalOcean, AWS, Heroku)
+  • MySQL (PlanetScale, AWS RDS)
+  • Redis (para caché)
+  • CDN (Cloudflare)
+  • SSL (Let's Encrypt)
+
+🔧 HERRAMIENTAS DE PRODUCCIÓN:
+  • PM2 (gestión de procesos)
+  • Nginx (proxy reverso)
+  • Docker (contenedores)
+  • GitHub Actions (CI/CD)
+  • Sentry (error tracking)
+  • LogRocket (session replay)
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  💰 ESTIMACIÓN DE COSTOS                                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+💵 COSTOS MENSUALES ESTIMADOS:
+  • Servidor: $20-50 USD
+  • Base de datos: $10-30 USD
+  • CDN: $5-15 USD
+  • SSL: $0 (Let's Encrypt)
+  • Dominio: $1-2 USD
+  • Email: $5-10 USD
+  • TOTAL: $41-107 USD/mes
+
+⏱️ TIEMPO TOTAL ESTIMADO:
+  • Backend: 3-4 semanas
+  • Base de datos: 1 semana
+  • Seguridad: 1-2 semanas
+  • Pagos: 1-2 semanas
+  • Despliegue: 1 semana
+  • Monitoreo: 1 semana
+  • TOTAL: 8-11 semanas
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🎯 PRÓXIMOS PASOS INMEDIATOS                              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+🚀 ACCIONES INMEDIATAS:
+  1. Crear carpeta 'backend' en el proyecto
+  2. Inicializar proyecto Node.js
+  3. Instalar dependencias básicas
+  4. Configurar estructura de carpetas
+  5. Crear archivo package.json
+  6. Configurar .env básico
+  7. Crear server.js inicial
+
+📋 CHECKLIST DE PREPARACIÓN:
+  ✅ Frontend completado
+  🔄 Configurar entorno de desarrollo
+  🔄 Crear cuenta en servicio de hosting
+  🔄 Configurar base de datos MySQL
+  🔄 Configurar cuenta MercadoPago
+  🔄 Configurar dominio
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              🎯 ¡LISTO PARA EL BACKEND! 🎯                  ║
+║                                                               ║
+║     Con este mapa tienes todo lo necesario para crear        ║
+║     una tienda online completa y profesional.               x
+║                                                               ║
+║              ¡A IMPLEMENTAR! 🚀                              ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
