@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API FanKit</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API FanKit</h1>
+    
+    <div class="test-section">
+        <h3>1. Test de conexión (sin token)</h3>
+        <button onclick="testConnection()">Probar Conexión</button>
+        <div id="connection-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Registro de usuario</h3>
+        <input type="email" id="email" placeholder="Email" style="margin: 5px; padding: 5px;">
+        <input type="password" id="password" placeholder="Contraseña" style="margin: 5px; padding: 5px;">
+        <input type="text" id="firstName" placeholder="Nombre" style="margin: 5px; padding: 5px;">
+        <input type="text" id="lastName" placeholder="Apellido" style="margin: 5px; padding: 5px;">
+        <br>
+        <button onclick="testRegister()">Registrar Usuario</button>
+        <div id="register-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Login de usuario</h3>
+        <input type="email" id="loginEmail" placeholder="Email" style="margin: 5px; padding: 5px;">
+        <input type="password" id="loginPassword" placeholder="Contraseña" style="margin: 5px; padding: 5px;">
+        <br>
+        <button onclick="testLogin()">Login</button>
+        <div id="login-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Obtener productos</h3>
+        <button onclick="testGetProducts()">Obtener Todos los Productos</button>
+        <div id="products-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>5. Buscar productos</h3>
+        <input type="text" id="searchTerm" placeholder="Término de búsqueda" style="margin: 5px; padding: 5px;">
+        <button onclick="testSearchProducts()">Buscar Productos</button>
+        <div id="search-result" class="result"></div>
+    </div>
+
+    <script>
+        let currentToken = null;
+        
+        async function testConnection() {
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/profile');
+                const data = await response.json();
+                document.getElementById('connection-result').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Response:</strong> <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('connection-result').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testRegister() {
+            const userData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                document.getElementById('register-result').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Response:</strong> <pre>${JSON.stringify(data, null, 2)}</pre>`;
+                
+                if (data.token) {
+                    currentToken = data.token;
+                    alert('¡Usuario registrado! Token guardado para pruebas.');
+                }
+            } catch (error) {
+                document.getElementById('register-result').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testLogin() {
+            const loginData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                document.getElementById('login-result').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Response:</strong> <pre>${JSON.stringify(data, null, 2)}</pre>`;
+                
+                if (data.token) {
+                    currentToken = data.token;
+                    alert('¡Login exitoso! Token guardado para pruebas.');
+                }
+            } catch (error) {
+                document.getElementById('login-result').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testGetProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/products');
+                const data = await response.json();
+                document.getElementById('products-result').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Total productos:</strong> ${data.products ? data.products.length : 0}<br>
+                     <strong>Response:</strong> <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('products-result').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testSearchProducts() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            if (!searchTerm) {
+                alert('Por favor ingresa un término de búsqueda');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/search?q=${encodeURIComponent(searchTerm)}`);
+                const data = await response.json();
+                document.getElementById('search-result').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Término buscado:</strong> ${searchTerm}<br>
+                     <strong>Productos encontrados:</strong> ${data.products ? data.products.length : 0}<br>
+                     <strong>Response:</strong> <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('search-result').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
