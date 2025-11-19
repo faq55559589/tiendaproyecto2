@@ -1,0 +1,270 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║        📁 REORGANIZACIÓN DEL PROYECTO GOLAZOSTORE 📁         ║
+║                                                               ║
+║              Actualizado: 16 de Noviembre 2025                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═════════════════════════════════════════════════════════════════
+  📊 NUEVA ESTRUCTURA DE CARPETAS
+═════════════════════════════════════════════════════════════════
+
+tienda/
+│
+├── 📄 index.html                    ← Página principal (RAÍZ)
+│
+├── 📁 pages/                        ← Páginas secundarias
+│   ├── catalogo.html
+│   ├── contacto.html
+│   ├── retros.html
+│   ├── login.html
+│   └── registro.html
+│
+├── 📁 css/                          ← Estilos
+│   └── style.css
+│
+├── 📁 js/                           ← JavaScript
+│   └── main.js
+│
+├── 📁 assets/                       ← Recursos
+│   └── images/
+│       └── logo.png
+│
+├── 📁 docs/                         ← Documentación
+│   ├── GUIA_COMPLETA_PROYECTO.txt
+│   └── CAMBIOS_BRANDING_GOLAZOSTORE.txt
+│
+└── 📁 .git/                         ← Control de versiones
+
+
+═════════════════════════════════════════════════════════════════
+  🔗 RUTAS CORRECTAS EN CADA ARCHIVO
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ INDEX.HTML (en la raíz)                                     │
+└─────────────────────────────────────────────────────────────┘
+
+CSS:        href="css/style.css"
+JavaScript: src="js/main.js"
+Logo:       src="assets/images/logo.png"
+Favicon:    href="assets/images/logo.png"
+
+Enlaces a otras páginas:
+  • Catálogo:   href="pages/catalogo.html"
+  • Contacto:   href="pages/contacto.html"
+  • Retros:     href="pages/retros.html"
+  • Login:      href="pages/login.html"
+  • Registro:   href="pages/registro.html"
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ ARCHIVOS EN pages/ (catalogo, contacto, login, etc.)       │
+└─────────────────────────────────────────────────────────────┘
+
+CSS:        href="../css/style.css"
+JavaScript: src="../js/main.js"
+Logo:       src="../assets/images/logo.png"
+Favicon:    href="../assets/images/logo.png"
+
+Enlace a Home:
+  • Inicio:     href="../index.html"
+
+Enlaces entre páginas de pages/:
+  • Catálogo:   href="catalogo.html"
+  • Contacto:   href="contacto.html"
+  • Retros:     href="retros.html"
+  • Login:      href="login.html"
+  • Registro:   href="registro.html"
+
+
+═════════════════════════════════════════════════════════════════
+  ✅ CAMBIOS REALIZADOS
+═════════════════════════════════════════════════════════════════
+
+1. ✓ Eliminada carpeta duplicada "tienda/" con archivos obsoletos
+2. ✓ Creada carpeta "pages/" para páginas secundarias
+3. ✓ Creada carpeta "css/" para estilos
+4. ✓ Creada carpeta "docs/" para documentación
+5. ✓ Movidos archivos HTML secundarios a pages/
+6. ✓ Movido style.css a css/
+7. ✓ Movidos archivos .txt a docs/
+8. ✓ Actualizado index.html con nuevas rutas
+9. ✓ Actualizado catalogo.html (parcialmente)
+
+
+═════════════════════════════════════════════════════════════════
+  📝 ARCHIVOS QUE NECESITAN ACTUALIZACIÓN MANUAL
+═════════════════════════════════════════════════════════════════
+
+Debido a que algunos archivos están abiertos en el editor, 
+necesitas actualizar manualmente las rutas en:
+
+📄 pages/contacto.html
+📄 pages/retros.html
+📄 pages/login.html
+📄 pages/registro.html
+
+
+PLANTILLA DE ACTUALIZACIÓN:
+─────────────────────────────────────────────────────────────
+
+En el <head> de cada archivo en pages/:
+
+CAMBIAR:
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/images/logo.png">
+
+POR:
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="../assets/images/logo.png">
+
+
+En el navbar (logo y enlace a inicio):
+
+CAMBIAR:
+    <a href="index.html">
+        <img src="assets/images/logo.png">
+    </a>
+
+POR:
+    <a href="../index.html">
+        <img src="../assets/images/logo.png">
+    </a>
+
+
+En el footer y otros elementos:
+
+CAMBIAR:
+    src="assets/images/...
+    href="assets/images/...
+
+POR:
+    src="../assets/images/...
+    href="../assets/images/...
+
+
+Al final del archivo (scripts):
+
+CAMBIAR:
+    <script src="js/main.js"></script>
+
+POR:
+    <script src="../js/main.js"></script>
+
+
+═════════════════════════════════════════════════════════════════
+  🔍 VERIFICACIÓN RÁPIDA
+═════════════════════════════════════════════════════════════════
+
+Abre el sitio con Live Server y verifica:
+
+□ index.html carga correctamente con estilos
+□ Logo visible en index.html
+□ Click en "Catálogo" → abre pages/catalogo.html
+□ Click en "Login" → abre pages/login.html
+□ Click en "Registro" → abre pages/registro.html
+□ Click en "Contacto" → abre pages/contacto.html
+□ En cualquier página de pages/, click en logo → vuelve a index
+□ Estilos se cargan en todas las páginas
+□ JavaScript funciona en todas las páginas
+
+
+═════════════════════════════════════════════════════════════════
+  💡 VENTAJAS DE LA NUEVA ESTRUCTURA
+═════════════════════════════════════════════════════════════════
+
+✓ ORGANIZACIÓN:
+  • Archivos separados por tipo (HTML, CSS, JS, Docs)
+  • Fácil de navegar y mantener
+  • Estándar de la industria
+
+✓ ESCALABILIDAD:
+  • Fácil agregar nuevas páginas en pages/
+  • Fácil agregar nuevos estilos en css/
+  • Fácil agregar nuevas funciones JS en js/
+
+✓ CLARIDAD:
+  • index.html en raíz (estándar web)
+  • Documentación separada en docs/
+  • Assets (imágenes, etc.) en su propia carpeta
+
+✓ PROFESIONALIDAD:
+  • Estructura reconocible para cualquier desarrollador
+  • Preparado para despliegue en servidor
+  • Git ignora correctamente node_modules, .env, etc.
+
+
+═════════════════════════════════════════════════════════════════
+  🚀 PRÓXIMOS PASOS RECOMENDADOS
+═════════════════════════════════════════════════════════════════
+
+1. Cierra todos los archivos HTML en el editor
+
+2. Ejecuta este comando en PowerShell para actualizar todas
+   las rutas automáticamente:
+
+   foreach ($f in Get-ChildItem pages\*.html) {
+       $c = Get-Content $f.FullName -Raw
+       $c = $c -replace 'href="style\.css"', 'href="../css/style.css"'
+       $c = $c -replace 'href="assets/', 'href="../assets/'
+       $c = $c -replace 'src="assets/', 'src="../assets/'
+       $c = $c -replace 'href="index\.html"', 'href="../index.html"'
+       $c = $c -replace 'src="js/', 'src="../js/'
+       $c | Set-Content $f.FullName -NoNewline
+   }
+
+3. Abre index.html con Live Server
+
+4. Prueba todos los enlaces de navegación
+
+5. Verifica que los estilos se carguen correctamente
+
+
+═════════════════════════════════════════════════════════════════
+  📋 CHECKLIST DE RUTAS POR ARCHIVO
+═════════════════════════════════════════════════════════════════
+
+✅ index.html (RAÍZ)
+   ✓ CSS: css/style.css
+   ✓ JS: js/main.js
+   ✓ Logo: assets/images/logo.png
+   ✓ Enlaces: pages/*.html
+
+⚠️ pages/catalogo.html
+   ⚠ CSS: Actualizar a ../css/style.css
+   ⚠ Logo: Actualizar a ../assets/images/logo.png
+   ⚠ Inicio: Actualizar a ../index.html
+   ⚠ JS: Actualizar a ../js/main.js
+
+⚠️ pages/contacto.html
+   ⚠ CSS: Actualizar a ../css/style.css
+   ⚠ Logo: Actualizar a ../assets/images/logo.png
+   ⚠ Inicio: Actualizar a ../index.html
+   ⚠ JS: Actualizar a ../js/main.js
+
+⚠️ pages/retros.html
+   ⚠ CSS: Actualizar a ../css/style.css
+   ⚠ Logo: Actualizar a ../assets/images/logo.png
+   ⚠ Inicio: Actualizar a ../index.html
+   ⚠ JS: Actualizar a ../js/main.js
+
+⚠️ pages/login.html
+   ⚠ CSS: Actualizar a ../css/style.css
+   ⚠ Logo: Actualizar a ../assets/images/logo.png
+   ⚠ Inicio: Actualizar a ../index.html
+   ⚠ JS: Actualizar a ../js/main.js
+
+⚠️ pages/registro.html
+   ⚠ CSS: Actualizar a ../css/style.css
+   ⚠ Logo: Actualizar a ../assets/images/logo.png
+   ⚠ Inicio: Actualizar a ../index.html
+   ⚠ JS: Actualizar a ../js/main.js
+
+
+═══════════════════════════════════════════════════════════════════
+  FIN DEL DOCUMENTO
+  Usa este documento como referencia para completar la migración
+═══════════════════════════════════════════════════════════════════

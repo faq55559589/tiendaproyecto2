@@ -1,13 +1,8 @@
-# ===========================================
-# FANKIT - PROYECTO E-COMMERCE
-# ===========================================
+# ===================================
+# GITIGNORE - GOLAZOSTORE PROJECT
+# ===================================
 
-# ===== ARCHIVOS DEL SISTEMA =====
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ===== NODE.JS =====
+# ===== NODE & NPM =====
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -15,34 +10,79 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 
-# ===== ENTORNOS VIRTUALES =====
+# ===== VARIABLES DE ENTORNO =====
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.development
+.env.production
+.env.test
+*.env
+
+# ===== ARCHIVOS DE SISTEMA =====
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# ===== IDEs Y EDITORES =====
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains (WebStorm, PHPStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===== UPLOADS Y ARCHIVOS TEMPORALES =====
+backend/uploads/*
+!backend/uploads/.gitkeep
+uploads/*
+!uploads/.gitkeep
+temp/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
 
 # ===== LOGS =====
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# ===== ARCHIVOS TEMPORALES =====
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
+# ===== BASE DE DATOS =====
+*.sqlite
+*.sqlite3
+*.db
 
-# ===== IDE/EDITORES =====
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# ===== BACKUP FILES =====
-*.bak
-*.backup
-*.old
+# ===== DEPENDENCIAS Y BUILD =====
+dist/
+build/
+coverage/
+.cache/
 
 # ===== ARCHIVOS DE CONFIGURACIÓN SENSIBLES =====
 config/database.js
@@ -50,28 +90,26 @@ config/secrets.js
 *.key
 *.pem
 
-# ===== CARPETAS DE BUILD =====
-dist/
-build/
-out/
+# ===== ARCHIVOS ESPECÍFICOS DEL PROYECTO =====
+# PDFs de documentación privada
+*.pdf
 
-# ===== CARPETAS DE TESTING =====
+# Notas personales
+SQLROOT.txt
+mejoras.txt
+notas-privadas.txt
+
+# Carpetas obsoletas
+ee/
+tienda-old/
+
+# ===== TESTING =====
 coverage/
 .nyc_output/
+*.lcov
 
-# ===== ARCHIVOS DE BASE DE DATOS =====
-*.sqlite
-*.db
-database.sql
-
-# ===== ARCHIVOS DE UPLOAD =====
-uploads/
-public/uploads/
-
-# ===== ARCHIVOS DE CACHE =====
-.cache/
-.parcel-cache/
-
-# ===== ARCHIVOS DE DEPLOYMENT =====
-.vercel/
-.netlify/
+# ===== OTROS =====
+*.zip
+*.rar
+*.tar.gz
+*.7z

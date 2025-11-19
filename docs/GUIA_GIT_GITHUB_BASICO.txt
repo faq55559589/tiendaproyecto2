@@ -1,0 +1,559 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║         📚 GUÍA BÁSICA DE COMANDOS GIT Y GITHUB 📚           ║
+║                                                               ║
+║              Para Principiantes y Referencia Rápida          ║
+║              Actualizado: 19 de Noviembre 2025                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═════════════════════════════════════════════════════════════════
+  📖 ¿QUÉ ES GIT Y GITHUB?
+═════════════════════════════════════════════════════════════════
+
+GIT:
+  • Sistema de control de versiones (VCS)
+  • Te permite guardar "fotos" (commits) de tu código
+  • Permite trabajar en equipo sin perder cambios
+  • Funciona en tu computadora (local)
+
+GITHUB:
+  • Plataforma en la nube para alojar proyectos Git
+  • Permite compartir código con otros
+  • Funciona como respaldo en internet
+  • Es como Google Drive, pero para programadores
+
+
+═════════════════════════════════════════════════════════════════
+  🚀 COMANDOS BÁSICOS - LOS QUE MÁS VAS A USAR
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ 1. VERIFICAR EL ESTADO DE TU PROYECTO                       │
+└─────────────────────────────────────────────────────────────┘
+
+git status
+
+  ✓ Muestra qué archivos cambiaron
+  ✓ Muestra qué archivos están listos para commit
+  ✓ Muestra en qué rama estás
+
+  Ejemplo de salida:
+    On branch main
+    Changes not staged for commit:
+      modified:   index.html
+      modified:   style.css
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ 2. AGREGAR ARCHIVOS AL "ÁREA DE PREPARACIÓN"                │
+└─────────────────────────────────────────────────────────────┘
+
+# Agregar UN archivo específico
+git add archivo.html
+
+# Agregar TODOS los archivos modificados
+git add .
+
+# Agregar TODOS los archivos (incluso eliminados)
+git add -A
+
+  ⚠️ Esto NO guarda los cambios todavía, solo los "prepara"
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ 3. GUARDAR LOS CAMBIOS (COMMIT)                             │
+└─────────────────────────────────────────────────────────────┘
+
+git commit -m "Descripción de lo que hiciste"
+
+  Ejemplos de buenos mensajes:
+    ✓ git commit -m "Agregar página de contacto"
+    ✓ git commit -m "Corregir error en el formulario"
+    ✓ git commit -m "Actualizar estilos del navbar"
+
+  Ejemplos de MALOS mensajes:
+    ✗ git commit -m "cambios"
+    ✗ git commit -m "asdf"
+    ✗ git commit -m "fix"
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ 4. SUBIR CAMBIOS A GITHUB (PUSH)                            │
+└─────────────────────────────────────────────────────────────┘
+
+git push
+
+  ✓ Sube tus commits al repositorio en GitHub
+  ✓ Ahora otros pueden ver tus cambios
+  ✓ Tu código está respaldado en la nube
+
+  Si es la primera vez:
+    git push -u origin main
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ 5. DESCARGAR CAMBIOS DE GITHUB (PULL)                       │
+└─────────────────────────────────────────────────────────────┘
+
+git pull
+
+  ✓ Descarga los cambios que otros hicieron
+  ✓ Actualiza tu proyecto local
+  ✓ Úsalo antes de empezar a trabajar
+
+
+═════════════════════════════════════════════════════════════════
+  🔄 FLUJO DE TRABAJO DIARIO (COPY-PASTE)
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ MAÑANA - AL EMPEZAR A TRABAJAR                              │
+└─────────────────────────────────────────────────────────────┘
+
+1. Abrir PowerShell en la carpeta de tu proyecto
+2. Descargar cambios nuevos:
+   
+   git pull
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ TARDE/NOCHE - AL TERMINAR DE TRABAJAR                       │
+└─────────────────────────────────────────────────────────────┘
+
+1. Ver qué cambié:
+   git status
+
+2. Agregar todos los archivos:
+   git add -A
+
+3. Guardar cambios con mensaje:
+   git commit -m "Descripción de lo que hice hoy"
+
+4. Subir a GitHub:
+   git push
+
+
+═════════════════════════════════════════════════════════════════
+  📝 COMANDOS INTERMEDIOS - ÚTILES CUANDO YA DOMINAS LO BÁSICO
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ VER EL HISTORIAL DE CAMBIOS                                 │
+└─────────────────────────────────────────────────────────────┘
+
+# Ver todos los commits
+git log
+
+# Ver commits de forma compacta
+git log --oneline
+
+# Ver últimos 5 commits
+git log -5 --oneline
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ VER QUÉ CAMBIÓ EN LOS ARCHIVOS                              │
+└─────────────────────────────────────────────────────────────┘
+
+# Ver diferencias en archivos no commiteados
+git diff
+
+# Ver diferencias en UN archivo específico
+git diff archivo.html
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ DESHACER CAMBIOS (¡CUIDADO!)                                │
+└─────────────────────────────────────────────────────────────┘
+
+# Descartar cambios en UN archivo (volver a la última versión)
+git checkout -- archivo.html
+
+# Descartar TODOS los cambios no guardados
+git checkout -- .
+
+# Quitar archivos del área de preparación (unstage)
+git reset archivo.html
+
+# Volver al commit anterior (pero mantener archivos)
+git reset --soft HEAD~1
+
+  ⚠️ ¡PELIGROSO! Usa con cuidado
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ RAMAS (BRANCHES) - TRABAJAR EN PARALELO                     │
+└─────────────────────────────────────────────────────────────┘
+
+# Ver todas las ramas
+git branch
+
+# Crear una nueva rama
+git branch nueva-funcionalidad
+
+# Cambiar a otra rama
+git checkout nueva-funcionalidad
+
+# Crear Y cambiar a una rama en un solo comando
+git checkout -b nueva-funcionalidad
+
+# Volver a la rama principal
+git checkout main
+
+# Combinar rama en main
+git checkout main
+git merge nueva-funcionalidad
+
+
+═════════════════════════════════════════════════════════════════
+  🆕 COMANDOS PARA COMENZAR UN PROYECTO NUEVO
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 1: CREAR UN PROYECTO DESDE CERO                      │
+└─────────────────────────────────────────────────────────────┘
+
+1. Crear carpeta del proyecto:
+   mkdir mi-proyecto
+   cd mi-proyecto
+
+2. Inicializar Git:
+   git init
+
+3. Crear un README:
+   echo "# Mi Proyecto" > README.md
+
+4. Hacer primer commit:
+   git add .
+   git commit -m "Primer commit"
+
+5. Conectar con GitHub:
+   git remote add origin https://github.com/tu-usuario/tu-repo.git
+   git push -u origin main
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 2: CLONAR UN PROYECTO EXISTENTE                      │
+└─────────────────────────────────────────────────────────────┘
+
+git clone https://github.com/usuario/proyecto.git
+cd proyecto
+
+
+═════════════════════════════════════════════════════════════════
+  🔧 CONFIGURACIÓN INICIAL (SOLO LA PRIMERA VEZ)
+═════════════════════════════════════════════════════════════════
+
+# Configurar tu nombre (aparecerá en los commits)
+git config --global user.name "Tu Nombre"
+
+# Configurar tu email (debe ser el mismo de GitHub)
+git config --global user.email "tu@email.com"
+
+# Ver tu configuración actual
+git config --list
+
+
+═════════════════════════════════════════════════════════════════
+  🌐 TRABAJAR CON REPOSITORIOS REMOTOS
+═════════════════════════════════════════════════════════════════
+
+# Ver qué repositorios remotos tienes configurados
+git remote -v
+
+# Agregar un repositorio remoto
+git remote add origin https://github.com/usuario/repo.git
+
+# Cambiar la URL del repositorio remoto
+git remote set-url origin https://github.com/usuario/nuevo-repo.git
+
+# Eliminar un repositorio remoto
+git remote remove origin
+
+
+═════════════════════════════════════════════════════════════════
+  ❌ RESOLVER PROBLEMAS COMUNES
+═════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: "Your branch is behind 'origin/main'"             │
+└─────────────────────────────────────────────────────────────┘
+
+SOLUCIÓN:
+  git pull
+
+  Si hay conflictos, Git te pedirá que los resuelvas manualmente
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: "Permission denied (publickey)"                    │
+└─────────────────────────────────────────────────────────────┘
+
+CAUSA: No tienes configurada una SSH key
+
+SOLUCIÓN:
+  Usa HTTPS en lugar de SSH:
+  
+  git remote set-url origin https://github.com/usuario/repo.git
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: Olvidé hacer commit antes de pull                 │
+└─────────────────────────────────────────────────────────────┘
+
+SOLUCIÓN:
+  1. Guardar cambios temporalmente:
+     git stash
+
+  2. Hacer pull:
+     git pull
+
+  3. Recuperar cambios guardados:
+     git stash pop
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: Subí archivos que no quería (ej. node_modules)    │
+└─────────────────────────────────────────────────────────────┘
+
+SOLUCIÓN:
+  1. Crear o editar .gitignore:
+     echo "node_modules/" >> .gitignore
+
+  2. Quitar del repositorio (pero mantener en local):
+     git rm --cached -r node_modules
+
+  3. Commit y push:
+     git add .gitignore
+     git commit -m "Agregar node_modules al gitignore"
+     git push
+
+
+═════════════════════════════════════════════════════════════════
+  📋 .GITIGNORE - ARCHIVOS QUE GIT DEBE IGNORAR
+═════════════════════════════════════════════════════════════════
+
+Crea un archivo llamado .gitignore en la raíz de tu proyecto:
+
+# Dependencias
+node_modules/
+vendor/
+
+# Variables de entorno
+.env
+.env.local
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Carpetas de build
+dist/
+build/
+out/
+
+# Logs
+*.log
+logs/
+
+# IDEs
+.vscode/
+.idea/
+
+
+═════════════════════════════════════════════════════════════════
+  🎯 BUENAS PRÁCTICAS
+═════════════════════════════════════════════════════════════════
+
+✅ HAZ COMMITS PEQUEÑOS Y FRECUENTES
+   En lugar de un commit gigante al final del día, haz varios
+   commits pequeños cada vez que termines una tarea.
+
+✅ ESCRIBE MENSAJES DE COMMIT CLAROS
+   Bueno: "Agregar validación al formulario de contacto"
+   Malo:  "cambios"
+
+✅ USA git pull ANTES DE EMPEZAR A TRABAJAR
+   Siempre descarga los últimos cambios antes de hacer
+   modificaciones.
+
+✅ NO SUBAS ARCHIVOS SENSIBLES
+   Nunca hagas commit de contraseñas, API keys, o archivos .env
+
+✅ USA .gitignore DESDE EL INICIO
+   Evita subir node_modules, archivos temporales, etc.
+
+✅ HAZ git push AL MENOS UNA VEZ AL DÍA
+   No dejes tu trabajo solo en local, súbelo a GitHub para
+   tener respaldo.
+
+
+═════════════════════════════════════════════════════════════════
+  🚨 COMANDOS PELIGROSOS (¡ÚSALOS CON CUIDADO!)
+═════════════════════════════════════════════════════════════════
+
+⚠️ Estos comandos pueden BORRAR tu trabajo:
+
+# Forzar push (sobrescribe historial en GitHub)
+git push --force
+
+# Borrar todos los cambios no guardados
+git reset --hard HEAD
+
+# Borrar rama
+git branch -D nombre-rama
+
+  🛡️ Si no estás seguro, haz una copia de tu carpeta antes
+
+
+═════════════════════════════════════════════════════════════════
+  📚 RECURSOS PARA APRENDER MÁS
+═════════════════════════════════════════════════════════════════
+
+Documentación Oficial:
+  • https://git-scm.com/doc
+
+Tutoriales Interactivos:
+  • https://learngitbranching.js.org/
+  • https://try.github.io/
+
+Cheat Sheets (Hojas de Referencia):
+  • https://education.github.com/git-cheat-sheet-education.pdf
+
+Videos en YouTube:
+  • "Git y GitHub desde cero" - Fazt
+  • "Git Tutorial for Beginners" - Programming with Mosh
+
+
+═════════════════════════════════════════════════════════════════
+  🎓 GLOSARIO - TÉRMINOS IMPORTANTES
+═════════════════════════════════════════════════════════════════
+
+REPOSITORIO (REPO):
+  Carpeta de tu proyecto con Git inicializado
+
+COMMIT:
+  "Foto" o "checkpoint" de tu código en un momento específico
+
+STAGING AREA:
+  Área donde preparas archivos antes de hacer commit
+
+BRANCH (RAMA):
+  Línea paralela de desarrollo
+
+MERGE:
+  Combinar dos ramas
+
+PULL:
+  Descargar cambios de GitHub a tu computadora
+
+PUSH:
+  Subir cambios de tu computadora a GitHub
+
+CLONE:
+  Copiar un repositorio de GitHub a tu computadora
+
+FORK:
+  Hacer tu propia copia de un repositorio de otro usuario
+
+PULL REQUEST (PR):
+  Solicitar que tus cambios se incluyan en el proyecto original
+
+REMOTE:
+  Repositorio alojado en GitHub (en la nube)
+
+LOCAL:
+  Repositorio en tu computadora
+
+HEAD:
+  Referencia al commit actual donde estás trabajando
+
+ORIGIN:
+  Nombre por defecto del repositorio remoto
+
+
+═════════════════════════════════════════════════════════════════
+  🧪 EJERCICIO PRÁCTICO - PRUEBA ESTOS COMANDOS
+═════════════════════════════════════════════════════════════════
+
+1. Crea una carpeta de prueba:
+   mkdir prueba-git
+   cd prueba-git
+
+2. Inicializa Git:
+   git init
+
+3. Crea un archivo:
+   echo "Hola Git" > archivo.txt
+
+4. Ver estado:
+   git status
+
+5. Agregar archivo:
+   git add archivo.txt
+
+6. Hacer commit:
+   git commit -m "Mi primer commit"
+
+7. Ver historial:
+   git log --oneline
+
+8. Modificar archivo:
+   echo "Nueva línea" >> archivo.txt
+
+9. Ver diferencias:
+   git diff
+
+10. Hacer commit de los cambios:
+    git add archivo.txt
+    git commit -m "Agregar nueva línea"
+
+11. Ver historial completo:
+    git log
+
+
+═════════════════════════════════════════════════════════════════
+  💡 TIPS RÁPIDOS
+═════════════════════════════════════════════════════════════════
+
+• Usa git status TODO EL TIEMPO
+  Es el comando más importante. Úsalo antes y después de
+  cualquier otro comando para saber qué está pasando.
+
+• Lee los mensajes de error
+  Git te dice exactamente qué hacer cuando algo sale mal.
+
+• No le tengas miedo a Git
+  Siempre puedes deshacer cambios (casi siempre).
+
+• Practica en un proyecto de prueba
+  Antes de usar Git en tu proyecto real, practica los comandos
+  en una carpeta de prueba.
+
+• Haz backups manuales
+  Mientras aprendes, copia tu proyecto manualmente de vez en
+  cuando por seguridad.
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              🎉 ¡FELICIDADES! 🎉                             ║
+║                                                               ║
+║    Ya tienes todo lo necesario para empezar a usar Git       ║
+║    y GitHub en tus proyectos. ¡Practica y no tengas          ║
+║    miedo de experimentar!                                    ║
+║                                                               ║
+║    Recuerda: Todos los programadores usan Git a diario,      ║
+║    así que vale la pena aprenderlo bien.                     ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+───────────────────────────────────────────────────────────────
+ FIN DEL DOCUMENTO
+ Fecha: 19 de Noviembre de 2025
+ Guarda este archivo para consultarlo cuando lo necesites
+───────────────────────────────────────────────────────────────
