@@ -16,8 +16,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1a1a1a;">
             <div class="container-fluid">
                 <a class="navbar-brand d-flex align-items-center" href="index.html">
-                    <img src="assets/images/logo.png" alt="GolazoStore" height="50" class="me-2">
-                    <span class="fs-5 fw-bold" style="color: #dc3545;">GolazoStore</span>
+                    <img src="assets/images/logo.png" alt="GolazoStore" height="55" class="me-2">
+                    <span class="fs-4 fw-bold" style="color: #dc3545;">GolazoStore</span>
                 </a>
     
                 <button class="btn btn-outline-danger d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories" aria-controls="offcanvasCategories">
@@ -31,13 +31,13 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" href="catalogo.html"><i class="fas fa-store"></i> Catálogo</a>
+                            <a class="nav-link active" href="catalogo.html">Catálogo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="retros.html"><i class="fas fa-history"></i> Retro</a>
+                            <a class="nav-link" href="retros.html">Retro</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a>
+                            <a class="nav-link" href="contacto.html">Contacto</a>
                         </li>
                     </ul>
     
@@ -68,115 +68,150 @@
         
         <section class="catalog-section py-5">
             <div class="container">
-                <h2 class="text-center mb-4" id="catalogTitle">Nuestro Catálogo</h2>
-                <div id="searchResults" class="alert alert-info" style="display: none;">
-                    <i class="fas fa-search me-2"></i>
-                    <strong>Resultados de búsqueda para:</strong> <span id="searchTerm"></span>
-                    <button type="button" class="btn-close float-end" onclick="clearSearch()"></button>
-                </div>
+                <h2 class="text-center mb-4">Nuestro Catálogo</h2>
     
                 <div class="row">
     
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card h-100">
-                                <a href="producto.html">
-                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+1" class="card-img-top" alt="...">
-                                </a>
-                                <div class="card-body text-center">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+1" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
                                     <h5 class="card-title">Camiseta Selección Local</h5>
-                                    <p class="card-text fw-bold">$89.99</p>
-                                    <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                                </div>
-                            </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+2" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Club Visitante</h5>
-                                <p class="card-text fw-bold">$75.50</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+3" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Retro Histórica</h5>
-                                <p class="card-text fw-bold">$110.00</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+4" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Edición Especial</h5>
-                                <p class="card-text fw-bold">$95.00</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+5" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Arquero Neón</h5>
-                                <p class="card-text fw-bold">$85.00</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+6" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Entrenamiento</h5>
-                                <p class="card-text fw-bold">$60.00</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+7" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Mujer Local</h5>
+                                </a>
                                 <p class="card-text fw-bold">$89.99</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
                             </div>
                         </div>
                     </div>
     
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                         <div class="card h-100">
-                            <a href="producto.html">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+8" class="card-img-top" alt="...">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+2" class="card-img-top" alt="..." style="cursor: pointer;">
                             </a>
                             <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Niño 2025</h5>
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Club Visitante</h5>
+                                </a>
+                                <p class="card-text fw-bold">$75.50</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+3" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Retro Histórica</h5>
+                                </a>
+                                <p class="card-text fw-bold">$110.00</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+4" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Edición Especial</h5>
+                                </a>
+                                <p class="card-text fw-bold">$95.00</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+5" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Arquero Neón</h5>
+                                </a>
+                                <p class="card-text fw-bold">$85.00</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+6" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Entrenamiento</h5>
+                                </a>
+                                <p class="card-text fw-bold">$60.00</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+7" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Mujer Local</h5>
+                                </a>
+                                <p class="card-text fw-bold">$89.99</p>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="producto.html" class="text-decoration-none">
+                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+8" class="card-img-top" alt="..." style="cursor: pointer;">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="producto.html" class="text-decoration-none text-dark">
+                                    <h5 class="card-title">Camiseta Niño 2025</h5>
+                                </a>
                                 <p class="card-text fw-bold">$70.00</p>
-                                <a href="producto.html" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
+                                <a href="producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                                <a href="#" class="btn btn-danger btn-sm mb-2"><i class="fas fa-cart-plus"></i> Añadir</a>
                             </div>
                         </div>
                     </div>
@@ -253,6 +288,5 @@
         </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/main.js"></script>
-    <script src="js/catalogo.js"></script>
 </body>
 </html>
