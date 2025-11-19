@@ -1,0 +1,448 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║          🚀 ROADMAP - PRÓXIMAS FASES GOLAZOSTORE 🚀         ║
+║                                                               ║
+║              Plan de Trabajo para las Fases 4-7               ║
+║              Actualizado: 19 de Noviembre 2025                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═════════════════════════════════════════════════════════════════
+  📊 ESTADO ACTUAL DEL PROYECTO
+═════════════════════════════════════════════════════════════════
+
+✅ FASE 1-3: FRONTEND COMPLETO
+   • Diseño GolazoStore implementado
+   • Hero section con animaciones
+   • Páginas: index, catálogo, producto, login, registro, contacto
+   • Carrito básico con localStorage
+   • Navbar responsive
+   • Footer con redes sociales
+   • Efectos hover y animaciones CSS
+
+✅ ESTRUCTURA Y REPOSITORIO
+   • Backend preparado (estructura creada)
+   • Base de datos MySQL (schema listo)
+   • Git configurado correctamente
+   • Documentación organizada
+
+🔄 POR HACER: FASES 4-7
+
+
+═════════════════════════════════════════════════════════════════
+  🎯 FASE 4: CONECTAR FRONTEND CON BACKEND
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Que el catálogo muestre productos reales desde MySQL
+
+DURACIÓN ESTIMADA: 1-2 semanas
+DIFICULTAD: ⭐⭐⭐ (Media)
+
+┌─────────────────────────────────────────────────────────────┐
+│ TAREAS ESPECÍFICAS                                          │
+└─────────────────────────────────────────────────────────────┘
+
+1. CONFIGURAR BACKEND
+   □ cd backend
+   □ npm install (instalar dependencias)
+   □ Crear archivo .env con credenciales MySQL
+   □ Probar: npm start → servidor en http://localhost:3000
+
+2. CONFIGURAR BASE DE DATOS
+   □ Abrir MySQL Workbench
+   □ Crear base de datos: CREATE DATABASE fankit_db;
+   □ Importar schema: mysql -u root -p fankit_db < backend/database/fankit_db.sql
+   □ Insertar productos de prueba (5-10 camisetas)
+
+3. PROBAR ENDPOINTS DE API
+   □ GET http://localhost:3000/api/products → Debe devolver productos
+   □ GET http://localhost:3000/api/products/1 → Debe devolver producto 1
+   □ Usar Postman o Thunder Client para probar
+
+4. CONECTAR CATÁLOGO CON API
+   □ Abrir frontend/js/catalogo.js
+   □ Cambiar productos hardcodeados por fetch() a la API
+   □ Código ejemplo:
+     fetch('http://localhost:3000/api/products')
+       .then(res => res.json())
+       .then(products => renderProducts(products))
+
+5. ACTUALIZAR PÁGINA DE PRODUCTO
+   □ frontend/pages/producto.html
+   □ Cargar datos dinámicamente según ID del producto
+   □ URL: producto.html?id=1
+
+┌─────────────────────────────────────────────────────────────┐
+│ ARCHIVOS A MODIFICAR                                        │
+└─────────────────────────────────────────────────────────────┘
+
+  backend/.env (crear)
+  frontend/js/catalogo.js (modificar)
+  frontend/js/product.js (modificar)
+  frontend/pages/catalogo.html (opcional: agregar loading spinner)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ¿CÓMO SABER QUE TERMINASTE?                                 │
+└─────────────────────────────────────────────────────────────┘
+
+  ✅ El catálogo muestra productos desde MySQL (no hardcodeados)
+  ✅ Al hacer click en un producto, muestra sus datos reales
+  ✅ Si agregas un producto en MySQL, aparece en el catálogo
+  ✅ El servidor backend corre sin errores
+
+
+═════════════════════════════════════════════════════════════════
+  🔐 FASE 5: SISTEMA DE AUTENTICACIÓN (LOGIN/REGISTRO)
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Usuarios puedan registrarse e iniciar sesión
+
+DURACIÓN ESTIMADA: 1 semana
+DIFICULTAD: ⭐⭐⭐⭐ (Media-Alta)
+
+┌─────────────────────────────────────────────────────────────┐
+│ TAREAS ESPECÍFICAS                                          │
+└─────────────────────────────────────────────────────────────┘
+
+1. CONFIGURAR JWT EN BACKEND
+   □ Generar JWT_SECRET seguro
+   □ Probar endpoint: POST /api/auth/register
+   □ Probar endpoint: POST /api/auth/login
+
+2. CONECTAR FORMULARIO DE REGISTRO
+   □ frontend/pages/registro.html
+   □ Capturar datos del formulario
+   □ Enviar POST con fetch() a /api/auth/register
+   □ Guardar token en localStorage
+
+3. CONECTAR FORMULARIO DE LOGIN
+   □ frontend/pages/login.html
+   □ Validar email y contraseña
+   □ Enviar POST a /api/auth/login
+   □ Redirigir a index.html si login exitoso
+
+4. PROTEGER RUTAS
+   □ Verificar si hay token en localStorage
+   □ Mostrar "Mi Cuenta" si está logueado
+   □ Ocultar "Login/Registro" si está logueado
+
+5. CREAR PÁGINA DE PERFIL
+   □ frontend/pages/perfil.html
+   □ Mostrar datos del usuario
+   □ Botón "Cerrar Sesión" (eliminar token)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ARCHIVOS A CREAR/MODIFICAR                                  │
+└─────────────────────────────────────────────────────────────┘
+
+  backend/src/middleware/auth.js (revisar)
+  frontend/js/login.js (modificar)
+  frontend/js/registro.js (modificar)
+  frontend/js/main.js (agregar lógica de autenticación)
+  frontend/pages/perfil.html (crear)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ¿CÓMO SABER QUE TERMINASTE?                                 │
+└─────────────────────────────────────────────────────────────┘
+
+  ✅ Puedes registrar un usuario nuevo
+  ✅ Puedes hacer login con ese usuario
+  ✅ El navbar muestra "Hola, [nombre]" al estar logueado
+  ✅ No puedes acceder al perfil sin login
+  ✅ El botón "Cerrar Sesión" funciona
+
+
+═════════════════════════════════════════════════════════════════
+  🛒 FASE 6: CARRITO Y CHECKOUT COMPLETO
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Carrito funcional con persistencia en base de datos
+
+DURACIÓN ESTIMADA: 1-2 semanas
+DIFICULTAD: ⭐⭐⭐⭐ (Media-Alta)
+
+┌─────────────────────────────────────────────────────────────┐
+│ TAREAS ESPECÍFICAS                                          │
+└─────────────────────────────────────────────────────────────┘
+
+1. CREAR TABLA DE CARRITO EN MYSQL
+   □ Tabla: cart_items (user_id, product_id, quantity)
+   □ Relación con users y products
+
+2. ENDPOINTS DE CARRITO EN BACKEND
+   □ POST /api/cart/add → Agregar al carrito
+   □ GET /api/cart → Ver mi carrito
+   □ PUT /api/cart/:id → Actualizar cantidad
+   □ DELETE /api/cart/:id → Eliminar producto
+
+3. CONECTAR CARRITO CON API
+   □ frontend/js/carrito.js
+   □ Al agregar producto: POST a /api/cart/add
+   □ Al abrir carrito.html: GET a /api/cart
+
+4. PÁGINA DE CHECKOUT
+   □ frontend/pages/checkout.html (crear)
+   □ Formulario: dirección, método de pago
+   □ Resumen del pedido
+   □ Botón "Finalizar Compra"
+
+5. CREAR TABLA DE PEDIDOS
+   □ Tabla: orders (user_id, total, status, created_at)
+   □ Tabla: order_items (order_id, product_id, quantity, price)
+
+6. FINALIZAR COMPRA
+   □ POST /api/orders → Crear pedido
+   □ Vaciar carrito después de compra
+   □ Página de confirmación
+
+┌─────────────────────────────────────────────────────────────┐
+│ ARCHIVOS A CREAR/MODIFICAR                                  │
+└─────────────────────────────────────────────────────────────┘
+
+  backend/database/fankit_db.sql (agregar tablas cart, orders)
+  backend/src/controllers/cartController.js (crear)
+  backend/src/routes/cart.js (crear)
+  frontend/pages/checkout.html (crear)
+  frontend/pages/confirmacion.html (crear)
+  frontend/js/carrito.js (modificar)
+  frontend/js/checkout.js (crear)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ¿CÓMO SABER QUE TERMINASTE?                                 │
+└─────────────────────────────────────────────────────────────┘
+
+  ✅ Puedes agregar productos al carrito (logueado)
+  ✅ El carrito persiste después de cerrar navegador
+  ✅ Puedes cambiar cantidades en el carrito
+  ✅ Puedes eliminar productos del carrito
+  ✅ El proceso de checkout funciona completo
+  ✅ Se crea un pedido en la base de datos
+
+
+═════════════════════════════════════════════════════════════════
+  💳 FASE 7: INTEGRACIÓN DE PAGOS
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Aceptar pagos reales con Stripe o MercadoPago
+
+DURACIÓN ESTIMADA: 3-5 días
+DIFICULTAD: ⭐⭐⭐⭐⭐ (Alta)
+
+┌─────────────────────────────────────────────────────────────┐
+│ TAREAS ESPECÍFICAS                                          │
+└─────────────────────────────────────────────────────────────┘
+
+1. ELEGIR PASARELA DE PAGO
+   □ Opción A: Stripe (internacional)
+   □ Opción B: MercadoPago (Latinoamérica)
+   □ Crear cuenta de desarrollador
+
+2. INSTALAR SDK
+   □ npm install stripe (o mercadopago)
+   □ Configurar API keys en .env
+
+3. CREAR ENDPOINT DE PAGO
+   □ POST /api/payment/create-intent
+   □ Generar session de pago
+   □ Devolver client_secret al frontend
+
+4. INTEGRAR EN CHECKOUT
+   □ Agregar formulario de tarjeta (Stripe Elements)
+   □ Procesar pago al hacer click "Pagar"
+   □ Mostrar loading mientras procesa
+
+5. CONFIRMAR PAGO
+   □ Webhook para confirmación
+   □ Actualizar estado del pedido
+   □ Enviar email de confirmación (opcional)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ARCHIVOS A CREAR/MODIFICAR                                  │
+└─────────────────────────────────────────────────────────────┘
+
+  backend/src/controllers/paymentController.js (crear)
+  backend/src/routes/payment.js (crear)
+  frontend/pages/checkout.html (agregar formulario de pago)
+  frontend/js/checkout.js (lógica de Stripe)
+
+┌─────────────────────────────────────────────────────────────┐
+│ ¿CÓMO SABER QUE TERMINASTE?                                 │
+└─────────────────────────────────────────────────────────────┘
+
+  ✅ Puedes ingresar datos de tarjeta
+  ✅ El pago se procesa correctamente
+  ✅ El pedido se marca como "pagado" en BD
+  ✅ El usuario ve confirmación de pago
+
+
+═════════════════════════════════════════════════════════════════
+  📈 FASE 8 (OPCIONAL): PANEL DE ADMINISTRACIÓN
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Dashboard para gestionar productos, pedidos y usuarios
+
+DURACIÓN ESTIMADA: 1-2 semanas
+DIFICULTAD: ⭐⭐⭐⭐ (Media-Alta)
+
+┌─────────────────────────────────────────────────────────────┐
+│ TAREAS ESPECÍFICAS                                          │
+└─────────────────────────────────────────────────────────────┘
+
+1. CREAR PÁGINAS DE ADMIN
+   □ frontend/admin/dashboard.html
+   □ frontend/admin/productos.html
+   □ frontend/admin/pedidos.html
+   □ frontend/admin/usuarios.html
+
+2. PROTEGER RUTAS DE ADMIN
+   □ Middleware: verificar si es admin
+   □ Campo role en tabla users ('user' o 'admin')
+
+3. CRUD DE PRODUCTOS
+   □ Listar todos los productos
+   □ Crear producto nuevo
+   □ Editar producto existente
+   □ Eliminar producto
+   □ Subir imágenes
+
+4. GESTIÓN DE PEDIDOS
+   □ Ver todos los pedidos
+   □ Cambiar estado (pendiente, enviado, entregado)
+   □ Ver detalles del pedido
+
+5. ESTADÍSTICAS
+   □ Ventas totales
+   □ Productos más vendidos
+   □ Gráficos con Chart.js
+
+
+═════════════════════════════════════════════════════════════════
+  🚀 FASE 9 (OPCIONAL): DESPLIEGUE EN PRODUCCIÓN
+═════════════════════════════════════════════════════════════════
+
+OBJETIVO: Sitio web accesible en internet
+
+DURACIÓN ESTIMADA: 2-3 días
+DIFICULTAD: ⭐⭐⭐⭐ (Media-Alta)
+
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIONES DE HOSTING                                         │
+└─────────────────────────────────────────────────────────────┘
+
+FRONTEND:
+  • Netlify (gratis, fácil)
+  • Vercel (gratis, fácil)
+  • GitHub Pages (gratis, pero sin backend)
+
+BACKEND:
+  • Railway (gratis hasta cierto límite)
+  • Render (gratis con limitaciones)
+  • Heroku (plan básico de pago)
+  • VPS (DigitalOcean, Linode) - $5/mes
+
+BASE DE DATOS:
+  • PlanetScale (MySQL gratis)
+  • ClearDB (MySQL en Heroku)
+  • Railway Database (incluido)
+
+┌─────────────────────────────────────────────────────────────┐
+│ PASOS PARA DESPLEGAR                                        │
+└─────────────────────────────────────────────────────────────┘
+
+1. PREPARAR BACKEND
+   □ Configurar variables de entorno en hosting
+   □ Conectar a base de datos en la nube
+   □ Hacer build si es necesario
+
+2. PREPARAR FRONTEND
+   □ Cambiar URLs de API (localhost → URL producción)
+   □ Optimizar imágenes
+   □ Minificar CSS/JS
+
+3. CONFIGURAR DOMINIO
+   □ Comprar dominio (opcional)
+   □ Configurar DNS
+   □ Agregar SSL (HTTPS)
+
+
+═════════════════════════════════════════════════════════════════
+  📊 RESUMEN: ORDEN DE PRIORIDAD
+═════════════════════════════════════════════════════════════════
+
+PRIORIDAD ALTA (Hacer primero):
+  1. ✅ FASE 4: Conectar frontend con backend
+  2. ✅ FASE 5: Sistema de autenticación
+  3. ✅ FASE 6: Carrito y checkout
+
+PRIORIDAD MEDIA (Después):
+  4. 💳 FASE 7: Integración de pagos
+  5. 📈 FASE 8: Panel de administración
+
+PRIORIDAD BAJA (Opcional):
+  6. 🚀 FASE 9: Despliegue en producción
+
+
+═════════════════════════════════════════════════════════════════
+  ⏱️ TIEMPO ESTIMADO TOTAL
+═════════════════════════════════════════════════════════════════
+
+Fase 4: 1-2 semanas   ⭐⭐⭐
+Fase 5: 1 semana      ⭐⭐⭐⭐
+Fase 6: 1-2 semanas   ⭐⭐⭐⭐
+Fase 7: 3-5 días      ⭐⭐⭐⭐⭐
+Fase 8: 1-2 semanas   ⭐⭐⭐⭐
+Fase 9: 2-3 días      ⭐⭐⭐⭐
+
+TOTAL: 5-8 semanas (trabajando regularmente)
+
+⚠️ NOTA: Los tiempos son estimados para alguien aprendiendo.
+Si ya sabes backend, puede ser más rápido.
+
+
+═════════════════════════════════════════════════════════════════
+  💡 CONSEJOS PARA AVANZAR RÁPIDO
+═════════════════════════════════════════════════════════════════
+
+✅ HAZ UNA FASE A LA VEZ
+   No intentes hacer todo junto. Termina Fase 4 antes de Fase 5.
+
+✅ PRUEBA CONSTANTEMENTE
+   Cada vez que agregues algo, pruébalo. No dejes bugs acumulados.
+
+✅ COMMITEA FRECUENTEMENTE
+   git add -A && git commit -m "Descripción" cada vez que termines una tarea.
+
+✅ DOCUMENTA LO QUE HACES
+   Si aprendes algo nuevo, escríbelo en un comentario o doc.
+
+✅ PIDE AYUDA CUANDO TE ATORES
+   Stack Overflow, ChatGPT, comunidades de Discord.
+
+✅ CELEBRA LOS LOGROS
+   Cada fase completada es un logro importante. ¡Disfruta el proceso!
+
+
+═════════════════════════════════════════════════════════════════
+  🎯 SIGUIENTE PASO: EMPEZAR FASE 4
+═════════════════════════════════════════════════════════════════
+
+¿Listo para empezar?
+
+1. Lee docs/GUIA_BACKEND_PASO_A_PASO.txt
+2. Configura el backend (npm install)
+3. Crea la base de datos en MySQL
+4. Prueba los endpoints de API
+5. Conecta el catálogo con fetch()
+
+¡Mucha suerte! 🚀
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              🎊 ROADMAP COMPLETO PARA GOLAZOSTORE 🎊         ║
+║                                                               ║
+║    Tienes un plan claro de 5-8 semanas para completar        ║
+║    tu tienda online. ¡Paso a paso, lo vas a lograr!          ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
