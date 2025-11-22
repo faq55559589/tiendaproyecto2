@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const emptyCartDiv = document.getElementById('emptyCart');
     const cartWithItemsDiv = document.getElementById('cartWithItems');
     const cartItemsContainer = document.getElementById('cartItems');
-    const cartBadge = document.getElementById('cartBadge');
+    const cartBadge = document.getElementById('cart-count');
     const subtotalElement = document.getElementById('subtotal');
+    const shippingElement = document.getElementById('shipping');
     const discountElement = document.getElementById('discount');
     const totalElement = document.getElementById('total');
     const discountInfoDiv = document.getElementById('discountInfo');
@@ -103,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-1">
-                        <span class="fw-bold text-primary">$${subtotal}</span>
+                    <div class="col-md-2">
+                        <span class="fw-bold text-dark">$${subtotal}</span>
                     </div>
                     <div class="col-md-1">
                         <button class="btn btn-outline-danger btn-sm" data-action="remove" title="Eliminar">
@@ -182,16 +183,20 @@ document.addEventListener('DOMContentLoaded', function() {
             subtotal += item.price * item.quantity;
         });
         
+        // Calcular envío (gratis si es mayor a $50)
+        let shipping = subtotal > 50 ? 0 : 10;
+        
         // Calcular descuento (ejemplo: 10% si el total es mayor a $100)
         let discount = 0;
         if (subtotal > 100) {
             discount = subtotal * 0.1;
         }
         
-        const total = subtotal - discount;
+        const total = subtotal + shipping - discount;
         
         // Actualizar elementos del DOM
         subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+        shippingElement.textContent = shipping === 0 ? 'GRATIS' : `$${shipping.toFixed(2)}`;
         discountElement.textContent = `-$${discount.toFixed(2)}`;
         totalElement.textContent = `$${total.toFixed(2)}`;
         
@@ -206,10 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateCartBadge() {
         const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        cartBadge.textContent = totalItems;
-        
-        // Actualizar badge en todas las páginas
-        localStorage.setItem('cartCount', totalItems);
+        if (cartBadge) {
+            cartBadge.textContent = totalItems;
+        }
     }
     
     function saveCart() {
@@ -223,14 +227,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function bindEvents() {
         // Vaciar carrito
-        clearCartBtn.addEventListener('click', function() {
-            if (confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
-                cartItems = [];
-                saveCart();
-                updateCartDisplay();
-                showAlert('Carrito vaciado', 'info');
-            }
-        });
+        if (clearCartBtn) {
+            clearCartBtn.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
+                    cartItems = [];
+                    saveCart();
+                    updateCartDisplay();
+                    showAlert('Carrito vaciado correctamente', 'info');
+                }
+            });
+        }
         
         // Proceder al pago
         checkoutBtn.addEventListener('click', function() {

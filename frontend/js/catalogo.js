@@ -1,6 +1,6 @@
 // ========================================
-// FANKIT - JavaScript para Página de Catálogo
-// Funcionalidades de búsqueda y filtrado
+// GOLAZOSTORE - JavaScript para Página de Catálogo
+// Funcionalidades de búsqueda
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fas fa-search fa-3x text-muted mb-3"></i>
                     <h4 class="text-muted">No se encontraron resultados</h4>
                     <p class="text-muted mb-3">No hay productos que coincidan con "${searchTerm}"</p>
-                    <button class="btn btn-primary" onclick="clearSearch()">
+                    <button class="btn btn-danger" onclick="clearSearch()">
                         <i class="fas fa-arrow-left me-2"></i>Ver todos los productos
                     </button>
                 </div>
@@ -134,5 +134,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     checkForSearchTerm();
 
-    console.log('✅ FanKit Catálogo: JavaScript cargado correctamente');
+    console.log('✅ GolazoStore Catálogo: JavaScript cargado correctamente');
 });
+
+
+/* ====================================
+   SISTEMA DE FILTRADO AVANZADO
+   (Comentado para implementación futura)
+   ====================================
+
+// Base de datos de productos mejorada con categorías, talles y stock
+const productsDatabase = [
+    {
+        id: 1,
+        name: 'Camiseta Selección Local',
+        price: 89.99,
+        category: 'seleccion',
+        sizes: ['S', 'M', 'L', 'XL'],
+        image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+1',
+        dateAdded: new Date('2024-12-01'),
+        stock: 15
+    },
+    // ... más productos
+];
+
+// Funciones de filtrado:
+// - applyFilters() - Aplica filtros por categoría, precio y talle
+// - applySorting() - Ordena por precio, nombre o fecha
+// - switchView() - Cambia entre vista grid y lista
+// - renderProducts() - Renderiza productos dinámicamente
+
+*/ 

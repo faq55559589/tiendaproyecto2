@@ -314,8 +314,114 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
     
     
-    console.log('✅ FanKit: JavaScript cargado correctamente');
+    // ====================================
+    // FUNCIONALIDAD DEL CARRITO
+    // ====================================
+    
+    // Actualizar contador del carrito al cargar la página
+    updateCartCount();
+    
+    console.log('✅ GolazoStore: JavaScript cargado correctamente');
 });
+
+
+// ====================================
+// FUNCIONES GLOBALES DEL CARRITO
+// ====================================
+
+// Base de datos de productos (simulada)
+const productsDB = {
+    1: { name: 'Camiseta Selección Local', price: 89.99, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+1' },
+    2: { name: 'Camiseta Club Visitante', price: 75.50, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+2' },
+    3: { name: 'Camiseta Retro Histórica', price: 110.00, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+3' },
+    4: { name: 'Camiseta Edición Especial', price: 95.00, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+4' },
+    5: { name: 'Camiseta Arquero Neón', price: 85.00, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+5' },
+    6: { name: 'Camiseta Entrenamiento', price: 60.00, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+6' },
+    7: { name: 'Camiseta Mujer Local', price: 89.99, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+7' },
+    8: { name: 'Camiseta Niño 2025', price: 70.00, image: 'https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+8' }
+};
+
+// Función para añadir productos al carrito
+function addToCart(productId) {
+    // Obtener información del producto
+    const product = productsDB[productId];
+    if (!product) {
+        console.error('Producto no encontrado:', productId);
+        return;
+    }
+    
+    // Obtener carrito actual
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+    // Verificar si el producto ya existe en el carrito
+    const existingItem = cartItems.find(item => item.id === productId && item.size === 'M');
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cartItems.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            size: 'M',
+            quantity: 1,
+            image: product.image
+        });
+    }
+    
+    // Guardar carrito actualizado
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+    // Actualizar contador
+    updateCartCount();
+    
+    // Mostrar notificación bonita
+    showCartNotification('¡Producto añadido al carrito!', 'success');
+    
+    // Efecto de shake en el icono del carrito
+    const cartIcon = document.querySelector('.fa-shopping-cart');
+    if (cartIcon) {
+        cartIcon.parentElement.style.animation = 'none';
+        setTimeout(() => {
+            cartIcon.parentElement.style.animation = 'shake 0.5s';
+        }, 10);
+    }
+}
+
+// Función para actualizar el contador del carrito
+function updateCartCount() {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    
+    const cartBadge = document.getElementById('cart-count');
+    if (cartBadge) {
+        cartBadge.textContent = totalItems;
+    }
+}
+
+// Función para mostrar notificaciones del carrito
+function showCartNotification(message, type = 'success') {
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 80px; right: 20px; z-index: 9999; max-width: 350px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
+    notification.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remover después de 3 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 150);
+    }, 3000);
+}
 
 
 // ====================================
