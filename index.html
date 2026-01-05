@@ -1,311 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GolazoStore - La mejor tienda de camisetas de fútbol. Diseños retro y actuales de tus equipos favoritos.">
-    <meta name="keywords" content="camisetas de fútbol, jerseys, deportes, equipos, GolazoStore">
-    <meta name="author" content="GolazoStore">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="frontend/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/png" href="frontend/assets/images/logo.png">
-    
-    <title>GolazoStore - Tienda de Camisetas de Fútbol</title>
+    <meta http-equiv="refresh" content="0; url=frontend/home.html">
+    <title>GolazoStore - Redireccionando...</title>
 </head>
+
 <body>
-
-    <!-- NAVBAR -->
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1a1a1a;">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="index.html">
-                    <img src="frontend/assets/images/logo.png" alt="GolazoStore" height="55" class="me-2">
-                    <span class="fs-4 fw-bold" style="color: #dc3545;">GolazoStore</span>
-                </a>
-    
-                <button class="btn btn-outline-danger d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories" aria-controls="offcanvasCategories">
-                    <i class="fas fa-bars"></i> Categorías
-                </button>
-    
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-    
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="frontend/catalogo.html"><i class="fas fa-store"></i> Catálogo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="frontend/retros.html"><i class="fas fa-history"></i> Retro</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="frontend/contacto.html"><i class="fas fa-envelope"></i> Contacto</a>
-                        </li>
-                    </ul>
-    
-                    <form class="d-flex mx-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Buscar camiseta..." aria-label="Search">
-                        <button class="btn btn-outline-danger" type="submit"><i class="fas fa-search"></i> Buscar</button>
-                    </form>
-    
-                    <div class="navbar-nav ms-auto">
-                        <a class="nav-link" href="frontend/login.html"><i class="fas fa-user"></i> Iniciar Sesión</a>
-                        <a class="nav-link" href="frontend/registro.html"><i class="fas fa-user-plus"></i> Registrarse</a>
-                        <a class="nav-link" href="frontend/carrito.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="badge bg-danger" id="cart-count">0</span></a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- HERO SECTION -->
-        <section id="hero-main" class="hero-section">
-            <div class="hero-overlay"></div>
-            <div class="container hero-content">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 text-white">
-                        <h1 class="display-3 fw-bold mb-4 animate-fade-in">
-                            ¡Viste los colores de tu pasión!
-                        </h1>
-                        <p class="lead mb-4 animate-fade-in" style="animation-delay: 0.2s;">
-                            Las mejores camisetas de fútbol, desde diseños clásicos retro hasta las últimas colecciones de tus equipos favoritos.
-                        </p>
-                        <div class="animate-fade-in" style="animation-delay: 0.4s;">
-                            <a href="frontend/catalogo.html" class="btn btn-danger btn-lg me-3 mb-2">
-                                <i class="fas fa-shopping-bag"></i> Ver Catálogo
-                            </a>
-                            <a href="#productos-destacados" class="btn btn-outline-light btn-lg mb-2">
-                                <i class="fas fa-star"></i> Productos Destacados
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 text-center animate-fade-in" style="animation-delay: 0.3s;">
-                        <img src="frontend/assets/images/logo.png" alt="GolazoStore" class="img-fluid hero-logo pulse-animation" style="max-width: 400px;">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CARACTERÍSTICAS -->
-        <section class="py-5 bg-light">
-            <div class="container">
-                <div class="row text-center">
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="feature-box">
-                            <i class="fas fa-shipping-fast fa-3x mb-3" style="color: #dc3545;"></i>
-                            <h5 class="fw-bold">Envío Gratis</h5>
-                            <p class="text-muted">En compras superiores a $50.000</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="feature-box">
-                            <i class="fas fa-shield-alt fa-3x mb-3" style="color: #dc3545;"></i>
-                            <h5 class="fw-bold">Compra Segura</h5>
-                            <p class="text-muted">Pagos protegidos 100%</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="feature-box">
-                            <i class="fas fa-undo fa-3x mb-3" style="color: #dc3545;"></i>
-                            <h5 class="fw-bold">Devolución Fácil</h5>
-                            <p class="text-muted">30 días para cambios</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="feature-box">
-                            <i class="fas fa-headset fa-3x mb-3" style="color: #dc3545;"></i>
-                            <h5 class="fw-bold">Soporte 24/7</h5>
-                            <p class="text-muted">Atención personalizada</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRODUCTOS DESTACADOS -->
-        <section id="productos-destacados" class="py-5">
-            <div class="container">
-                <h2 class="text-center mb-5">Productos Destacados</h2>
-                <div class="row">
-                    <!-- Producto 1 -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="frontend/producto.html" class="text-decoration-none">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+1" class="card-img-top" alt="Camiseta Selección Local" style="cursor: pointer;">
-                            </a>
-                            <div class="card-body text-center">
-                                <a href="frontend/producto.html" class="text-decoration-none text-dark">
-                                    <h5 class="card-title">Camiseta Selección Local</h5>
-                                </a>
-                                <p class="card-text fw-bold text-danger fs-4">$89.99</p>
-                                <a href="frontend/producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </a>
-                                <a href="#" class="btn btn-danger btn-sm mb-2" onclick="addToCart(1); return false;"><i class="fas fa-cart-plus"></i> Añadir</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 2 -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="frontend/producto.html" class="text-decoration-none">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+2" class="card-img-top" alt="Camiseta Club Visitante" style="cursor: pointer;">
-                            </a>
-                            <div class="card-body text-center">
-                                <a href="frontend/producto.html" class="text-decoration-none text-dark">
-                                    <h5 class="card-title">Camiseta Club Visitante</h5>
-                                </a>
-                                <p class="card-text fw-bold text-danger fs-4">$75.50</p>
-                                <a href="frontend/producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </a>
-                                <a href="#" class="btn btn-danger btn-sm mb-2" onclick="addToCart(2); return false;"><i class="fas fa-cart-plus"></i> Añadir</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 3 -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="frontend/producto.html" class="text-decoration-none">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+3" class="card-img-top" alt="Camiseta Retro Histórica" style="cursor: pointer;">
-                            </a>
-                            <div class="card-body text-center">
-                                <a href="frontend/producto.html" class="text-decoration-none text-dark">
-                                    <h5 class="card-title">Camiseta Retro Histórica</h5>
-                                </a>
-                                <p class="card-text fw-bold text-danger fs-4">$110.00</p>
-                                <a href="frontend/producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </a>
-                                <a href="#" class="btn btn-danger btn-sm mb-2" onclick="addToCart(3); return false;"><i class="fas fa-cart-plus"></i> Añadir</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 4 -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <a href="frontend/producto.html" class="text-decoration-none">
-                                <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+4" class="card-img-top" alt="Camiseta Edición Especial" style="cursor: pointer;">
-                            </a>
-                            <div class="card-body text-center">
-                                <a href="frontend/producto.html" class="text-decoration-none text-dark">
-                                    <h5 class="card-title">Camiseta Edición Especial</h5>
-                                </a>
-                                <p class="card-text fw-bold text-danger fs-4">$95.00</p>
-                                <a href="frontend/producto.html" class="btn btn-outline-danger btn-sm me-1 mb-2">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </a>
-                                <a href="#" class="btn btn-danger btn-sm mb-2" onclick="addToCart(4); return false;"><i class="fas fa-cart-plus"></i> Añadir</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <a href="frontend/catalogo.html" class="btn btn-danger btn-lg">
-                        <i class="fas fa-th"></i> Ver Catálogo Completo
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- CALL TO ACTION -->
-        <section class="py-5" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 50%, #1a1a1a 100%);">
-            <div class="container text-center text-white">
-                <h2 class="display-4 fw-bold mb-3">¿Nuevo en GolazoStore?</h2>
-                <p class="lead mb-4">Regístrate ahora y obtén un 10% de descuento en tu primera compra</p>
-                <a href="frontend/registro.html" class="btn btn-danger btn-lg">
-                    <i class="fas fa-user-plus"></i> Crear Cuenta Gratis
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-dark text-white pt-5 pb-4">
-        <div class="container text-center text-md-start">
-            <div class="row text-center text-md-start">
-    
-                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">GolazoStore</h5>
-                    <p>
-                        La casa de las camisetas de fútbol para verdaderos hinchas. Calidad, pasión y los mejores diseños retro y actuales.
-                    </p>
-                </div>
-    
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Enlaces</h5>
-                    <p><a href="frontend/catalogo.html" class="text-white" style="text-decoration: none;">Catálogo</a></p>
-                    <p><a href="frontend/retros.html" class="text-white" style="text-decoration: none;">Retro</a></p>
-                    <p><a href="frontend/login.html" class="text-white" style="text-decoration: none;">Mi Cuenta</a></p>
-                    <p><a href="frontend/contacto.html" class="text-white" style="text-decoration: none;">Contacto</a></p>
-                </div>
-    
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-                     <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Contacto</h5>
-                     <p><i class="fas fa-map-marker-alt me-2"></i>Montevideo, Uruguay</p>
-                     <p><i class="fas fa-envelope me-2"></i>info@golazostore.com</p>
-                     <p><i class="fas fa-phone me-2"></i>+598 99 123 456</p>
-                     <div class="social-icons mt-3">
-                        <a href="https://www.instagram.com/facupintado_/" target="_blank" class="instagram" title="Instagram">
-                            <i class="fab fa-instagram fa-lg"></i>
-                        </a>
-                        <a href="https://www.facebook.com" target="_blank" class="facebook" title="Facebook">
-                            <i class="fab fa-facebook-f fa-lg"></i>
-                        </a>
-                        <a href="https://www.twitter.com" target="_blank" class="twitter" title="Twitter">
-                            <i class="fab fa-twitter fa-lg"></i>
-                        </a>
-                        <a href="https://wa.me/59899123456" target="_blank" class="whatsapp" title="WhatsApp">
-                            <i class="fab fa-whatsapp fa-lg"></i>
-                        </a>
-                     </div>
-                </div>
-            </div>
-        </div>
-
-        <hr class="mb-4">
-
-        <div class="row align-items-center">
-            <div class="col-md-7 col-lg-8">
-                <p class="text-center text-md-start"> © 2025 Copyright:
-                    <a href="index.html" style="text-decoration: none;">
-                        <strong style="color: #dc3545;">GolazoStore.com</strong>
-                    </a>
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- OFFCANVAS CATEGORÍAS -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCategories" aria-labelledby="offcanvasCategoriesLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasCategoriesLabel">Categorías</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="frontend/catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-tshirt me-2"></i>Todas las Camisetas</a></li>
-                <li class="list-group-item"><a href="frontend/retros.html" class="text-decoration-none text-dark"><i class="fas fa-history me-2"></i>Camisetas Retro</a></li>
-                <li class="list-group-item"><a href="frontend/catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-flag me-2"></i>Selecciones Nacionales</a></li>
-                <li class="list-group-item"><a href="frontend/catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-futbol me-2"></i>Clubes Europeos</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- BOTÓN VOLVER ARRIBA -->
-    <button id="backToTop" title="Volver arriba">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="frontend/js/main.js"></script>
+    <script>
+        window.location.href = 'frontend/home.html';
+    </script>
+    <p>Redireccionando a <a href="frontend/home.html">GolazoStore</a>...</p>
 </body>
+
+</html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=frontend/home.html">
+    <title>GolazoStore - Redireccionando...</title>
+</head>
+
+<body>
+    <script>
+        window.location.href = 'frontend/home.html';
+    </script>
+    <p>Redireccionando a <a href="frontend/home.html">GolazoStore</a>...</p>
+</body>
+
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <title>Verificar Email - GolazoStore</title>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1a1a1a;">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="../index.html">
+                    <img src="assets/images/logo.png" alt="GolazoStore" height="50" class="me-2">
+                    <span class="fs-5 fw-bold" style="color: #dc3545;">GolazoStore</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="d-flex align-items-center justify-content-center" style="min-height: 80vh; padding-top: 80px;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <div class="card shadow-lg border-0 p-5" id="verificationCard">
+
+                        <!-- Estado: Cargando -->
+                        <div id="loadingState">
+                            <i class="fas fa-spinner fa-spin fa-4x text-danger mb-4"></i>
+                            <h3 class="mb-3">Verificando tu cuenta...</h3>
+                            <p class="text-muted">Por favor espera un momento mientras validamos tu email.</p>
+                        </div>
+
+                        <!-- Estado: Éxito -->
+                        <div id="successState" style="display: none;">
+                            <i class="fas fa-check-circle fa-4x text-success mb-4"></i>
+                            <h3 class="mb-3 text-success">¡Cuenta Verificada!</h3>
+                            <p class="text-muted mb-4">Tu email ha sido confirmado correctamente. Ya puedes iniciar
+                                sesión y disfrutar de GolazoStore.</p>
+                            <a href="login.html" class="btn btn-danger btn-lg px-5">Iniciar Sesión</a>
+                        </div>
+
+                        <!-- Estado: Error -->
+                        <div id="errorState" style="display: none;">
+                            <i class="fas fa-times-circle fa-4x text-danger mb-4"></i>
+                            <h3 class="mb-3 text-danger">Error de Verificación</h3>
+                            <p class="text-muted mb-4" id="errorMessage">El enlace es inválido o ha expirado.</p>
+                            <a href="../index.html" class="btn btn-outline-secondary">Volver al Inicio</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/verificar-email.js"></script>
+</body>
+
+</html>

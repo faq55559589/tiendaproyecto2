@@ -2,9 +2,9 @@ const Product = require('../models/Product');
 
 class ProductController {
     // Obtener todos los productos
-    static async getAll(req, res) {
+    static getAll(req, res) {
         try {
-            const products = await Product.getAll();
+            const products = Product.getAll();
             const formattedProducts = products.map(product => ({
                 ...product,
                 sizes: JSON.parse(product.sizes || '[]')
@@ -23,10 +23,10 @@ class ProductController {
     }
 
     // Obtener producto por ID
-    static async getById(req, res) {
+    static getById(req, res) {
         try {
             const { id } = req.params;
-            const product = await Product.getById(id);
+            const product = Product.getById(id);
             if (!product) {
                 return res.status(404).json({
                     success: false,
@@ -48,7 +48,7 @@ class ProductController {
     }
 
     // Buscar productos
-    static async search(req, res) {
+    static search(req, res) {
         try {
             const { q } = req.query;
             if (!q) {
@@ -57,7 +57,7 @@ class ProductController {
                     message: 'Término de búsqueda requerido'
                 });
             }
-            const products = await Product.search(q);
+            const products = Product.search(q);
             const formattedProducts = products.map(product => ({
                 ...product,
                 sizes: JSON.parse(product.sizes || '[]')
@@ -77,16 +77,27 @@ class ProductController {
     }
 
     // Crear producto (admin)
-    static async create(req, res) {
+    static create(req, res) {
         try {
-            const { name, description, price, image_url, stock, sizes, category_id } = req.body;
-            const productId = await Product.create({
+            const { name, description, price, stock, sizes, category_id, specifications } = req.body;
+            let image_url = req.body.image_url; // Fallback URL if provided manually
+
+            // If file uploaded, use the file path
+            if (req.file) {
+                // Construct the full URL for the uploaded file
+                // Assuming backend runs on port 3000
+                const baseUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+                image_url = `${baseUrl}/${req.file.filename}`;
+            }
+
+            const productId = Product.create({
                 name, description, price, image_url, stock, sizes, category_id
             });
             res.status(201).json({
                 success: true,
                 message: 'Producto creado exitosamente',
-                productId
+                productId,
+                image_url
             });
         } catch (error) {
             console.error('Error creando producto:', error);
@@ -101,7 +112,7 @@ class ProductController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const { name, description, price, image_url, stock, sizes, category_id } = req.body;
+            const { name, description, price, image_url, stock, sizes, category_id, specifications } = req.body;
             await Product.update(id, {
                 name, description, price, image_url, stock, sizes, category_id
             });

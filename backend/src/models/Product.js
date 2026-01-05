@@ -1,39 +1,27 @@
-const db = require('../utils/database');
+const db = require('../config/database');
 
 class Product {
-    static async getAll() {
+    static getAll() {
         const query = `
             SELECT p.*, c.name as category_name 
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
         `;
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, (err, result) => {
-                if (err) reject(err);
-                else resolve(result);
-            });
-        });
+        return db.prepare(query).all();
     }
-    
-    static async getById(id) {
+
+    static getById(id) {
         const query = `
             SELECT p.*, c.name as category_name 
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = ?
         `;
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, [id], (err, result) => {
-                if (err) reject(err);
-                else resolve(result[0]);
-            });
-        });
+        return db.prepare(query).get(id);
     }
-    
-    static async search(searchTerm) {
+
+    static search(searchTerm) {
         const query = `
             SELECT p.*, c.name as category_name 
             FROM products p 
@@ -41,61 +29,41 @@ class Product {
             WHERE p.name LIKE ? OR p.description LIKE ?
             ORDER BY p.created_at DESC
         `;
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, result) => {
-                if (err) reject(err);
-                else resolve(result);
-            });
-        });
+        const term = `%${searchTerm}%`;
+        return db.prepare(query).all(term, term);
     }
-    
-    static async create(productData) {
+
+    static create(productData) {
         const { name, description, price, image_url, stock, sizes, category_id } = productData;
-        
+
         const query = `
-            INSERT INTO products (name, description, price, image_url, stock, sizes, category_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO products (name, description, price, image_url, stock, sizes, category_id, specifications)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, [name, description, price, image_url, stock, JSON.stringify(sizes), category_id], 
-                (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result.insertId);
-                }
-            );
-        });
+
+        const result = db.prepare(query).run(
+            name, description, price, image_url, stock, JSON.stringify(sizes), JSON.stringify(category_id), productData.specifications
+        );
+        return result.lastInsertRowid;
     }
-    
-    static async update(id, productData) {
+
+    static update(id, productData) {
         const { name, description, price, image_url, stock, sizes, category_id } = productData;
-        
+
         const query = `
             UPDATE products 
-            SET name = ?, description = ?, price = ?, image_url = ?, stock = ?, sizes = ?, category_id = ?
+            SET name = ?, description = ?, price = ?, image_url = ?, stock = ?, sizes = ?, category_id = ?, specifications = ?
             WHERE id = ?
         `;
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, [name, description, price, image_url, stock, JSON.stringify(sizes), category_id, id], 
-                (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
-                }
-            );
-        });
+
+        return db.prepare(query).run(
+            name, description, price, image_url, stock, JSON.stringify(sizes), category_id, productData.specifications, id
+        );
     }
-    
-    static async delete(id) {
+
+    static delete(id) {
         const query = 'DELETE FROM products WHERE id = ?';
-        
-        return new Promise((resolve, reject) => {
-            db.query(query, [id], (err, result) => {
-                if (err) reject(err);
-                else resolve(result);
-            });
-        });
+        return db.prepare(query).run(id);
     }
 }
 

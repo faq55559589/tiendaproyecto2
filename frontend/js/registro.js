@@ -2,8 +2,8 @@
 // FANKIT - JavaScript para Página de Registro
 // ========================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // ====================================
     // VARIABLES
     // ====================================
@@ -16,19 +16,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================
     // FUNCIONALIDAD DE MOSTRAR/OCULTAR CONTRASEÑAS
     // ====================================
-    
-    togglePasswordBtn.addEventListener('click', function() {
+
+    togglePasswordBtn.addEventListener('click', function () {
         togglePasswordVisibility(passwordInput, this);
     });
 
-    toggleConfirmPasswordBtn.addEventListener('click', function() {
+    toggleConfirmPasswordBtn.addEventListener('click', function () {
         togglePasswordVisibility(confirmPasswordInput, this);
     });
 
     function togglePasswordVisibility(input, button) {
         const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
         input.setAttribute('type', type);
-        
+
         // Cambiar icono
         const icon = button.querySelector('i');
         icon.classList.toggle('fa-eye');
@@ -38,24 +38,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================
     // VALIDACIÓN EN TIEMPO REAL
     // ====================================
-    
+
     // Validación de contraseña mientras se escribe
-    passwordInput.addEventListener('input', function() {
+    passwordInput.addEventListener('input', function () {
         validatePasswordStrength(this.value);
     });
 
     // Validación de confirmación de contraseña
-    confirmPasswordInput.addEventListener('input', function() {
+    confirmPasswordInput.addEventListener('input', function () {
         validatePasswordMatch();
     });
 
     // ====================================
     // ENVÍO DEL FORMULARIO
     // ====================================
-    
-    registerForm.addEventListener('submit', function(e) {
+
+    registerForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         // Obtener datos del formulario
         const formData = {
             firstName: document.getElementById('firstName').value.trim(),
@@ -67,12 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
             acceptTerms: document.getElementById('acceptTerms').checked,
             newsletter: document.getElementById('newsletter').checked
         };
-        
+
         // Validar formulario
         if (!validateForm(formData)) {
             return;
         }
-        
+
         // Simular registro
         simulateRegistration(formData);
     });
@@ -80,67 +80,67 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================
     // FUNCIONES DE VALIDACIÓN
     // ====================================
-    
+
     function validateForm(data) {
         // Validar campos obligatorios
         if (!data.firstName || !data.lastName || !data.email || !data.password || !data.confirmPassword) {
             showAlert('Por favor, completa todos los campos obligatorios.', 'warning');
             return false;
         }
-        
+
         // Validar email
         if (!isValidEmail(data.email)) {
             showAlert('Por favor, ingresa un email válido.', 'warning');
             return false;
         }
-        
+
         // Validar contraseña
         if (!validatePasswordStrength(data.password)) {
             return false;
         }
-        
+
         // Validar confirmación de contraseña
         if (data.password !== data.confirmPassword) {
             showAlert('Las contraseñas no coinciden.', 'warning');
             return false;
         }
-        
+
         // Validar términos y condiciones
         if (!data.acceptTerms) {
             showAlert('Debes aceptar los términos y condiciones para continuar.', 'warning');
             return false;
         }
-        
+
         return true;
     }
-    
+
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-    
+
     function validatePasswordStrength(password) {
         const minLength = 6;
         const hasLetter = /[a-zA-Z]/.test(password);
         const hasNumber = /\d/.test(password);
-        
+
         if (password.length < minLength) {
             showAlert('La contraseña debe tener al menos 6 caracteres.', 'warning');
             return false;
         }
-        
+
         if (!hasLetter || !hasNumber) {
             showAlert('La contraseña debe contener al menos una letra y un número.', 'warning');
             return false;
         }
-        
+
         return true;
     }
-    
+
     function validatePasswordMatch() {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
-        
+
         if (confirmPassword && password !== confirmPassword) {
             confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
             confirmPasswordInput.classList.add('is-invalid');
@@ -152,39 +152,62 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ====================================
-    // SIMULACIÓN DE REGISTRO
+    // REGISTRO REAL CON BACKEND
     // ====================================
-    
-    function simulateRegistration(data) {
+
+    const API_URL = 'http://localhost:3000/api';
+
+    async function simulateRegistration(data) {
         // Mostrar loading
         const submitBtn = registerForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creando cuenta...';
         submitBtn.disabled = true;
-        
-        // Simular delay de registro
-        setTimeout(() => {
-            // Simular éxito (en el backend real aquí crearías el usuario)
-            showAlert('¡Cuenta creada exitosamente! Bienvenido a FanKit.', 'success');
-            
-            // Guardar datos en localStorage (simulación)
-            localStorage.setItem('userEmail', data.email);
-            localStorage.setItem('userName', `${data.firstName} ${data.lastName}`);
-            localStorage.setItem('userPhone', data.phone);
-            localStorage.setItem('newsletter', data.newsletter);
-            
-            // Auto-login después del registro
-            sessionStorage.setItem('userLoggedIn', 'true');
-            sessionStorage.setItem('userEmail', data.email);
-            sessionStorage.setItem('userName', `${data.firstName} ${data.lastName}`);
-            
-            // Redirigir después de 2 segundos
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        }, 2500);
+
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    password: data.password,
+                    first_name: data.firstName,
+                    last_name: data.lastName,
+                    phone: data.phone,
+                    newsletter: data.newsletter
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Éxito: Mostrar mensaje de verificación
+                showAlert('¡Registro casi listo! Te enviamos un email para verificar tu cuenta.', 'success');
+
+                // Limpiar formulario y restaurar botón
+                registerForm.reset();
+                submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>¡Enviado!';
+
+                // Redirigir al login después de un momento para que ingresen tras verificar
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 4000);
+            } else {
+                // Error del servidor
+                showAlert(result.message || 'Error al crear la cuenta. Intentá de nuevo.', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error en registro:', error);
+            showAlert('Error de conexión. Verificá que el servidor esté corriendo.', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
     }
-    
+
     function showAlert(message, type = 'info') {
         // Crear alerta personalizada
         const alertDiv = document.createElement('div');
@@ -194,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         `;
-        
+
         document.body.appendChild(alertDiv);
-        
+
         // Auto-remover después de 5 segundos
         setTimeout(() => {
             if (alertDiv.parentNode) {
@@ -208,27 +231,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================
     // VERIFICAR SI YA ESTÁ LOGEADO
     // ====================================
-    
+
     function checkIfLoggedIn() {
-        const isLoggedIn = sessionStorage.getItem('userLoggedIn');
-        if (isLoggedIn === 'true') {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        if (token && user) {
             // Si ya está logueado, redirigir al inicio
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }
     }
-    
+
     // Verificar al cargar la página
     checkIfLoggedIn();
 
     // ====================================
     // EFECTOS VISUALES
     // ====================================
-    
+
     // Efecto de entrada para la card
     const registerCard = document.querySelector('.card');
     registerCard.style.opacity = '0';
     registerCard.style.transform = 'translateY(30px)';
-    
+
     setTimeout(() => {
         registerCard.style.transition = 'all 0.6s ease';
         registerCard.style.opacity = '1';
@@ -238,12 +262,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================
     // VALIDACIÓN DE TELÉFONO (OPCIONAL)
     // ====================================
-    
+
     const phoneInput = document.getElementById('phone');
-    phoneInput.addEventListener('input', function() {
+    phoneInput.addEventListener('input', function () {
         // Formatear número de teléfono uruguayo
         let value = this.value.replace(/\D/g, ''); // Solo números
-        
+
         if (value.length > 0) {
             if (value.startsWith('598')) {
                 value = value.substring(3);
@@ -258,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 value = `+598 ${value}`;
             }
         }
-        
+
         this.value = value;
     });
 

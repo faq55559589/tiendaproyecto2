@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <title>Mis Pedidos - GolazoStore</title>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1a1a1a;">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="home.html">
+                    <img src="assets/images/logo.png" alt="GolazoStore" height="50" class="me-2">
+                    <span class="fs-5 fw-bold" style="color: #dc3545;">GolazoStore</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="catalogo.html"><i class="fas fa-store"></i> Catálogo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="retros.html"><i class="fas fa-history"></i> Retro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a>
+                        </li>
+                    </ul>
+
+                    <div class="navbar-nav ms-auto">
+                        <!-- Se actualiza dinámicamente con auth.js -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="home.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Mis Pedidos</li>
+                </ol>
+            </div>
+        </nav>
+
+        <section class="orders-section py-5">
+            <div class="container">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-lg-3 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-user-circle fa-5x text-danger"></i>
+                                </div>
+                                <h5 class="card-title" id="profileName">Cargando...</h5>
+                                <p class="text-muted small" id="profileEmail">...</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="perfil.html" class="text-dark text-decoration-none">
+                                        <i class="fas fa-user me-2"></i>Mi Perfil
+                                    </a>
+                                </li>
+                                <li class="list-group-item active bg-danger border-danger">
+                                    <a href="mis-pedidos.html" class="text-white text-decoration-none">
+                                        <i class="fas fa-box me-2"></i>Mis Pedidos
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="carrito.html" class="text-dark text-decoration-none">
+                                        <i class="fas fa-shopping-cart me-2"></i>Mi Carrito
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#" onclick="GolazoAuth.logout(); return false;" class="text-danger text-decoration-none">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Principal -->
+                    <div class="col-lg-9">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0"><i class="fas fa-box me-2"></i>Mis Pedidos</h4>
+                                <span class="badge bg-white text-danger" id="ordersCount">0 pedidos</span>
+                            </div>
+                            <div class="card-body">
+                                <!-- Estado vacío -->
+                                <div id="emptyOrders" class="text-center py-5">
+                                    <i class="fas fa-shopping-bag fa-5x text-muted mb-4"></i>
+                                    <h4 class="text-muted">No tenés pedidos todavía</h4>
+                                    <p class="text-muted mb-4">¡Explorá nuestro catálogo y hacé tu primer pedido!</p>
+                                    <a href="catalogo.html" class="btn btn-danger btn-lg">
+                                        <i class="fas fa-store me-2"></i>Ver Catálogo
+                                    </a>
+                                </div>
+
+                                <!-- Lista de pedidos -->
+                                <div id="ordersList" class="d-none">
+                                    <!-- Los pedidos se cargan dinámicamente aquí -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 <strong style="color: #dc3545;">GolazoStore</strong> - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/mis-pedidos.js"></script>
+</body>
+</html>

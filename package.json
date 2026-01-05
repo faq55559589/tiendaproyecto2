@@ -7,7 +7,7 @@
     "start": "cd frontend && python -m http.server 8000",
     "dev": "cd frontend && live-server --port=3000",
     "backend:init": "cd backend && npm init -y",
-    "backend:install": "cd backend && npm install express cors helmet morgan dotenv bcryptjs jsonwebtoken mysql2 multer express-validator nodemon",
+    "backend:install": "cd backend && npm install express cors helmet morgan dotenv bcryptjs jsonwebtoken better-sqlite3 multer express-validator nodemon",
     "backend:dev": "cd backend && npm run dev",
     "docs": "echo 'Documentación disponible en la carpeta docs/'"
   },

@@ -2,7 +2,7 @@
 
 ![Logo GolazoStore](frontend/assets/images/logo.png)
 
-**GolazoStore** es una tienda online moderna y profesional especializada en la venta de camisetas de fútbol, tanto diseños retro como colecciones actuales. El proyecto combina un frontend atractivo con animaciones CSS modernas y un backend robusto con API REST, autenticación y base de datos MySQL.
+**GolazoStore** es una tienda online moderna y profesional especializada en la venta de camisetas de fútbol, tanto diseños retro como colecciones actuales. El proyecto combina un frontend atractivo con animaciones CSS modernas y un backend robusto con API REST, autenticación y base de datos SQLite.
 
 ---
 
@@ -33,7 +33,7 @@
 ### Backend
 - ✅ **API REST**: Endpoints para productos, usuarios y autenticación
 - ✅ **Autenticación JWT**: Sistema de login y registro seguro
-- ✅ **Base de Datos MySQL**: Esquema completo con relaciones
+- ✅ **Base de Datos SQLite**: Base de datos ligera y eficiente (archivo local)
 - ✅ **Subida de Archivos**: Multer para imágenes de productos
 - ✅ **Middleware de Seguridad**: Validación y protección de rutas
 - ✅ **CORS Configurado**: Comunicación frontend-backend
@@ -51,7 +51,7 @@
 ### Backend
 - **Node.js** (v16+)
 - **Express.js** (Framework web)
-- **MySQL** (Base de datos)
+- **SQLite** (Base de datos mediante `better-sqlite3`)
 - **JWT** (JSON Web Tokens para autenticación)
 - **Multer** (Subida de archivos)
 - **bcrypt** (Encriptación de contraseñas)
@@ -72,7 +72,7 @@ tienda/
 │   ├── server.js               # Punto de entrada del servidor
 │   ├── package.json            # Dependencias del backend
 │   ├── database/
-│   │   └── fankit_db.sql       # Schema de la base de datos
+│   │   └── golazostore.db      # Archivo de base de datos SQLite
 │   ├── src/
 │   │   ├── controllers/        # Lógica de negocio
 │   │   ├── middleware/         # Middlewares personalizados
@@ -98,7 +98,6 @@ tienda/
 ### Prerrequisitos
 
 - **Node.js** (v16+) - [Descargar](https://nodejs.org/)
-- **MySQL** (v8.0+) - [Descargar](https://dev.mysql.com/downloads/)
 - **Git** - [Descargar](https://git-scm.com/)
 
 ### Paso 1: Clonar el Repositorio
@@ -115,16 +114,9 @@ cd backend
 npm install
 ```
 
-### Paso 3: Configurar la Base de Datos
+### Paso 3: Configuración de Base de Datos
 
-```sql
-CREATE DATABASE fankit_db;
-```
-
-Importa el schema:
-```bash
-mysql -u root -p fankit_db < database/fankit_db.sql
-```
+El proyecto utiliza **SQLite**, por lo que no es necesaria una configuración compleja de servidor. La base de datos se inicializará automáticamente o ya estará presente en `backend/database/golazostore.db`.
 
 ### Paso 4: Configurar Variables de Entorno
 
@@ -132,14 +124,10 @@ Crea un archivo `.env` en `backend/`:
 
 ```env
 PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=tu_contraseña
-DB_NAME=fankit_db
 JWT_SECRET=tu_clave_secreta
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=http://127.0.0.1:5500
+FRONTEND_URL=http://localhost:8000
+NODE_ENV=development
 ```
 
 ---
@@ -157,16 +145,17 @@ Servidor disponible en: `http://localhost:3000`
 
 ### Iniciar Frontend
 
-Opción A: **Live Server** (VS Code)
-- Abre `index.html` → Click derecho → "Open with Live Server"
+Puedes usar Python (si lo tienes instalado) o cualquier servidor estático.
 
-Opción B: **HTTP Server**
+Opción A: **Python**
 ```bash
-npm install -g http-server
-http-server -p 8080
+# Desde la raíz del proyecto
+python -m http.server 8000
 ```
+Luego abre `http://localhost:8000`
 
-Frontend disponible en: `http://localhost:8080`
+Opción B: **Live Server** (VS Code)
+- Abre `index.html` → Click derecho → "Open with Live Server"
 
 ---
 

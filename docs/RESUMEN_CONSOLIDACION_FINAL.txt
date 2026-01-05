@@ -15,7 +15,7 @@
 ✅ CONSOLIDACIÓN EXITOSA
    Se unificaron los proyectos "tienda" y "tienda-main" en uno solo,
    preservando lo mejor de ambos:
-   - Backend funcional (API REST + MySQL) de "tienda"
+   - Backend funcional (API REST + SQLite) de "tienda"
    - Frontend visual moderno de "tienda-main" (GolazoStore)
 
 
@@ -34,7 +34,7 @@ tienda/
 │   ├── server.js               ← Servidor Node.js + Express
 │   ├── package.json
 │   ├── database/
-│   │   └── fankit_db.sql       ← Schema MySQL
+│   │   └── schema.sql          ← Schema SQLite
 │   └── src/
 │       ├── controllers/        ← Lógica de negocio
 │       ├── middleware/         ← Autenticación JWT
@@ -84,12 +84,12 @@ tienda/
    ✓ Breadcrumbs en páginas internas
    ✓ Diseño 100% responsive
 
-🔧 BACKEND (API REST + MySQL)
+🔧 BACKEND (API REST + SQLite)
    ✓ Servidor Express.js
    ✓ Autenticación JWT (login/registro)
    ✓ CRUD de productos
    ✓ Middleware de seguridad
-   ✓ Base de datos MySQL con schema completo
+   ✓ Base de datos SQLite (archivo local)
    ✓ Subida de imágenes (Multer)
    ✓ CORS configurado
    ✓ Encriptación de contraseñas (bcrypt)
@@ -121,7 +121,7 @@ tienda/
    npm install
 
    Configurar .env:
-   (Crea un archivo .env con tus credenciales MySQL y JWT_SECRET)
+   (Crea un archivo .env con tus secretos como JWT_SECRET)
 
    Iniciar servidor:
    npm start
@@ -144,11 +144,9 @@ tienda/
 
 3️⃣ BASE DE DATOS
 
-   Crear base de datos:
-   CREATE DATABASE fankit_db;
-
-   Importar schema:
-   mysql -u root -p fankit_db < backend/database/fankit_db.sql
+   Base de datos SQLite:
+   Ya viene pre-configurada en backend/database/golazostore.db.
+   Para reiniciar, ejecuta: node backend/scripts/init-db.js
 
 
 ═════════════════════════════════════════════════════════════════
@@ -247,7 +245,7 @@ Backend:
   □ Crear archivo .env con credenciales
   □ npm start → ¿El servidor inicia sin errores?
   □ Probar endpoint: http://localhost:3000/api/products
-  □ ¿La conexión a MySQL funciona?
+  □ ¿La conexión a SQLite funciona?
 
 Git/GitHub:
   □ git status → ¿Working tree clean?

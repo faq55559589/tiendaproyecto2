@@ -1,0 +1,319 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              📋 REGISTRO DE CAMBIOS - PROYECTO GOLAZOSTORE                   ║
+║                                                                               ║
+║                        Fecha: 9 de Diciembre 2025                            ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔄 CAMBIOS REALIZADOS HOY (9/12/2025)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. MIGRACIÓN DE BASE DE DATOS
+   ────────────────────────────
+   ❌ ANTES: MySQL (requería servidor, contraseña, configuración)
+   ✅ AHORA: SQLite (archivo único, cero configuración)
+   
+   Archivos modificados:
+   • backend/package.json → Cambiado mysql2 por better-sqlite3
+   • backend/src/config/database.js → Nueva conexión SQLite
+   • backend/src/models/Product.js → Sintaxis SQLite (síncrona)
+   • backend/src/models/User.js → Sintaxis SQLite (síncrona)
+   • backend/src/controllers/*.js → Removido async/await innecesario
+   
+   Archivos eliminados:
+   • backend/src/utils/database.js (conexión MySQL antigua)
+   • backend/database/fankit_db.sql (schema MySQL)
+   
+   Archivos creados:
+   • backend/database/schema.sql (schema SQLite)
+   • backend/database/golazostore.db (base de datos)
+   • backend/scripts/init-db.js (inicializador)
+
+
+2. MEJORAS DE SEGURIDAD
+   ────────────────────────────
+   ✅ JWT_SECRET: Generado hash aleatorio de 128 caracteres
+   ✅ Validaciones: Agregado validationResult() en authController
+   ✅ CORS: Configurado para orígenes específicos (no abierto)
+   ✅ Rate Limiting: 5 intentos login/15min, 3 registros/hora
+   ✅ Logs: Deshabilitado verbose SQL en producción
+   
+   Nivel de seguridad: 5.5/10 → 8/10
+
+
+3. SISTEMA DE EMAILS
+   ────────────────────────────
+   ✅ Instalado: nodemailer
+   ✅ Configurado: Gmail SMTP
+   ✅ Email de bienvenida: Se envía al registrarse
+   ⏳ Pendiente: Recuperar contraseña
+   ⏳ Pendiente: Verificación de email
+   
+   Archivos creados:
+   • backend/src/utils/emailService.js
+   
+   Configuración en .env:
+   • EMAIL_USER=facundonew2003@gmail.com (temporal - cambiar por correo de tienda)
+   • EMAIL_PASS=contraseña de aplicación Gmail
+
+
+4. CORRECCIONES CSS
+   ────────────────────────────
+   ✅ Botón "Crear Cuenta" en login.html → Cambiado de azul a rojo
+   ✅ Botón "Iniciar Sesión" en registro.html → Cambiado de azul a rojo
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 ESTADO ACTUAL DEL PROYECTO
+═══════════════════════════════════════════════════════════════════════════════
+
+COMPONENTE              ESTADO          NOTAS
+─────────────────────────────────────────────────────────────────────────────
+Frontend (diseño)       ✅ 100%         HTML, CSS, Bootstrap, responsive
+Backend (API)           ✅ 100%         Node.js + Express funcionando
+Base de datos           ✅ 100%         SQLite con 15 productos, 4 categorías
+Autenticación           ✅ 100%         JWT + bcrypt + rate limiting
+Seguridad               ✅ 8/10         Falta HTTPS (producción)
+Emails                  🔄 50%          Bienvenida OK, falta recuperar pass
+Frontend ↔ Backend      ❌ 0%           Formularios no conectados aún
+Carrito funcional       ❌ 0%           Solo localStorage (no API)
+Checkout/Pagos          ❌ 0%           MercadoPago no configurado
+Producción              ❌ 0%           Falta hosting y dominio
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🛠️ STACK TECNOLÓGICO ACTUAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Frontend:
+  • HTML5 + CSS3
+  • Bootstrap 5.3.3
+  • JavaScript ES6+
+  • FontAwesome 6.5.2
+
+Backend:
+  • Node.js v22+
+  • Express.js 5.1
+  • SQLite (better-sqlite3)
+  • JWT (jsonwebtoken)
+  • bcryptjs
+  • nodemailer
+  • express-validator
+  • express-rate-limit
+  • helmet (seguridad)
+  • cors
+  • morgan (logs)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📁 ESTRUCTURA DE ARCHIVOS IMPORTANTE
+═══════════════════════════════════════════════════════════════════════════════
+
+backend/
+├── server.js                      # Punto de entrada
+├── package.json                   # Dependencias
+├── .env                           # Variables de entorno (NO subir a Git)
+├── database/
+│   ├── golazostore.db             # Base de datos SQLite
+│   └── schema.sql                 # Schema para recrear BD
+├── scripts/
+│   └── init-db.js                 # Script para inicializar BD
+└── src/
+    ├── config/
+    │   └── database.js            # Conexión SQLite
+    ├── controllers/
+    │   ├── authController.js      # Login/Registro
+    │   └── productController.js   # CRUD productos
+    ├── middleware/
+    │   └── auth.js                # Verificar JWT
+    ├── models/
+    │   ├── User.js                # Modelo usuario
+    │   └── Product.js             # Modelo producto
+    ├── routes/
+    │   ├── auth.js                # Rutas /api/auth/*
+    │   └── products.js            # Rutas /api/products/*
+    └── utils/
+        └── emailService.js        # Envío de emails
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🌐 ENDPOINTS DE LA API
+═══════════════════════════════════════════════════════════════════════════════
+
+PRODUCTOS (públicos):
+  GET  /api/products              → Lista todos los productos
+  GET  /api/products/:id          → Producto por ID
+  GET  /api/products/search?q=    → Buscar productos
+
+AUTENTICACIÓN:
+  POST /api/auth/register         → Registrar usuario (envía email)
+  POST /api/auth/login            → Iniciar sesión
+  GET  /api/auth/profile          → Ver perfil (requiere token)
+  PUT  /api/auth/profile          → Actualizar perfil (requiere token)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 PRÓXIMOS PASOS (PENDIENTES)
+═══════════════════════════════════════════════════════════════════════════════
+
+PRIORIDAD ALTA:
+  □ Crear correo dedicado para la tienda (golazostore@gmail.com o similar)
+  □ Conectar frontend con backend (catálogo muestre productos de API)
+  □ Conectar formularios login/registro del frontend
+  □ Implementar "Recuperar contraseña" con email
+
+PRIORIDAD MEDIA:
+  □ Carrito funcional con API
+  □ Verificación de email al registrarse
+  □ Checkout básico
+
+PRIORIDAD BAJA (Producción):
+  □ Configurar MercadoPago
+  □ Hosting backend (Railway/Render)
+  □ Hosting frontend (Vercel/Netlify)
+  □ Comprar dominio
+  □ Configurar HTTPS/SSL
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ⚠️ NOTAS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. El archivo .env contiene secretos - NO subirlo a GitHub
+   (ya está en .gitignore)
+
+2. Para iniciar el servidor:
+   cd backend
+   node server.js
+
+3. La base de datos SQLite está en:
+   backend/database/golazostore.db
+   (Abrir con DB Browser for SQLite)
+
+4. Para reiniciar la BD desde cero:
+   node scripts/init-db.js
+
+5. Email actual es temporal (facundonew2003@gmail.com)
+   Cambiar por correo dedicado de la tienda
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📅 HISTORIAL DE SESIONES
+═══════════════════════════════════════════════════════════════════════════════
+
+09/12/2025 - Sesión 2 (Tarde)
+  • Recuperar contraseña completo (frontend + backend + email)
+  • Login conectado al backend API
+  • Navbar dinámico (muestra nombre de usuario al loguearse)
+  • Página "Mi Perfil" creada y conectada al backend
+  • Página "Mis Pedidos" creada con pedidos simulados de ejemplo
+  • Mejoras UI: colores marrones en perfil, dropdown visible
+
+09/12/2025 - Sesión 1 (Mañana)
+  • Migración MySQL → SQLite
+  • Mejoras de seguridad (8/10)
+  • Sistema de emails (bienvenida)
+  • Correcciones CSS (botones azules → rojos)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎓 ENSEÑANZAS DE HOY - SERVIDORES Y BACKEND
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 ¿QUÉ ES UN SERVIDOR?
+   Un servidor es simplemente un programa que está "escuchando" peticiones.
+   Cuando alguien visita tu página o hace click en "Iniciar Sesión",
+   se envía una petición al servidor y éste responde.
+
+📌 CICLO DE VIDA DE UNA PETICIÓN:
+   1. Usuario hace click → Frontend envía petición (fetch)
+   2. Petición viaja por internet al servidor (localhost:3000)
+   3. Servidor procesa (valida datos, consulta BD)
+   4. Servidor responde (JSON con datos o error)
+   5. Frontend recibe y actualiza la página
+
+📌 CÓMO INICIAR EL SERVIDOR:
+   
+   Opción A - Doble click en INICIAR_SERVIDOR.bat (recomendado)
+   
+   Opción B - Manual desde terminal:
+   cd c:\Users\Facundo\Desktop\tienda\backend
+   node server.js
+
+📌 ¿POR QUÉ EL SERVIDOR SE DETIENE?
+   • Error en el código → Muestra error y se cierra
+   • Ctrl+C en la terminal → Lo detienes manualmente
+   • Terminal de VS Code → A veces se cierra sola
+   
+   SOLUCIÓN: Usar ventana CMD separada con el .bat
+
+📌 CÓMO REINICIAR EL SERVIDOR:
+   1. Cerrar la ventana CMD donde corre
+   2. Volver a ejecutar INICIAR_SERVIDOR.bat
+   
+   O desde terminal:
+   Ctrl+C (para detener)
+   node server.js (para iniciar)
+
+📌 COMANDOS ÚTILES:
+
+   Ver si algo está usando el puerto 3000:
+   netstat -ano | findstr :3000
+
+   Matar proceso por puerto (si el servidor no arranca):
+   npx kill-port 3000
+
+   Ver logs del servidor en tiempo real:
+   El servidor ya muestra logs en la consola automáticamente
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 ESTADO ACTUAL ACTUALIZADO
+═══════════════════════════════════════════════════════════════════════════════
+
+COMPONENTE              ESTADO          NOTAS
+─────────────────────────────────────────────────────────────────────────────
+Frontend (diseño)       ✅ 100%         HTML, CSS, Bootstrap, responsive
+Backend (API)           ✅ 100%         Node.js + Express + SQLite
+Base de datos           ✅ 100%         SQLite con 15 productos
+Autenticación           ✅ 100%         JWT + bcrypt + rate limiting
+Seguridad               ✅ 8/10         Falta HTTPS (producción)
+Emails                  ✅ 100%         Bienvenida + Recuperar contraseña
+Login Frontend          ✅ 100%         Conectado a API
+Registro Frontend       ✅ 100%         Conectado a API
+Mi Perfil               ✅ 100%         Página + API conectada
+Mis Pedidos             🔄 50%          UI lista, falta backend real
+Carrito funcional       ❌ 0%           Solo localStorage (no API)
+Checkout/Pagos          ❌ 0%           MercadoPago no configurado
+Producción              ❌ 0%           Falta hosting y dominio
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ▶️ QUÉ SIGUE (PRÓXIMA SESIÓN)
+═══════════════════════════════════════════════════════════════════════════════
+
+PRIORIDAD 1 - Funcionalidad del Carrito:
+  □ Crear API de carrito en backend (POST, GET, DELETE)
+  □ Conectar carrito.js con la API
+  □ Persistir carrito en base de datos (no solo localStorage)
+
+PRIORIDAD 2 - Sistema de Pedidos Real:
+  □ Crear tabla "orders" en SQLite
+  □ API para crear y listar pedidos
+  □ Conectar "Mis Pedidos" con datos reales
+
+PRIORIDAD 3 - Catálogo Dinámico:
+  □ Conectar catalogo.js con API de productos
+  □ Filtros por categoría desde backend
+  □ Búsqueda de productos
+
+FUTURO - Producción:
+  □ Checkout con MercadoPago
+  □ Hosting (Railway/Render para backend)
+  □ Dominio propio
+
+
+═══════════════════════════════════════════════════════════════════════════════

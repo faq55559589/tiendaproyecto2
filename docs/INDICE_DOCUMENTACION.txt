@@ -3,7 +3,7 @@
 ║           📚 ÍNDICE DE DOCUMENTACIÓN - GOLAZOSTORE 📚        ║
 ║                                                               ║
 ║              Guía rápida para navegar los docs                ║
-║              Actualizado: 19 de Noviembre 2025                ║
+║              Actualizado: 9 de Diciembre 2025                 ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 
@@ -13,8 +13,30 @@
 ═════════════════════════════════════════════════════════════════
 
 ┌─────────────────────────────────────────────────────────────┐
+│ 🌟 GUIA_MAESTRA_APRENDIZAJE.txt  ← ¡NUEVO! EMPIEZA AQUÍ    │
+│    ENTIENDE TODO EL PROYECTO DE PRINCIPIO A FIN             │
+└─────────────────────────────────────────────────────────────┘
+
+  ¿Qué contiene?
+  • Mapa de toda la documentación
+  • Arquitectura visual del proyecto
+  • Estructura de carpetas explicada
+  • Ruta de aprendizaje por semanas
+  • Conceptos clave (API REST, JWT, CORS, MVC)
+  • Guía completa de servidores
+  • Comandos y errores comunes
+  • Recursos para seguir aprendiendo
+
+  ¿Cuándo usarlo?
+  • ¡PRIMERO! Cuando no sabes por dónde empezar
+  • Para entender cómo se conecta todo
+  • Para reforzar conocimientos de servidores
+  • Como referencia general
+
+
+┌─────────────────────────────────────────────────────────────┐
 │ 1. 🎯 RESUMEN_CONSOLIDACION_FINAL.txt                       │
-│    LEE ESTO PRIMERO                                         │
+│    HISTORIA Y ESTADO DEL PROYECTO                           │
 └─────────────────────────────────────────────────────────────┘
 
   ¿Qué contiene?
@@ -71,7 +93,7 @@
   ¿Qué contiene?
   • Cómo configurar el backend desde cero
   • Instalación de dependencias (npm install)
-  • Configuración de MySQL
+  • Configuración de SQLite
   • Crear endpoints de API
   • Conectar frontend con backend
 
@@ -104,7 +126,7 @@
 └─────────────────────────────────────────────────────────────┘
 
   ¿Qué contiene?
-  • Explicaciones de tecnologías (Node.js, Express, MySQL)
+  • Explicaciones de tecnologías (Node.js, Express, SQLite)
   • Conceptos de desarrollo web
   • Arquitectura cliente-servidor
   • APIs REST explicadas
@@ -169,13 +191,15 @@ Se eliminaron estos documentos porque estaban DESACTUALIZADOS:
 ═════════════════════════════════════════════════════════════════
 
 docs/
+├── 🌟 GUIA_MAESTRA_APRENDIZAJE.txt      ← ¡EMPIEZA AQUÍ!
 ├── 📋 INDICE_DOCUMENTACION.txt          ← Estás aquí
-├── ✅ RESUMEN_CONSOLIDACION_FINAL.txt   ← Estado actual
+├── 📅 CAMBIOS_09_12_2025.txt            ← Cambios de hoy
+├── ✅ RESUMEN_CONSOLIDACION_FINAL.txt   ← Historia del proyecto
 ├── 🚀 ROADMAP_PROXIMAS_FASES.txt        ← Qué hacer después
 ├── 📘 GUIA_GIT_GITHUB_BASICO.txt        ← Comandos Git
 ├── 🔧 GUIA_BACKEND_PASO_A_PASO.txt      ← Implementar backend
 ├── 🎨 CAMBIOS_BRANDING_GOLAZOSTORE.txt  ← Diseño visual
-└── 📖 GUIA_TEORICA_HERRAMIENTAS.txt     ← Conceptos técnicos
+└── 📖 STACK_TECNOLOGICO.md              ← Tecnologías usadas
 
 
 ═════════════════════════════════════════════════════════════════
@@ -238,8 +262,10 @@ La documentación debe AYUDARTE, no estorbarte.
 
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║              📚 7 DOCUMENTOS ORGANIZADOS Y ÚTILES 📚         ║
+║              📚 9 DOCUMENTOS ORGANIZADOS Y ÚTILES 📚         ║
 ║                                                               ║
 ║    Todo lo que necesitas está aquí, limpio y ordenado.       ║
+║                                                               ║
+║    🌟 Empieza por: GUIA_MAESTRA_APRENDIZAJE.txt              ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝

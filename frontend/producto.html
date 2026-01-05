@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <title>Producto - GolazoStore</title>
 </head>
+
 <body>
 
     <header>
@@ -19,37 +24,44 @@
                     <img src="assets/images/logo.png" alt="GolazoStore" height="50" class="me-2">
                     <span class="fs-5 fw-bold" style="color: #dc3545;">GolazoStore</span>
                 </a>
-    
-                <button class="btn btn-outline-danger d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories" aria-controls="offcanvasCategories">
+
+                <button class="btn btn-outline-danger d-none d-lg-block" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasCategories" aria-controls="offcanvasCategories">
                     <i class="fas fa-bars"></i> Categorías
                 </button>
-    
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-    
+
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="catalogo.html"><i class="fas fa-store"></i> Catálogo</a>
                         </li>
+                        <!--
                         <li class="nav-item">
                             <a class="nav-link" href="retros.html"><i class="fas fa-history"></i> Retro</a>
                         </li>
+                        -->
                         <li class="nav-item">
                             <a class="nav-link" href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a>
                         </li>
                     </ul>
-    
+
                     <form class="d-flex mx-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Buscar camiseta..." aria-label="Search">
-                        <button class="btn btn-outline-danger" type="submit"><i class="fas fa-search"></i> Buscar</button>
+                        <input class="form-control me-2" type="search" placeholder="Buscar camiseta..."
+                            aria-label="Search">
+                        <button class="btn btn-outline-danger" type="submit"><i class="fas fa-search"></i>
+                            Buscar</button>
                     </form>
-    
+
                     <div class="navbar-nav ms-auto">
                         <a class="nav-link" href="login.html"><i class="fas fa-user"></i> Iniciar Sesión</a>
                         <a class="nav-link" href="registro.html"><i class="fas fa-user-plus"></i> Registrarse</a>
-                        <a class="nav-link" href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="badge bg-danger" id="cart-count">0</span></a>
+                        <a class="nav-link" href="carrito.html"><i class="fas fa-shopping-cart"></i> Carrito <span
+                                class="badge bg-danger" id="cart-count">0</span></a>
                     </div>
                 </div>
             </div>
@@ -77,44 +89,38 @@
                         <div class="product-gallery">
                             <!-- Imagen Principal -->
                             <div class="main-image-container mb-3">
-                                <img id="mainImage" src="assets/images/camiseta_seleccion_local.jpg.webp" 
-                                     class="img-fluid rounded shadow" 
-                                     alt="Camiseta Selección Local"
-                                     style="cursor: pointer; transition: transform 0.3s ease;">
+                                <img id="mainImage" class="img-fluid rounded shadow" alt="Camiseta Selección Local"
+                                    style="cursor: pointer; transition: transform 0.3s ease;">
                             </div>
 
                             <!-- Miniaturas -->
                             <div class="thumbnail-gallery d-flex gap-2">
                                 <div class="thumbnail-item active">
-                                    <img src="assets/images/camiseta_seleccion_local.jpg.webp" 
-                                         class="img-thumbnail thumbnail-img" 
-                                         alt="Vista frontal"
-                                         data-full-src="assets/images/camiseta_seleccion_local.jpg.webp"
-                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                                    <img src="assets/images/camiseta_seleccion_local.jpg.webp"
+                                        class="img-thumbnail thumbnail-img" alt="Vista frontal"
+                                        data-full-src="assets/images/camiseta_seleccion_local.jpg.webp"
+                                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                 </div>
                                 <div class="thumbnail-item">
-                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Vista+Trasera" 
-                                         class="img-thumbnail thumbnail-img" 
-                                         alt="Vista trasera"
-                                         data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Vista+Trasera"
-                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Vista+Trasera"
+                                        class="img-thumbnail thumbnail-img" alt="Vista trasera"
+                                        data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Vista+Trasera"
+                                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                 </div>
                                 <div class="thumbnail-item">
-                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Detalle+Logo" 
-                                         class="img-thumbnail thumbnail-img" 
-                                         alt="Detalle del logo"
-                                         data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Detalle+Logo"
-                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Detalle+Logo"
+                                        class="img-thumbnail thumbnail-img" alt="Detalle del logo"
+                                        data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Detalle+Logo"
+                                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                 </div>
                                 <div class="thumbnail-item">
-                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Etiqueta+Oficial" 
-                                         class="img-thumbnail thumbnail-img" 
-                                         alt="Etiqueta oficial"
-                                         data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Etiqueta+Oficial"
-                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                                    <img src="https://placehold.co/300x300/E8E8E8/000000?text=Etiqueta+Oficial"
+                                        class="img-thumbnail thumbnail-img" alt="Etiqueta oficial"
+                                        data-full-src="https://placehold.co/800x800/E8E8E8/000000?text=Etiqueta+Oficial"
+                                        style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                 </div>
-                    </div>
-        
+                            </div>
+
                             <!-- Botón de Zoom -->
                             <div class="zoom-controls mt-3">
                                 <button class="btn btn-outline-secondary btn-sm" id="zoomBtn">
@@ -128,7 +134,7 @@
                     <div class="col-lg-6">
                         <div class="product-info">
                             <h1 class="product-title mb-3">Camiseta Selección Local 2025</h1>
-                            
+
                             <!-- Rating -->
                             <div class="product-rating mb-3">
                                 <div class="stars">
@@ -143,23 +149,27 @@
 
                             <!-- Precio -->
                             <div class="product-price mb-4">
-                                <span class="current-price h3 text-primary fw-bold">$89.99</span>
+                                <span class="current-price h3 text-danger fw-bold">$89.99</span>
                                 <span class="original-price text-muted text-decoration-line-through ms-2">$120.00</span>
                                 <span class="discount-badge badge bg-danger ms-2">-25%</span>
                             </div>
 
                             <!-- Descripción -->
                             <div class="product-description mb-4">
-                                <p class="lead">La camiseta oficial de la selección local, diseñada para los verdaderos fanáticos del fútbol.</p>
-                                <p>Fabricada con materiales de alta calidad que garantizan comodidad y durabilidad. Incluye tecnología de secado rápido y ventilación optimizada para el máximo rendimiento en la cancha.</p>
+                                <p class="lead">La camiseta oficial de la selección local, diseñada para los verdaderos
+                                    fanáticos del fútbol.</p>
+                                <p>Fabricada con materiales de alta calidad que garantizan comodidad y durabilidad.
+                                    Incluye tecnología de secado rápido y ventilación optimizada para el máximo
+                                    rendimiento en la cancha.</p>
                             </div>
 
                             <!-- Especificaciones -->
                             <div class="product-specs mb-4">
-                                <h6><i class="fas fa-info-circle text-primary"></i> Especificaciones:</h6>
+                                <h6><i class="fas fa-info-circle text-danger"></i> Especificaciones:</h6>
                                 <ul class="list-unstyled">
                                     <li><i class="fas fa-check text-success"></i> Material: 100% Poliéster técnico</li>
-                                    <li><i class="fas fa-check text-success"></i> Tecnología Dri-FIT para secado rápido</li>
+                                    <li><i class="fas fa-check text-success"></i> Tecnología Dri-FIT para secado rápido
+                                    </li>
                                     <li><i class="fas fa-check text-success"></i> Logo y escudo bordados</li>
                                     <li><i class="fas fa-check text-success"></i> Lavado a máquina</li>
                                     <li><i class="fas fa-check text-success"></i> Garantía de calidad oficial</li>
@@ -168,7 +178,7 @@
 
                             <!-- Selector de Talle -->
                             <div class="size-selector mb-4">
-                                <h6><i class="fas fa-ruler text-primary"></i> Seleccionar Talle:</h6>
+                                <h6><i class="fas fa-ruler text-danger"></i> Seleccionar Talle:</h6>
                                 <div class="size-options d-flex gap-2 flex-wrap">
                                     <button class="btn btn-outline-secondary size-btn" data-size="XS">XS</button>
                                     <button class="btn btn-outline-secondary size-btn" data-size="S">S</button>
@@ -186,25 +196,26 @@
 
                             <!-- Selector de Cantidad -->
                             <div class="quantity-selector mb-4">
-                                <h6><i class="fas fa-shopping-cart text-primary"></i> Cantidad:</h6>
+                                <h6><i class="fas fa-shopping-cart text-danger"></i> Cantidad:</h6>
                                 <div class="input-group" style="width: 150px;">
                                     <button class="btn btn-outline-secondary" type="button" id="decreaseQty">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" class="form-control text-center" value="1" min="1" max="10" id="quantityInput">
+                                    <input type="number" class="form-control text-center" value="1" min="1" max="10"
+                                        id="quantityInput">
                                     <button class="btn btn-outline-secondary" type="button" id="increaseQty">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
                                 <small class="text-muted">
-                                    <i class="fas fa-box text-info"></i> 
+                                    <i class="fas fa-box text-info"></i>
                                     Stock disponible: <span id="stockCount" class="fw-bold">15</span> unidades
                                 </small>
                             </div>
 
                             <!-- Botones de Acción -->
                             <div class="action-buttons mb-4">
-                                <button class="btn btn-primary btn-lg me-2" id="addToCartBtn">
+                                <button class="btn btn-danger btn-lg me-2" id="addToCartBtn">
                                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                                 </button>
                                 <button class="btn btn-success btn-lg" id="buyNowBtn">
@@ -216,40 +227,43 @@
                             <div class="product-info-details">
                                 <div class="row text-center">
                                     <div class="col-md-6">
-                                        <i class="fas fa-shield-alt text-primary mb-2"></i>
+                                        <i class="fas fa-shield-alt text-danger mb-2"></i>
                                         <p class="mb-0"><strong>Garantía</strong><br><small>30 días</small></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <i class="fas fa-medal text-primary mb-2"></i>
+                                        <i class="fas fa-medal text-danger mb-2"></i>
                                         <p class="mb-0"><strong>Calidad</strong><br><small>Oficial</small></p>
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
-            </section>
+            </div>
+        </section>
 
         <!-- Sección de Detalles Adicionales -->
         <section class="product-details-section py-5 bg-light">
-                <div class="container">
+            <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <!-- Tabs de Información -->
                         <ul class="nav nav-tabs" id="productTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
+                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                    data-bs-target="#description" type="button" role="tab">
                                     <i class="fas fa-info-circle"></i> Descripción
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab">
+                                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab"
+                                    data-bs-target="#specifications" type="button" role="tab">
                                     <i class="fas fa-cog"></i> Especificaciones
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">
+                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
+                                    type="button" role="tab">
                                     <i class="fas fa-star"></i> Reseñas (127)
                                 </button>
                             </li>
@@ -260,19 +274,28 @@
                             <div class="tab-pane fade show active" id="description" role="tabpanel">
                                 <div class="p-4">
                                     <h5>Descripción Completa</h5>
-                                    <p>Esta camiseta oficial de la selección local representa la pasión y el orgullo de nuestros colores. Diseñada con la más alta tecnología deportiva, combina estilo y funcionalidad para ofrecerte la mejor experiencia tanto en la cancha como en la tribuna.</p>
-                                    
+                                    <p>Esta camiseta oficial de la selección local representa la pasión y el orgullo de
+                                        nuestros colores. Diseñada con la más alta tecnología deportiva, combina estilo
+                                        y funcionalidad para ofrecerte la mejor experiencia tanto en la cancha como en
+                                        la tribuna.</p>
+
                                     <h6>Características Destacadas:</h6>
                                     <ul>
-                                        <li><strong>Material Premium:</strong> Fabricada con poliéster técnico de alta calidad que garantiza durabilidad y comodidad.</li>
-                                        <li><strong>Tecnología Dri-FIT:</strong> Sistema de secado rápido que mantiene la piel seca durante la actividad física.</li>
-                                        <li><strong>Ventilación Optimizada:</strong> Diseño con zonas de ventilación estratégicas para máximo confort.</li>
-                                        <li><strong>Logo Bordado:</strong> Escudo oficial bordado con hilos de alta resistencia.</li>
-                                        <li><strong>Corte Deportivo:</strong> Silueta ergonómica que se adapta perfectamente al cuerpo.</li>
+                                        <li><strong>Material Premium:</strong> Fabricada con poliéster técnico de alta
+                                            calidad que garantiza durabilidad y comodidad.</li>
+                                        <li><strong>Tecnología Dri-FIT:</strong> Sistema de secado rápido que mantiene
+                                            la piel seca durante la actividad física.</li>
+                                        <li><strong>Ventilación Optimizada:</strong> Diseño con zonas de ventilación
+                                            estratégicas para máximo confort.</li>
+                                        <li><strong>Logo Bordado:</strong> Escudo oficial bordado con hilos de alta
+                                            resistencia.</li>
+                                        <li><strong>Corte Deportivo:</strong> Silueta ergonómica que se adapta
+                                            perfectamente al cuerpo.</li>
                                     </ul>
 
                                     <h6>Perfecto Para:</h6>
-                                    <p>Partidos de fútbol, entrenamientos, eventos deportivos, colección personal o simplemente mostrar tu pasión por el equipo.</p>
+                                    <p>Partidos de fútbol, entrenamientos, eventos deportivos, colección personal o
+                                        simplemente mostrar tu pasión por el equipo.</p>
                                 </div>
                             </div>
 
@@ -280,7 +303,7 @@
                             <div class="tab-pane fade" id="specifications" role="tabpanel">
                                 <div class="p-4">
                                     <h5>Especificaciones Técnicas</h5>
-                    <div class="row">
+                                    <div class="row">
                                         <div class="col-md-6">
                                             <table class="table table-striped">
                                                 <tbody>
@@ -333,12 +356,12 @@
                             <div class="tab-pane fade" id="reviews" role="tabpanel">
                                 <div class="p-4">
                                     <h5>Reseñas de Clientes</h5>
-                                    
+
                                     <!-- Resumen de Calificaciones -->
                                     <div class="row mb-4">
                                         <div class="col-md-4">
                                             <div class="text-center">
-                                                <h2 class="text-primary">4.8</h2>
+                                                <h2 class="text-danger">4.8</h2>
                                                 <div class="stars mb-2">
                                                     <i class="fas fa-star text-warning"></i>
                                                     <i class="fas fa-star text-warning"></i>
@@ -406,7 +429,8 @@
                                                 </div>
                                                 <small class="text-muted">Hace 2 días</small>
                                             </div>
-                                            <p class="mb-0">"Excelente calidad, muy cómoda y se ve genial. La talla es exacta según la guía. ¡Altamente recomendada!"</p>
+                                            <p class="mb-0">"Excelente calidad, muy cómoda y se ve genial. La talla es
+                                                exacta según la guía. ¡Altamente recomendada!"</p>
                                         </div>
 
                                         <div class="review-item border-bottom pb-3 mb-3">
@@ -423,7 +447,8 @@
                                                 </div>
                                                 <small class="text-muted">Hace 1 semana</small>
                                             </div>
-                                            <p class="mb-0">"Perfecta para el partido del domingo. El material es muy bueno y transpirable. El envío fue súper rápido."</p>
+                                            <p class="mb-0">"Perfecta para el partido del domingo. El material es muy
+                                                bueno y transpirable. El envío fue súper rápido."</p>
                                         </div>
 
                                         <div class="review-item border-bottom pb-3 mb-3">
@@ -440,7 +465,8 @@
                                                 </div>
                                                 <small class="text-muted">Hace 2 semanas</small>
                                             </div>
-                                            <p class="mb-0">"Muy buena camiseta, solo que me quedó un poco ajustada. Recomiendo pedir una talla más grande si están entre dos tallas."</p>
+                                            <p class="mb-0">"Muy buena camiseta, solo que me quedó un poco ajustada.
+                                                Recomiendo pedir una talla más grande si están entre dos tallas."</p>
                                         </div>
                                     </div>
                                 </div>
@@ -451,56 +477,18 @@
                 </div>
             </div>
         </section>
-            
+
         <!-- Productos Relacionados -->
-        <section class="related-products py-5">
+        <!-- Productos Relacionados -->
+        <section class="related-products py-5" id="relatedProductsSection" style="display: none;">
             <div class="container">
                 <h3 class="text-center mb-5">Productos Relacionados</h3>
-                <div class="row">
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card h-100">
-                            <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+Visitante" class="card-img-top" alt="Camiseta Visitante">
-                                <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Visitante</h5>
-                                <p class="card-text fw-bold">$75.50</p>
-                                <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card h-100">
-                            <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+Retro" class="card-img-top" alt="Camiseta Retro">
-                                <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Retro 1990</h5>
-                                <p class="card-text fw-bold">$110.00</p>
-                                <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                                </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100">
-                            <img src="https://placehold.co/300x300/E8E8E8/000000?text=Camiseta+Entrenamiento" class="card-img-top" alt="Camiseta Entrenamiento">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Camiseta Entrenamiento</h5>
-                                <p class="card-text fw-bold">$60.00</p>
-                                <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card h-100">
-                            <img src="https://placehold.co/300x300/E8E8E8/000000?text=Short+Local" class="card-img-top" alt="Short Local">
-                                <div class="card-body text-center">
-                                <h5 class="card-title">Short Local</h5>
-                                <p class="card-text fw-bold">$45.00</p>
-                                <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i> Ver Producto</a>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
+                <div class="row" id="relatedProductsContainer">
+                    <!-- Dinámico -->
                 </div>
-            </section>
-        </main>  
+            </div>
+        </section>
+    </main>
 
     <!-- Modal para Guía de Talles -->
     <div class="modal fade" id="sizeGuideModal" tabindex="-1" aria-labelledby="sizeGuideModalLabel" aria-hidden="true">
@@ -563,7 +551,8 @@
                     </div>
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle"></i>
-                        <strong>Consejo:</strong> Si estás entre dos talles, te recomendamos elegir el talle más grande para mayor comodidad.
+                        <strong>Consejo:</strong> Si estás entre dos talles, te recomendamos elegir el talle más grande
+                        para mayor comodidad.
                     </div>
                 </div>
             </div>
@@ -584,79 +573,91 @@
             </div>
         </div>
     </div>
-    
-        <footer class="bg-dark text-white pt-5 pb-4">
-            <div class="container text-center text-md-start">
-                <div class="row text-center text-md-start">
-        
-                    <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                        <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">GolazoStore</h5>
-                        <p>
-                            La casa de las camisetas de fútbol para verdaderos hinchas. Calidad, pasión y los mejores diseños retro y actuales.
-                        </p>
-                    </div>
-        
-                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                        <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Enlaces</h5>
-                        <p><a href="catalogo.html" class="text-white" style="text-decoration: none;">Catálogo</a></p>
-                        <p><a href="#" class="text-white" style="text-decoration: none;">Ofertas</a></p>
-                        <p><a href="#" class="text-white" style="text-decoration: none;">Mi Cuenta</a></p>
-                        <p><a href="contacto.html" class="text-white" style="text-decoration: none;">Contacto</a></p>
-                    </div>
-        
-                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-                         <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Contacto</h5>
-                         <p>Montevideo, Uruguay</p>
-                         <p>info@golazostore.com</p>
-                         <p>+598 99 123 456</p>
-                         <div class="social-icons mt-3">
-                            <a href="https://www.instagram.com/facupintado_/" target="_blank" class="instagram" title="Instagram">
-                                <i class="fab fa-instagram fa-lg"></i>
-                            </a>
-                            <a href="https://www.facebook.com" target="_blank" class="facebook" title="Facebook">
-                                <i class="fab fa-facebook-f fa-lg"></i>
-                            </a>
-                            <a href="https://www.twitter.com" target="_blank" class="twitter" title="Twitter">
-                                <i class="fab fa-twitter fa-lg"></i>
-                            </a>
-                            <a href="https://wa.me/59899123456" target="_blank" class="whatsapp" title="WhatsApp">
-                                <i class="fab fa-whatsapp fa-lg"></i>
-                            </a>
-                         </div>
-                        </div>
-                </div>
-        
-                <hr class="mb-4">
-        
-                <div class="row align-items-center">
-                    <div class="col-md-7 col-lg-8">
-                        <p> © 2025 Copyright:
-                            <a href="../index.html" style="text-decoration: none;">
-                                <strong style="color: #dc3545;">GolazoStore.com</strong>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCategories" aria-labelledby="offcanvasCategoriesLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasCategoriesLabel">Categorías</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row text-center text-md-start">
+
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">GolazoStore</h5>
+                    <p>
+                        La casa de las camisetas de fútbol para verdaderos hinchas. Calidad, pasión y los mejores
+                        diseños retro y actuales.
+                    </p>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Enlaces</h5>
+                    <p><a href="catalogo.html" class="text-white" style="text-decoration: none;">Catálogo</a></p>
+                    <p><a href="#" class="text-white" style="text-decoration: none;">Ofertas</a></p>
+                    <p><a href="#" class="text-white" style="text-decoration: none;">Mi Cuenta</a></p>
+                    <p><a href="contacto.html" class="text-white" style="text-decoration: none;">Contacto</a></p>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #dc3545;">Contacto</h5>
+                    <p>Montevideo, Uruguay</p>
+                    <p>info@golazostore.com</p>
+                    <p>+598 99 123 456</p>
+                    <div class="social-icons mt-3">
+                        <a href="https://www.instagram.com/facupintado_/" target="_blank" class="instagram"
+                            title="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="https://www.facebook.com" target="_blank" class="facebook" title="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="https://www.twitter.com" target="_blank" class="twitter" title="Twitter">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="https://wa.me/59899123456" target="_blank" class="whatsapp" title="WhatsApp">
+                            <i class="fab fa-whatsapp fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="offcanvas-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-tshirt me-2"></i>Todas las Camisetas</a></li>
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p> © 2025 Copyright:
+                        <a href="../index.html" style="text-decoration: none;">
+                            <strong style="color: #dc3545;">GolazoStore.com</strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCategories"
+        aria-labelledby="offcanvasCategoriesLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasCategoriesLabel">Categorías</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="catalogo.html" class="text-decoration-none text-dark"><i
+                            class="fas fa-tshirt me-2"></i>Todas las Camisetas</a></li>
+                <li class="list-group-item"><a href="catalogo.html?cat=shorts" class="text-decoration-none text-dark"><i
+                            class="fas fa-running me-2"></i>Shorts</a></li>
+                <!--
                     <li class="list-group-item"><a href="retros.html" class="text-decoration-none text-dark"><i class="fas fa-history me-2"></i>Camisetas Retro</a></li>
                     <li class="list-group-item"><a href="catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-flag me-2"></i>Selecciones Nacionales</a></li>
                     <li class="list-group-item"><a href="catalogo.html" class="text-decoration-none text-dark"><i class="fas fa-futbol me-2"></i>Clubes Europeos</a></li>
-                </ul>
-            </div>
+                    -->
+            </ul>
         </div>
-        
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/product.js"></script>
+    <script src="js/producto.js"></script>
 </body>
+
 </html>

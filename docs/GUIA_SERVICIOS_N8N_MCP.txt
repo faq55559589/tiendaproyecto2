@@ -1,0 +1,732 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║        🔧 GUÍA: CAPA DE SERVICIOS, N8N Y MCP                                 ║
+║                                                                               ║
+║        Preparar GolazoStore para automatizaciones e IA                        ║
+║        Creado: 10 de Diciembre 2025                                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📚 CONCEPTOS BÁSICOS
+═══════════════════════════════════════════════════════════════════════════════
+
+¿QUÉ ES UNA CAPA DE SERVICIOS?
+─────────────────────────────────────────────────────────────────────────────
+Es una carpeta con archivos que contienen la LÓGICA DE NEGOCIO separada
+de los controllers.
+
+ANTES (actual - sin servicios):
+  Ruta → Controller (hace todo) → Model → BD
+
+DESPUÉS (con servicios):
+  Ruta → Controller → Servicio (lógica) → Model → BD
+
+¿POR QUÉ ES IMPORTANTE?
+  • Código reutilizable (el mismo servicio lo usa API, n8n, MCP)
+  • Más fácil de probar (unit tests)
+  • Más fácil de mantener
+  • Necesario para integraciones con IA
+
+
+¿QUÉ ES N8N?
+─────────────────────────────────────────────────────────────────────────────
+Es una herramienta de AUTOMATIZACIÓN visual (como Zapier pero gratis y
+self-hosted).
+
+Ejemplos de lo que puedes hacer:
+  • Nuevo pedido → Enviar notificación a Telegram
+  • Usuario registrado → Agregar a lista de Mailchimp
+  • Stock bajo → Enviar alerta por email
+  • Cada día a las 9am → Generar reporte de ventas
+
+n8n se conecta a tu app mediante WEBHOOKS (URLs que reciben/envían datos).
+
+
+¿QUÉ ES MCP (Model Context Protocol)?
+─────────────────────────────────────────────────────────────────────────────
+Es un protocolo que permite a modelos de IA (como Claude) acceder a
+herramientas y datos de tu aplicación.
+
+Con MCP podrías:
+  • Preguntar: "¿Cuántos pedidos hubo hoy?" → IA consulta tu BD
+  • Pedir: "Crea un producto nuevo" → IA usa tu API
+  • Solicitar: "Resume las ventas del mes" → IA analiza datos
+
+MCP necesita una CAPA DE SERVICIOS bien definida para funcionar.
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🏗️ PASO 1: IMPLEMENTAR CAPA DE SERVICIOS
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTRUCTURA A CREAR
+─────────────────────────────────────────────────────────────────────────────
+
+backend/src/services/
+├── authService.js        ← Lógica de autenticación
+├── productService.js     ← Lógica de productos
+├── orderService.js       ← Lógica de pedidos
+├── cartService.js        ← Lógica del carrito
+└── webhookService.js     ← Para disparar eventos a n8n
+
+
+EJEMPLO: productService.js
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/services/productService.js
+const Product = require('../models/Product');
+const eventBus = require('../utils/eventBus');
+
+class ProductService {
+    
+    getAll(filters = {}) {
+        let products = Product.findAll();
+        
+        if (filters.category) {
+            products = products.filter(p => p.category_id === filters.category);
+        }
+        
+        if (filters.search) {
+            const term = filters.search.toLowerCase();
+            products = products.filter(p => 
+                p.name.toLowerCase().includes(term)
+            );
+        }
+        
+        return products;
+    }
+    
+    getById(id) {
+        const product = Product.findById(id);
+        if (!product) {
+            throw new Error('Producto no encontrado');
+        }
+        return product;
+    }
+    
+    create(data) {
+        const product = Product.create(data);
+        
+        // Disparar evento (para n8n)
+        eventBus.emit('product.created', product);
+        
+        return product;
+    }
+    
+    update(id, data) {
+        const product = Product.update(id, data);
+        
+        eventBus.emit('product.updated', product);
+        
+        // Verificar stock bajo
+        if (product.stock < 5) {
+            eventBus.emit('product.low_stock', product);
+        }
+        
+        return product;
+    }
+    
+    delete(id) {
+        const result = Product.delete(id);
+        eventBus.emit('product.deleted', { id });
+        return result;
+    }
+    
+    // Método para MCP/IA
+    getStats() {
+        const products = Product.findAll();
+        return {
+            total: products.length,
+            byCategory: this._groupByCategory(products),
+            lowStock: products.filter(p => p.stock < 5),
+            outOfStock: products.filter(p => p.stock === 0)
+        };
+    }
+    
+    _groupByCategory(products) {
+        return products.reduce((acc, p) => {
+            acc[p.category_id] = (acc[p.category_id] || 0) + 1;
+            return acc;
+        }, {});
+    }
+}
+
+module.exports = new ProductService();
+
+
+EJEMPLO: authService.js
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/services/authService.js
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const emailService = require('../utils/emailService');
+const eventBus = require('../utils/eventBus');
+
+class AuthService {
+    
+    async register(userData) {
+        // Verificar si usuario existe
+        const existingUser = User.findByEmail(userData.email);
+        if (existingUser) {
+            throw new Error('El email ya está registrado');
+        }
+        
+        // Hash de contraseña
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        
+        // Crear usuario
+        const user = User.create({
+            ...userData,
+            password: hashedPassword
+        });
+        
+        // Enviar email de bienvenida
+        await emailService.sendWelcomeEmail(user);
+        
+        // Disparar evento (para n8n)
+        eventBus.emit('user.registered', {
+            id: user.id,
+            email: user.email,
+            name: `${user.first_name} ${user.last_name}`
+        });
+        
+        // Generar token
+        const token = this._generateToken(user);
+        
+        return { user: this._sanitizeUser(user), token };
+    }
+    
+    async login(email, password) {
+        const user = User.findByEmail(email);
+        if (!user) {
+            throw new Error('Credenciales inválidas');
+        }
+        
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            throw new Error('Credenciales inválidas');
+        }
+        
+        eventBus.emit('user.logged_in', { id: user.id, email: user.email });
+        
+        const token = this._generateToken(user);
+        
+        return { user: this._sanitizeUser(user), token };
+    }
+    
+    _generateToken(user) {
+        return jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+    }
+    
+    _sanitizeUser(user) {
+        const { password, reset_token, reset_token_expires, ...safeUser } = user;
+        return safeUser;
+    }
+}
+
+module.exports = new AuthService();
+
+
+EJEMPLO: Controller usando servicio
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/controllers/productController.js (MODIFICADO)
+const productService = require('../services/productService');
+
+class ProductController {
+    
+    static getAll(req, res) {
+        try {
+            const filters = {
+                category: req.query.category,
+                search: req.query.q
+            };
+            const products = productService.getAll(filters);
+            res.json({ success: true, data: products });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+    
+    static getById(req, res) {
+        try {
+            const product = productService.getById(req.params.id);
+            res.json({ success: true, data: product });
+        } catch (error) {
+            res.status(404).json({ success: false, message: error.message });
+        }
+    }
+    
+    static create(req, res) {
+        try {
+            const product = productService.create(req.body);
+            res.status(201).json({ success: true, data: product });
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+}
+
+module.exports = ProductController;
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔔 PASO 2: IMPLEMENTAR SISTEMA DE EVENTOS
+═══════════════════════════════════════════════════════════════════════════════
+
+CREAR EVENT BUS
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/utils/eventBus.js
+const EventEmitter = require('events');
+
+class AppEventBus extends EventEmitter {
+    constructor() {
+        super();
+        this.setMaxListeners(50);
+    }
+    
+    // Log de eventos para debug
+    emit(event, data) {
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(`📢 Evento: ${event}`, data?.id || data?.email || '');
+        }
+        super.emit(event, data);
+    }
+}
+
+module.exports = new AppEventBus();
+
+
+EVENTOS DISPONIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+USUARIOS:
+  user.registered      → Usuario se registró
+  user.logged_in       → Usuario inició sesión
+  user.password_reset  → Usuario cambió contraseña
+  user.profile_updated → Usuario actualizó perfil
+
+PEDIDOS:
+  order.created        → Nuevo pedido creado
+  order.paid           → Pedido pagado
+  order.shipped        → Pedido enviado
+  order.delivered      → Pedido entregado
+  order.cancelled      → Pedido cancelado
+
+CARRITO:
+  cart.item_added      → Producto agregado al carrito
+  cart.item_removed    → Producto eliminado del carrito
+  cart.checkout        → Carrito convertido en pedido
+
+PRODUCTOS:
+  product.created      → Producto creado
+  product.updated      → Producto actualizado
+  product.deleted      → Producto eliminado
+  product.low_stock    → Stock bajo (menos de 5)
+  product.out_of_stock → Sin stock
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🤖 PASO 3: INTEGRAR N8N
+═══════════════════════════════════════════════════════════════════════════════
+
+CREAR SERVICIO DE WEBHOOKS
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/services/webhookService.js
+const eventBus = require('../utils/eventBus');
+
+class WebhookService {
+    constructor() {
+        // URLs de webhooks (configurar en .env)
+        this.webhookUrls = {
+            'order.created': process.env.N8N_WEBHOOK_ORDER,
+            'user.registered': process.env.N8N_WEBHOOK_USER,
+            'product.low_stock': process.env.N8N_WEBHOOK_STOCK,
+        };
+        
+        this.setupListeners();
+    }
+    
+    setupListeners() {
+        Object.keys(this.webhookUrls).forEach(event => {
+            if (this.webhookUrls[event]) {
+                eventBus.on(event, (data) => this.sendWebhook(event, data));
+            }
+        });
+    }
+    
+    async sendWebhook(event, data) {
+        const url = this.webhookUrls[event];
+        if (!url) return;
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event,
+                    timestamp: new Date().toISOString(),
+                    data
+                })
+            });
+            
+            if (response.ok) {
+                console.log(`✅ Webhook enviado: ${event}`);
+            }
+        } catch (error) {
+            console.error(`❌ Error webhook ${event}:`, error.message);
+        }
+    }
+}
+
+// Inicializar al importar
+module.exports = new WebhookService();
+
+
+AGREGAR A .env
+─────────────────────────────────────────────────────────────────────────────
+
+# Webhooks de n8n (configurar cuando tengas n8n corriendo)
+N8N_WEBHOOK_ORDER=
+N8N_WEBHOOK_USER=
+N8N_WEBHOOK_STOCK=
+
+
+INICIALIZAR EN server.js
+─────────────────────────────────────────────────────────────────────────────
+
+// Agregar al inicio de server.js (después de dotenv)
+require('./src/services/webhookService');
+
+
+CREAR RUTA PARA RECIBIR WEBHOOKS DE N8N
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/src/routes/webhooks.js
+const express = require('express');
+const router = express.Router();
+const productService = require('../services/productService');
+
+// Verificar API key de n8n
+const verifyN8nKey = (req, res, next) => {
+    const apiKey = req.headers['x-n8n-api-key'];
+    if (apiKey !== process.env.N8N_API_KEY) {
+        return res.status(401).json({ error: 'No autorizado' });
+    }
+    next();
+};
+
+// n8n puede enviar datos a tu app
+router.post('/n8n/:action', verifyN8nKey, async (req, res) => {
+    const { action } = req.params;
+    const data = req.body;
+    
+    console.log(`📥 Webhook de n8n: ${action}`);
+    
+    try {
+        switch(action) {
+            case 'update-stock':
+                await productService.update(data.productId, { stock: data.stock });
+                break;
+                
+            case 'bulk-price-update':
+                // Actualizar precios masivamente
+                for (const item of data.products) {
+                    await productService.update(item.id, { price: item.price });
+                }
+                break;
+                
+            default:
+                return res.status(400).json({ error: 'Acción desconocida' });
+        }
+        
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+module.exports = router;
+
+
+EJEMPLO DE FLUJO N8N: Notificación de nuevo pedido
+─────────────────────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                      FLUJO EN N8N                               │
+  └─────────────────────────────────────────────────────────────────┘
+
+  1. [Webhook Trigger]
+     URL: https://tu-n8n.com/webhook/nuevo-pedido
+     Método: POST
+
+  2. [Format Data]
+     Mensaje: "🛒 Nuevo pedido #{{$json.data.id}}
+               Cliente: {{$json.data.customer_name}}
+               Total: ${{$json.data.total}}"
+
+  3. [Telegram]
+     Bot Token: tu_bot_token
+     Chat ID: tu_chat_id
+     Mensaje: {{$node["Format Data"].mensaje}}
+
+  RESULTADO:
+  Usuario compra → GolazoStore envía webhook → n8n recibe →
+  n8n formatea → Telegram envía mensaje → Dueño ve notificación
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧠 PASO 4: PREPARAR PARA MCP (FUTURO)
+═══════════════════════════════════════════════════════════════════════════════
+
+¿QUÉ NECESITA MCP?
+─────────────────────────────────────────────────────────────────────────────
+MCP necesita un servidor separado que expone "herramientas" (tools) que
+la IA puede invocar. Cada herramienta es una función con:
+  • Nombre
+  • Descripción (para que la IA sepa cuándo usarla)
+  • Parámetros
+  • Handler (función que ejecuta)
+
+
+ESTRUCTURA FUTURA
+─────────────────────────────────────────────────────────────────────────────
+
+backend/
+├── server.js              ← Servidor API (ya existe)
+├── mcp-server.js          ← Servidor MCP (nuevo)
+└── src/
+    └── services/          ← Los servicios los usan AMBOS servidores
+
+
+EJEMPLO BÁSICO DE MCP SERVER
+─────────────────────────────────────────────────────────────────────────────
+
+// backend/mcp-server.js
+const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
+const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
+
+// Importar servicios existentes
+const productService = require('./src/services/productService');
+const orderService = require('./src/services/orderService');
+
+const server = new Server(
+    { name: 'golazostore-mcp', version: '1.0.0' },
+    { capabilities: { tools: {} } }
+);
+
+// Herramienta: Buscar productos
+server.setRequestHandler('tools/list', async () => ({
+    tools: [
+        {
+            name: 'searchProducts',
+            description: 'Buscar productos en la tienda GolazoStore',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    query: { type: 'string', description: 'Término de búsqueda' },
+                    category: { type: 'string', description: 'Categoría (opcional)' }
+                }
+            }
+        },
+        {
+            name: 'getOrderStats',
+            description: 'Obtener estadísticas de pedidos',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    period: { 
+                        type: 'string', 
+                        enum: ['today', 'week', 'month'],
+                        description: 'Período de tiempo'
+                    }
+                },
+                required: ['period']
+            }
+        },
+        {
+            name: 'createProduct',
+            description: 'Crear un nuevo producto en la tienda',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    name: { type: 'string' },
+                    price: { type: 'number' },
+                    description: { type: 'string' },
+                    category_id: { type: 'number' }
+                },
+                required: ['name', 'price']
+            }
+        }
+    ]
+}));
+
+// Handler para ejecutar herramientas
+server.setRequestHandler('tools/call', async (request) => {
+    const { name, arguments: args } = request.params;
+    
+    switch (name) {
+        case 'searchProducts':
+            const products = productService.getAll({
+                search: args.query,
+                category: args.category
+            });
+            return { content: [{ type: 'text', text: JSON.stringify(products, null, 2) }] };
+            
+        case 'getOrderStats':
+            const stats = await orderService.getStats(args.period);
+            return { content: [{ type: 'text', text: JSON.stringify(stats, null, 2) }] };
+            
+        case 'createProduct':
+            const product = productService.create(args);
+            return { content: [{ type: 'text', text: `Producto creado: ${product.name} (ID: ${product.id})` }] };
+            
+        default:
+            throw new Error(`Herramienta desconocida: ${name}`);
+    }
+});
+
+// Iniciar servidor
+const transport = new StdioServerTransport();
+server.connect(transport);
+
+console.log('🧠 MCP Server iniciado');
+
+
+CONFIGURAR EN CLAUDE DESKTOP
+─────────────────────────────────────────────────────────────────────────────
+
+Archivo: %APPDATA%\Claude\claude_desktop_config.json
+
+{
+    "mcpServers": {
+        "golazostore": {
+            "command": "node",
+            "args": ["C:/Users/Facundo/Desktop/tienda/backend/mcp-server.js"],
+            "env": {
+                "NODE_ENV": "production"
+            }
+        }
+    }
+}
+
+
+EJEMPLO DE USO CON CLAUDE
+─────────────────────────────────────────────────────────────────────────────
+
+TÚ: "¿Cuáles son los productos de la categoría retro?"
+
+CLAUDE: Voy a buscar los productos de esa categoría.
+        [Usa herramienta searchProducts con category="retro"]
+        
+        Encontré 5 productos retro:
+        1. Argentina 1986 - $4500
+        2. Brasil 1970 - $4200
+        3. ...
+
+TÚ: "Crea un nuevo producto: River Plate 2000, precio 3800"
+
+CLAUDE: [Usa herramienta createProduct]
+        
+        ✅ Producto creado exitosamente:
+        - Nombre: River Plate 2000
+        - Precio: $3800
+        - ID: 16
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ORDEN DE IMPLEMENTACIÓN RECOMENDADO
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE: Primero termina el MVP del proyecto, después implementa esto.
+
+
+FASE 1: Capa de Servicios (2-3 días)
+─────────────────────────────────────────────────────────────────────────────
+  □ Crear carpeta src/services/
+  □ Crear productService.js
+  □ Crear authService.js
+  □ Crear orderService.js (cuando exista)
+  □ Crear cartService.js (cuando exista)
+  □ Actualizar controllers para usar servicios
+  □ Probar que todo sigue funcionando
+
+
+FASE 2: Sistema de Eventos (1 día)
+─────────────────────────────────────────────────────────────────────────────
+  □ Crear src/utils/eventBus.js
+  □ Agregar emisión de eventos en servicios
+  □ Probar con console.log que los eventos se disparan
+
+
+FASE 3: Webhooks para n8n (1-2 días)
+─────────────────────────────────────────────────────────────────────────────
+  □ Crear webhookService.js
+  □ Configurar variables en .env
+  □ Crear ruta /api/webhooks/n8n/:action
+  □ Instalar n8n (npx n8n o n8n.cloud)
+  □ Crear primer flujo de prueba
+
+
+FASE 4: MCP (Cuando domines lo anterior)
+─────────────────────────────────────────────────────────────────────────────
+  □ Instalar SDK: npm install @modelcontextprotocol/sdk
+  □ Crear mcp-server.js
+  □ Definir herramientas básicas
+  □ Configurar Claude Desktop
+  □ Probar conversaciones con IA
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔗 RECURSOS PARA APRENDER MÁS
+═══════════════════════════════════════════════════════════════════════════════
+
+N8N:
+  • Documentación: https://docs.n8n.io/
+  • Instalación rápida: npx n8n (abre en localhost:5678)
+  • Hosting gratis: https://n8n.cloud/ (tier gratuito)
+  • Tutoriales: YouTube "n8n tutorial español"
+
+MCP:
+  • Documentación oficial: https://modelcontextprotocol.io/
+  • SDK para Node.js: npm install @modelcontextprotocol/sdk
+  • Ejemplos oficiales: github.com/modelcontextprotocol/servers
+  • Guía de inicio: modelcontextprotocol.io/quickstart
+
+PATRONES DE ARQUITECTURA:
+  • Service Layer Pattern (Google/YouTube)
+  • Repository Pattern
+  • Event-Driven Architecture
+  • Clean Architecture
+
+
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║           💡 RESUMEN: PRIMERO MVP, DESPUÉS ESCALAR                           ║
+║                                                                               ║
+║     1. Termina el MVP (catálogo, carrito, pedidos, checkout)                 ║
+║     2. Implementa capa de servicios (separa lógica)                          ║
+║     3. Agrega sistema de eventos (EventEmitter)                              ║
+║     4. Conecta n8n para automatizaciones                                     ║
+║     5. Implementa MCP para integración con IA                                ║
+║                                                                               ║
+║     La capa de servicios es la BASE de todo lo demás.                        ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝

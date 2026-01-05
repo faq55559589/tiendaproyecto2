@@ -13,7 +13,7 @@
 🎯 OBJETIVO: Crear un backend completo para FanKit
 ⏱️ TIEMPO ESTIMADO: 3-4 semanas
 💻 LENGUAJE: Node.js + Express.js
-🗄️ BASE DE DATOS: MySQL
+🗄️ BASE DE DATOS: SQLite
 🔐 AUTENTICACIÓN: JWT (JSON Web Tokens)
 💳 PAGOS: MercadoPago
 ☁️ DESPLIEGUE: Heroku/DigitalOcean
@@ -36,18 +36,14 @@
    - Node.js v18.x o superior
    - npm v9.x o superior
 
-✅ PASO 1.2: INSTALAR MYSQL
+✅ PASO 1.2: PREPARAR SQLITE
 ─────────────────────────────────────────────────────────────
 🔧 QUÉ HACER:
-  1. Ir a https://dev.mysql.com/downloads/mysql/
-  2. Descargar MySQL Community Server
-  3. Instalar con configuración por defecto
-  4. Recordar la contraseña del root
-  5. Instalar MySQL Workbench (opcional pero recomendado)
+  No necesitas instalar nada extra. SQLite se maneja como un archivo
+  dentro de tu proyecto y usaremos la librería 'better-sqlite3'.
 
 📝 RESULTADO ESPERADO:
-   - MySQL Server funcionando
-   - Acceso desde terminal: mysql -u root -p
+   - Proyecto listo para configuración.
 
 ✅ PASO 1.3: CONFIGURAR PROYECTO BACKEND
 ─────────────────────────────────────────────────────────────
@@ -62,7 +58,7 @@
   5. Instalar dependencias de autenticación:
      npm install bcryptjs jsonwebtoken
   6. Instalar dependencias de base de datos:
-     npm install mysql2
+     npm install better-sqlite3
   7. Instalar dependencias de archivos:
      npm install multer
   8. Instalar dependencias de validación:
@@ -182,7 +178,7 @@ MP_PUBLIC_KEY=tu_public_key_mercadopago
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["ecommerce", "nodejs", "express", "mysql"],
+  "keywords": ["ecommerce", "nodejs", "express", "sqlite"],
   "author": "Facundo Pintado",
   "license": "Private"
 }
@@ -299,28 +295,20 @@ INSERT INTO products (name, description, price, image_url, stock, sizes, categor
 ✅ PASO 3.3: CREAR CONEXIÓN A BASE DE DATOS
 ─────────────────────────────────────────────────────────────
 🔧 QUÉ HACER:
-  1. Crear archivo src/utils/database.js:
+  1. Crear archivo src/config/database.js (o src/utils/database.js):
 
 ```javascript
-const mysql = require('mysql2');
-require('dotenv').config();
+const Database = require('better-sqlite3');
+const path = require('path');
 
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+// Ruta al archivo de base de datos
+const dbPath = path.resolve(__dirname, '../../database/golazostore.db');
 
-connection.connect((err) => {
-    if (err) {
-        console.error('❌ Error conectando a la base de datos:', err);
-        return;
-    }
-    console.log('✅ Conectado a la base de datos MySQL');
-});
+const db = new Database(dbPath, { verbose: console.log });
 
-module.exports = connection;
+console.log('✅ Conectado a SQLite');
+
+module.exports = db;
 ```
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

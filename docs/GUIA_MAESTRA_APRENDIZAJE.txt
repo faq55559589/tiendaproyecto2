@@ -1,0 +1,502 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║           📚 GUÍA MAESTRA DE APRENDIZAJE - GOLAZOSTORE 📚                    ║
+║                                                                               ║
+║              Entiende tu proyecto de principio a fin                          ║
+║              Creado: 9 de Diciembre 2025                                      ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+Esta guía está diseñada para que puedas entender TODO el proyecto GolazoStore,
+desde lo más básico hasta lo más avanzado. Sigue el orden propuesto.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🗺️ MAPA DE DOCUMENTACIÓN - ¿QUÉ LEER Y CUÁNDO?
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  NIVEL 1: PRINCIPIANTE - "Quiero entender qué es este proyecto"             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  1️⃣ README.md (raíz del proyecto)
+     → Qué es GolazoStore, cómo instalarlo, qué tecnologías usa
+
+  2️⃣ INDICE_DOCUMENTACION.txt
+     → Mapa general de todos los documentos disponibles
+
+  3️⃣ RESUMEN_CONSOLIDACION_FINAL.txt
+     → Historia del proyecto, estructura de carpetas explicada
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  NIVEL 2: INTERMEDIO - "Quiero entender cómo funciona"                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  4️⃣ STACK_TECNOLOGICO.md
+     → Explicación de CADA tecnología: HTML, CSS, JavaScript, Node, etc.
+     → Incluye recursos para aprender más
+
+  5️⃣ GUIA_BACKEND_PASO_A_PASO.txt
+     → Cómo se construyó el servidor desde cero
+     → Explicación de endpoints, middleware, etc.
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  NIVEL 3: AVANZADO - "Quiero modificar y agregar cosas"                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  6️⃣ CAMBIOS_BRANDING_GOLAZOSTORE.txt
+     → Cómo se hizo el diseño, paleta de colores, CSS
+
+  7️⃣ ROADMAP_PROXIMAS_FASES.txt
+     → Qué falta por hacer, cómo implementarlo
+
+  8️⃣ CAMBIOS_09_12_2025.txt (y futuros archivos de cambios)
+     → Registro diario de modificaciones
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  HERRAMIENTAS - "Necesito ayuda con Git/Terminal"                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  📗 GUIA_GIT_GITHUB_BASICO.txt
+     → Comandos de Git explicados para principiantes
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🏗️ ARQUITECTURA DEL PROYECTO - VISIÓN GENERAL
+═══════════════════════════════════════════════════════════════════════════════
+
+                    ┌─────────────────────────────────────┐
+                    │         TU NAVEGADOR                │
+                    │     (Chrome, Firefox, Edge)         │
+                    └──────────────┬──────────────────────┘
+                                   │
+                    ┌──────────────▼──────────────────────┐
+                    │         FRONTEND                     │
+                    │   (Lo que el usuario ve)            │
+                    │                                      │
+                    │  📁 frontend/                        │
+                    │  ├── *.html (páginas)               │
+                    │  ├── css/style.css (estilos)        │
+                    │  └── js/*.js (interactividad)       │
+                    │                                      │
+                    │  Puerto: 5500 (Live Server)          │
+                    └──────────────┬──────────────────────┘
+                                   │
+                         fetch() / API calls
+                                   │
+                    ┌──────────────▼──────────────────────┐
+                    │         BACKEND (API)               │
+                    │   (El cerebro del sistema)          │
+                    │                                      │
+                    │  📁 backend/                         │
+                    │  ├── server.js (entrada)            │
+                    │  ├── src/routes/ (URLs)             │
+                    │  ├── src/controllers/ (lógica)      │
+                    │  └── src/models/ (datos)            │
+                    │                                      │
+                    │  Puerto: 3000                        │
+                    └──────────────┬──────────────────────┘
+                                   │
+                         Consultas SQL
+                                   │
+                    ┌──────────────▼──────────────────────┐
+                    │       BASE DE DATOS                 │
+                    │        (SQLite)                     │
+                    │                                      │
+                    │  📁 backend/database/               │
+                    │  └── golazostore.db                 │
+                    │                                      │
+                    │  Tablas: users, products,           │
+                    │          categories                 │
+                    └─────────────────────────────────────┘
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📂 ESTRUCTURA DE CARPETAS EXPLICADA
+═══════════════════════════════════════════════════════════════════════════════
+
+tienda/
+│
+├── index.html              ← Página principal (hero section)
+├── README.md               ← Documentación del proyecto
+│
+├── frontend/               ← TODO LO QUE VE EL USUARIO
+│   │
+│   ├── home.html           ← Otra versión de página principal
+│   ├── catalogo.html       ← Lista de productos
+│   ├── producto.html       ← Detalle de un producto
+│   ├── carrito.html        ← Carrito de compras
+│   ├── login.html          ← Iniciar sesión
+│   ├── registro.html       ← Crear cuenta
+│   ├── perfil.html         ← Mi perfil (datos del usuario)
+│   ├── mis-pedidos.html    ← Historial de compras
+│   ├── recuperar-contrasena.html
+│   ├── reset-password.html
+│   │
+│   ├── css/
+│   │   └── style.css       ← TODOS los estilos del sitio
+│   │
+│   ├── js/
+│   │   ├── main.js         ← JavaScript común a todas las páginas
+│   │   ├── auth.js         ← Maneja login/logout en navbar
+│   │   ├── login.js        ← Lógica del formulario login
+│   │   ├── registro.js     ← Lógica del formulario registro
+│   │   ├── carrito.js      ← Lógica del carrito
+│   │   ├── catalogo.js     ← Carga productos en catálogo
+│   │   ├── perfil.js       ← Carga y guarda perfil
+│   │   └── mis-pedidos.js  ← Muestra pedidos
+│   │
+│   └── assets/
+│       └── images/         ← Imágenes del sitio
+│
+├── backend/                ← EL SERVIDOR (no visible al usuario)
+│   │
+│   ├── server.js           ← 🔑 ARCHIVO PRINCIPAL - inicia todo
+│   ├── package.json        ← Lista de dependencias (npm install)
+│   ├── .env                ← 🔒 SECRETOS (no subir a GitHub)
+│   ├── INICIAR_SERVIDOR.bat ← Doble click para iniciar servidor
+│   │
+│   ├── database/
+│   │   ├── golazostore.db  ← 📦 Base de datos SQLite
+│   │   └── schema.sql      ← Estructura de tablas
+│   │
+│   ├── scripts/
+│   │   └── init-db.js      ← Reinicia la base de datos
+│   │
+│   └── src/
+│       ├── config/
+│       │   └── database.js ← Conexión a SQLite
+│       │
+│       ├── routes/         ← Define las URLs de la API
+│       │   ├── auth.js     ← /api/auth/login, /register, etc.
+│       │   └── products.js ← /api/products, /api/products/:id
+│       │
+│       ├── controllers/    ← La LÓGICA de cada ruta
+│       │   ├── authController.js     ← Procesa login/registro
+│       │   └── productController.js  ← Procesa productos
+│       │
+│       ├── models/         ← Interactúa con la base de datos
+│       │   ├── User.js     ← CRUD usuarios
+│       │   └── Product.js  ← CRUD productos
+│       │
+│       ├── middleware/
+│       │   └── auth.js     ← Verifica token JWT
+│       │
+│       └── utils/
+│           └── emailService.js ← Envía emails
+│
+└── docs/                   ← DOCUMENTACIÓN (estás aquí)
+    ├── GUIA_MAESTRA_APRENDIZAJE.txt ← Esta guía
+    ├── CAMBIOS_09_12_2025.txt
+    └── ...otros documentos
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎓 RUTA DE APRENDIZAJE RECOMENDADA
+═══════════════════════════════════════════════════════════════════════════════
+
+SEMANA 1: Entender el Frontend
+─────────────────────────────────────────────────────────────────────────────
+
+  Día 1-2: HTML Básico
+    • Abre frontend/catalogo.html
+    • Identifica las etiquetas: <header>, <main>, <section>, <div>
+    • Entiende la estructura Bootstrap (container, row, col)
+    
+    📚 Recurso: https://www.w3schools.com/html/
+
+  Día 3-4: CSS y Estilos
+    • Abre frontend/css/style.css
+    • Busca las clases que se usan en catalogo.html
+    • Cambia un color y ve qué pasa
+    
+    📚 Recurso: https://flexboxfroggy.com/ (juego para aprender Flexbox)
+
+  Día 5-7: JavaScript Frontend
+    • Abre frontend/js/main.js
+    • Entiende document.querySelector y addEventListener
+    • Mira frontend/js/carrito.js - localStorage
+    
+    📚 Recurso: https://es.javascript.info/
+
+
+SEMANA 2: Entender el Backend
+─────────────────────────────────────────────────────────────────────────────
+
+  Día 1-2: ¿Qué es un servidor?
+    • Lee GUIA_BACKEND_PASO_A_PASO.txt (primeras 200 líneas)
+    • Abre backend/server.js y lee los comentarios
+    • Inicia el servidor y ve los logs en consola
+
+  Día 3-4: Rutas y Controllers
+    • Abre backend/src/routes/auth.js
+    • Sigue el flujo: ruta → controller → modelo
+    • Prueba endpoints con el navegador o Postman
+
+  Día 5-7: Base de Datos
+    • Instala "DB Browser for SQLite"
+    • Abre backend/database/golazostore.db
+    • Explora las tablas: users, products, categories
+
+
+SEMANA 3: Conectar Todo
+─────────────────────────────────────────────────────────────────────────────
+
+  • Abre frontend/js/login.js
+  • Mira cómo hace fetch() al backend
+  • Entiende el flujo completo:
+    
+    Usuario escribe email/password
+           ↓
+    JavaScript captura los datos
+           ↓
+    fetch() envía POST a /api/auth/login
+           ↓
+    Backend valida credenciales
+           ↓
+    Backend responde con token JWT
+           ↓
+    Frontend guarda token en localStorage
+           ↓
+    Usuario está logueado
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  💡 CONCEPTOS CLAVE QUE DEBES ENTENDER
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 API REST
+   Es la forma en que el frontend habla con el backend.
+   Usa URLs (endpoints) y métodos HTTP:
+   
+   GET    /api/products      → Obtener lista de productos
+   GET    /api/products/5    → Obtener producto con ID 5
+   POST   /api/auth/login    → Enviar datos para login
+   PUT    /api/auth/profile  → Actualizar perfil
+   DELETE /api/cart/3        → Eliminar item 3 del carrito
+
+📌 JWT (JSON Web Token)
+   Es un "pase" que demuestra que el usuario está logueado.
+   Se guarda en localStorage y se envía en cada petición protegida.
+   
+   Flujo:
+   1. Usuario hace login → Backend genera token
+   2. Frontend guarda token en localStorage
+   3. Cada petición incluye: Authorization: Bearer <token>
+   4. Backend verifica el token antes de responder
+
+📌 CORS (Cross-Origin Resource Sharing)
+   Seguridad del navegador que bloquea peticiones entre dominios.
+   Frontend (localhost:5500) → Backend (localhost:3000)
+   Necesitamos configurar CORS en el backend para permitirlo.
+
+📌 Middleware
+   Funciones que se ejecutan ANTES de llegar a la ruta.
+   Ejemplo: verificar que el usuario tiene token válido.
+   
+   Cliente → Middleware (verifica token) → Controller → Respuesta
+
+📌 MVC (Model-View-Controller)
+   Patrón de organización del código:
+   - Model: Interactúa con la base de datos (User.js, Product.js)
+   - View: Lo que ve el usuario (HTML/CSS)
+   - Controller: La lógica de negocio (authController.js)
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🖥️ GUÍA DE SERVIDORES - LO QUE QUERÍAS REFORZAR
+═══════════════════════════════════════════════════════════════════════════════
+
+¿QUÉ ES UN SERVIDOR?
+─────────────────────────────────────────────────────────────────────────────
+Un servidor es un programa que:
+1. Se inicia y queda "escuchando" en un puerto (ej: 3000)
+2. Espera peticiones (requests) de clientes
+3. Procesa la petición y envía una respuesta (response)
+4. Repite indefinidamente
+
+Es como un restaurante:
+- El servidor (mozo) está esperando
+- El cliente hace un pedido (petición)
+- El mozo va a la cocina (base de datos)
+- El mozo trae la comida (respuesta)
+
+
+CÓMO FUNCIONA server.js
+─────────────────────────────────────────────────────────────────────────────
+
+```javascript
+// 1. Importar dependencias
+const express = require('express');    // Framework web
+const cors = require('cors');          // Permitir peticiones de otro dominio
+
+// 2. Crear la aplicación
+const app = express();
+
+// 3. Configurar middleware (se ejecuta en CADA petición)
+app.use(cors());                       // Permitir CORS
+app.use(express.json());               // Entender JSON en el body
+
+// 4. Definir rutas
+app.use('/api/auth', require('./src/routes/auth'));        // Rutas de auth
+app.use('/api/products', require('./src/routes/products')); // Rutas de productos
+
+// 5. Iniciar servidor
+app.listen(3000, () => {
+    console.log('Servidor corriendo en puerto 3000');
+});
+```
+
+
+COMANDOS ESENCIALES PARA SERVIDORES
+─────────────────────────────────────────────────────────────────────────────
+
+# Iniciar servidor (desde carpeta backend)
+node server.js
+
+# Iniciar con reinicio automático (para desarrollo)
+npx nodemon server.js
+
+# Ver qué proceso usa el puerto 3000
+netstat -ano | findstr :3000
+
+# Matar proceso que usa puerto 3000
+npx kill-port 3000
+
+# Ver si Node está instalado
+node --version
+
+# Instalar dependencias del proyecto
+npm install
+
+
+ERRORES COMUNES Y SOLUCIONES
+─────────────────────────────────────────────────────────────────────────────
+
+❌ "EADDRINUSE: address already in use :::3000"
+   → Otro proceso usa el puerto 3000
+   → Solución: npx kill-port 3000
+
+❌ "Cannot find module 'express'"
+   → No instalaste las dependencias
+   → Solución: npm install
+
+❌ "Error: connect ECONNREFUSED 127.0.0.1:3000"
+   → El servidor no está corriendo
+   → Solución: Iniciar servidor con node server.js
+
+❌ "CORS policy: No 'Access-Control-Allow-Origin'"
+   → El backend no permite peticiones del frontend
+   → Solución: Configurar CORS en server.js
+
+❌ El servidor se cierra solo
+   → Hay un error en el código que crashea el servidor
+   → Solución: Leer el error en consola y corregirlo
+
+
+¿POR QUÉ USAR INICIAR_SERVIDOR.bat?
+─────────────────────────────────────────────────────────────────────────────
+La terminal de VS Code a veces se cierra o reinicia, matando el servidor.
+El archivo .bat abre una ventana CMD separada que permanece abierta.
+
+Contenido del .bat:
+```batch
+@echo off
+cd /d "%~dp0"
+echo Iniciando servidor GolazoStore...
+node server.js
+pause
+```
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 CHECKLIST PARA SESIONES DE TRABAJO
+═══════════════════════════════════════════════════════════════════════════════
+
+Antes de empezar a programar:
+
+  □ Abrir VS Code con la carpeta tienda/
+  □ Ejecutar INICIAR_SERVIDOR.bat (backend)
+  □ Abrir frontend con Live Server (click derecho → Open with Live Server)
+  □ Verificar que el servidor responde: http://localhost:3000/api/products
+
+Cuando termines de programar:
+
+  □ Probar que todo funciona
+  □ Guardar cambios en Git:
+    git add .
+    git commit -m "Descripción de cambios"
+    git push
+  □ Cerrar la ventana del servidor (CMD)
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔗 RECURSOS PARA SEGUIR APRENDIENDO
+═══════════════════════════════════════════════════════════════════════════════
+
+HTML/CSS:
+  • W3Schools: https://www.w3schools.com/
+  • MDN Web Docs: https://developer.mozilla.org/es/
+  • Flexbox Froggy: https://flexboxfroggy.com/#es
+
+JavaScript:
+  • JavaScript.info: https://es.javascript.info/
+  • Eloquent JavaScript: https://eloquentjavascript.net/
+
+Node.js/Express:
+  • Documentación oficial: https://expressjs.com/es/
+  • Node.js Docs: https://nodejs.org/es/docs/
+
+SQL/Base de Datos:
+  • SQLite Tutorial: https://www.sqlitetutorial.net/
+  • DB Browser for SQLite: https://sqlitebrowser.org/
+
+YouTube (en español):
+  • Fazt: https://www.youtube.com/@FasCode
+  • midudev: https://www.youtube.com/@midudev
+  • HolaMundo: https://www.youtube.com/@HolaMundoDev
+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ ¿POR DÓNDE EMPEZAR AHORA?
+═══════════════════════════════════════════════════════════════════════════════
+
+Si estás perdido, sigue estos pasos:
+
+1. Lee el README.md de la raíz (visión general)
+
+2. Inicia el servidor y el frontend:
+   - Doble click en backend/INICIAR_SERVIDOR.bat
+   - Click derecho en frontend/home.html → Open with Live Server
+
+3. Navega por el sitio y prueba:
+   - Registrarte
+   - Iniciar sesión
+   - Ver tu perfil
+   - Ver mis pedidos
+
+4. Abre los archivos que quieras entender:
+   - Si es visual (HTML/CSS): empieza por frontend/
+   - Si es lógica (cómo funciona): empieza por frontend/js/
+   - Si es servidor (API): empieza por backend/server.js
+
+5. Usa esta guía como referencia cuando tengas dudas.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                     ¡Mucha suerte aprendiendo! 🚀
+                     
+═══════════════════════════════════════════════════════════════════════════════
