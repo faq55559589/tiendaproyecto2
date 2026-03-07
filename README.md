@@ -28,6 +28,18 @@ Ver detalle en:
 
 ## Levantar en local
 
+Flujo oficial en Windows:
+
+```powershell
+.\INICIAR_TODO.bat
+```
+
+Ese script:
+- cierra procesos viejos en `3000` y `8000`
+- levanta backend y frontend en ventanas separadas
+- valida que ambos puertos queden activos
+- abre `http://localhost:8000/frontend/home.html` solo si el arranque fue correcto
+
 ## Backend
 
 ```powershell
@@ -52,7 +64,7 @@ Backend con autorestart:
 
 ```powershell
 cd backend
-node --watch server.js
+npm run dev
 ```
 
 Frontend con live reload:
@@ -62,16 +74,33 @@ cd ..
 node scripts/serve-frontend.js
 ```
 
-O todo junto:
+O todo junto con el flujo oficial:
 
 ```powershell
-INICIAR_TODO.bat
+.\INICIAR_TODO.bat
 ```
 
 Notas:
 - cambios de `frontend/` se reflejan al guardar y recargar automaticamente
-- cambios de backend reinician Node automaticamente con `node --watch`
+- cambios de backend reinician Node automaticamente con el watcher local de `npm run dev`
 - si cambias dependencias o `.env`, conviene reiniciar el proceso manualmente
+- si habia procesos viejos de Node ocupando `3000` o `8000`, el BAT los cierra y relanza limpio
+
+## Cambios recientes relevantes
+
+- Entorno local normalizado:
+  - `INICIAR_TODO.bat` como entrada oficial en Windows
+  - `scripts/dev-backend.js` para autorestart compatible con este entorno
+- Panel admin de productos:
+  - crear, editar y eliminar productos
+  - multiples imagenes por producto
+  - quitar imagenes individuales al editar
+- Ficha de producto:
+  - galeria deslizante de imagenes
+  - tabs de descripcion, especificaciones y reseñas con estilo actualizado
+- Navegacion:
+  - se removio la categoria visible `Shorts`
+  - el catalogo funciona como catalogo unico mientras no exista categoria real en base
 
 ## Nota de entorno
 

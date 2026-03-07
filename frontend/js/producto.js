@@ -17,6 +17,8 @@
         lead: document.querySelector('.product-description .lead'),
         bodyText: document.querySelector('#description p'),
         mainImage: document.getElementById('mainImage'),
+        galleryPrev: document.getElementById('galleryPrev'),
+        galleryNext: document.getElementById('galleryNext'),
         breadcrumbs: document.querySelector('.breadcrumb-item.active'),
         stock: document.getElementById('stockCount'),
         quantityInput: document.getElementById('quantityInput'),
@@ -32,6 +34,8 @@
     };
 
     let product;
+    let galleryImages = [];
+    let activeImageIndex = 0;
 
     try {
         product = await GolazoStore.getProduct(productId);
@@ -61,16 +65,16 @@
         if (dom.originalPrice) dom.originalPrice.remove();
         if (dom.discountBadge) dom.discountBadge.remove();
         if (dom.rating) {
-            dom.rating.innerHTML = '<span class="text-muted small"><i class="fas fa-circle-info me-2"></i>Sin resenas publicadas por ahora.</span>';
+            dom.rating.innerHTML = '<span class="text-muted small"><i class="fas fa-circle-info me-2"></i>Sin reseñas publicadas por ahora.</span>';
         }
         if (dom.reviewsTabBtn) {
-            dom.reviewsTabBtn.textContent = 'Resenas';
+            dom.reviewsTabBtn.textContent = 'Reseñas';
         }
         if (dom.reviewsPane) {
             dom.reviewsPane.innerHTML = `
                 <div class="p-4 text-center">
                     <i class="fas fa-comment-slash fa-2x text-muted mb-3"></i>
-                    <p class="mb-0 text-muted">Este MVP todavia no publica resenas. La ficha muestra solo datos reales del producto.</p>
+                    <p class="mb-0 text-muted">Este MVP todavia no publica reseñas. La ficha muestra solo datos reales del producto.</p>
                 </div>
             `;
         }
@@ -78,14 +82,7 @@
         renderSizes(product.sizes);
         renderSpecifications(product);
 
-        const thumbnails = document.querySelector('.thumbnail-gallery');
-        if (thumbnails) {
-            thumbnails.innerHTML = `
-                <div class="thumbnail-item active">
-                    <img src="${product.image_url}" class="img-thumbnail thumbnail-img" alt="${product.name}" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
-                </div>
-            `;
-        }
+        setupGallery(product);
 
         dom.addButton.disabled = product.stock < 1;
         dom.buyButton.disabled = product.stock < 1;
@@ -93,6 +90,54 @@
             dom.addButton.textContent = 'Sin stock';
             dom.buyButton.textContent = 'No disponible';
         }
+    }
+
+    function setupGallery(product) {
+        const normalized = Array.isArray(product.image_urls) ? product.image_urls : [product.image_url];
+        galleryImages = normalized
+            .map((url) => String(url || '').trim())
+            .filter(Boolean)
+            .filter((url, index, array) => array.indexOf(url) === index);
+        if (!galleryImages.length) {
+            galleryImages = [product.image_url];
+        }
+        activeImageIndex = 0;
+        renderGallery();
+    }
+
+    function renderGallery() {
+        const thumbnails = document.querySelector('.thumbnail-gallery');
+        const currentImage = galleryImages[activeImageIndex] || product.image_url;
+        dom.mainImage.src = currentImage;
+        dom.mainImage.alt = product.name;
+        dom.mainImage.onerror = function () {
+            this.onerror = null;
+            this.src = product.image_url;
+        };
+
+        if (thumbnails) {
+            thumbnails.innerHTML = galleryImages.map((imageUrl, index) => `
+                <button type="button" class="thumbnail-item border-0 bg-transparent p-0 ${index === activeImageIndex ? 'active' : ''}" data-image-index="${index}" aria-label="Ver imagen ${index + 1}">
+                    <img src="${imageUrl}" class="img-thumbnail thumbnail-img" alt="${product.name} ${index + 1}" loading="lazy" onerror="this.onerror=null;this.src='${product.image_url}'">
+                </button>
+            `).join('');
+        }
+
+        const hasMultipleImages = galleryImages.length > 1;
+        if (dom.galleryPrev) {
+            dom.galleryPrev.disabled = !hasMultipleImages;
+            dom.galleryPrev.style.display = hasMultipleImages ? 'grid' : 'none';
+        }
+        if (dom.galleryNext) {
+            dom.galleryNext.disabled = !hasMultipleImages;
+            dom.galleryNext.style.display = hasMultipleImages ? 'grid' : 'none';
+        }
+    }
+
+    function moveGallery(direction) {
+        if (galleryImages.length <= 1) return;
+        activeImageIndex = (activeImageIndex + direction + galleryImages.length) % galleryImages.length;
+        renderGallery();
     }
 
     function renderSizes(sizes) {
@@ -125,17 +170,17 @@
 
         if (dom.specsList) {
             dom.specsList.innerHTML = specs.slice(0, 5).map(([key, value]) => `
-                <li><i class="fas fa-check text-success"></i> <strong>${key}:</strong> ${value}</li>
+                <li class="spec-item"><i class="fas fa-check text-success"></i> <strong class="spec-key">${key}:</strong> <span class="spec-value">${value}</span></li>
             `).join('');
         }
 
         if (dom.specsTab) {
             dom.specsTab.innerHTML = `
-                <h5>Especificaciones reales</h5>
+                <h5 class="spec-title">Especificaciones reales</h5>
                 <div class="table-responsive">
-                    <table class="table table-striped mb-0">
+                    <table class="table table-striped mb-0 specs-table">
                         <tbody>
-                            ${specs.map(([key, value]) => `<tr><td class="fw-bold">${key}</td><td>${value}</td></tr>`).join('')}
+                            ${specs.map(([key, value]) => `<tr><td class="spec-key">${key}</td><td class="spec-value">${value}</td></tr>`).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -177,6 +222,21 @@
     document.getElementById('decreaseQty')?.addEventListener('click', function () {
         const current = Number(dom.quantityInput.value || 1);
         if (current > 1) dom.quantityInput.value = current - 1;
+    });
+
+    document.querySelector('.thumbnail-gallery')?.addEventListener('click', function (event) {
+        const thumbnail = event.target.closest('[data-image-index]');
+        if (!thumbnail) return;
+        activeImageIndex = Number(thumbnail.dataset.imageIndex);
+        renderGallery();
+    });
+
+    dom.galleryPrev?.addEventListener('click', function () {
+        moveGallery(-1);
+    });
+
+    dom.galleryNext?.addEventListener('click', function () {
+        moveGallery(1);
     });
 
     dom.addButton?.addEventListener('click', async function () {

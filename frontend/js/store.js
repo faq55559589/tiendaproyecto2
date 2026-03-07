@@ -18,6 +18,38 @@
         }
     }
 
+    function normalizeImageUrls(rawValue, primaryImage) {
+        const fallback = primaryImage || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen';
+        let values = [];
+
+        if (Array.isArray(rawValue)) {
+            values = rawValue;
+        } else if (typeof rawValue === 'string') {
+            const trimmed = rawValue.trim();
+            if (trimmed) {
+                if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('"') && trimmed.endsWith('"'))) {
+                    const parsed = safeParse(trimmed, []);
+                    values = Array.isArray(parsed) ? parsed : [String(parsed)];
+                } else {
+                    values = trimmed.split(',');
+                }
+            }
+        } else if (rawValue) {
+            values = [rawValue];
+        }
+
+        const normalized = values
+            .map((item) => String(item || '').trim())
+            .filter(Boolean)
+            .filter((url, index, array) => array.indexOf(url) === index);
+
+        if (fallback && !normalized.includes(fallback)) {
+            normalized.unshift(fallback);
+        }
+
+        return normalized.length ? normalized : [fallback];
+    }
+
     function currentPage() {
         const parts = window.location.pathname.split('/');
         return parts[parts.length - 1] || 'home.html';
@@ -31,13 +63,16 @@
         const sizes = Array.isArray(product.sizes)
             ? product.sizes
             : safeParse(product.sizes, []);
+        const primaryImage = String(product.image_url || '').trim() || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen';
+        const normalizedImageUrls = normalizeImageUrls(product.image_urls, primaryImage);
 
         return {
             ...product,
             price: Number(product.price || 0),
             stock: Number(product.stock || 0),
             sizes: sizes.length ? sizes : ['M'],
-            image_url: product.image_url || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen'
+            image_url: normalizedImageUrls[0] || primaryImage,
+            image_urls: normalizedImageUrls
         };
     }
 
@@ -90,7 +125,6 @@
             if (category.includes('retro')) return 'Retro';
             if (category.includes('seleccion')) return 'Selecciones';
             if (category.includes('club')) return 'Clubes';
-            if (String(product.name || '').toLowerCase().includes('short')) return 'Shorts';
             return product.category_name || 'Camisetas';
         },
         async api(path, options = {}, requireAuth = false) {

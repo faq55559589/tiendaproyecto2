@@ -34,11 +34,11 @@ class Product {
     }
 
     static create(productData) {
-        const { name, description, price, image_url, stock, sizes, category_id, specifications } = productData;
+        const { name, description, price, image_url, image_urls, stock, sizes, category_id, specifications } = productData;
 
         const query = `
-            INSERT INTO products (name, description, price, image_url, stock, sizes, category_id, specifications)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO products (name, description, price, image_url, image_urls, stock, sizes, category_id, specifications)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const result = db.prepare(query).run(
@@ -46,6 +46,7 @@ class Product {
             description,
             price,
             image_url,
+            JSON.stringify(image_urls || []),
             stock,
             JSON.stringify(sizes || []),
             category_id,
@@ -55,11 +56,11 @@ class Product {
     }
 
     static update(id, productData) {
-        const { name, description, price, image_url, stock, sizes, category_id, specifications } = productData;
+        const { name, description, price, image_url, image_urls, stock, sizes, category_id, specifications } = productData;
 
         const query = `
             UPDATE products 
-            SET name = ?, description = ?, price = ?, image_url = ?, stock = ?, sizes = ?, category_id = ?, specifications = ?
+            SET name = ?, description = ?, price = ?, image_url = ?, image_urls = ?, stock = ?, sizes = ?, category_id = ?, specifications = ?
             WHERE id = ?
         `;
 
@@ -68,6 +69,7 @@ class Product {
             description,
             price,
             image_url,
+            JSON.stringify(image_urls || []),
             stock,
             JSON.stringify(sizes || []),
             category_id,

@@ -7,12 +7,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     const productSubmitLabel = document.getElementById('productSubmitLabel');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     const currentImageWrap = document.getElementById('currentImageWrap');
-    const currentImagePreview = document.getElementById('currentImagePreview');
+    const currentImageCount = document.getElementById('currentImageCount');
+    const currentImagePreviewList = document.getElementById('currentImagePreviewList');
     const imageHelpText = document.getElementById('imageHelpText');
-    const imageInput = productForm?.querySelector('input[name="image"]');
+    const imageInput = productForm?.querySelector('input[name="images"]');
+    const selectedImagesWrap = document.getElementById('selectedImagesWrap');
+    const selectedImagesCount = document.getElementById('selectedImagesCount');
+    const selectedImagesPreview = document.getElementById('selectedImagesPreview');
     const API_URL = `${GolazoStore.config.apiBase}/products`;
 
     let productsCache = [];
+    let editingImageUrls = [];
 
     function showNotice(message) {
         if (!adminNotice) return;
@@ -48,13 +53,28 @@ document.addEventListener('DOMContentLoaded', async function () {
         productSubmitLabel.textContent = 'Crear producto';
         cancelEditBtn.classList.add('d-none');
         currentImageWrap.classList.add('d-none');
-        currentImagePreview.src = '';
+        currentImageCount.textContent = '';
+        currentImagePreviewList.innerHTML = '';
+        editingImageUrls = [];
+        selectedImagesWrap.classList.add('d-none');
+        selectedImagesCount.textContent = '';
+        selectedImagesPreview.innerHTML = '';
         imageInput.required = true;
-        imageHelpText.textContent = 'Formatos permitidos: JPG, PNG, WEBP.';
+        imageHelpText.textContent = 'Puedes subir una o varias imagenes. Formatos permitidos: JPG, PNG, WEBP.';
         productForm.querySelector('input[name="stock"]').value = '1';
         productForm.querySelector('input[name="sizesText"]').value = 'S,M,L,XL';
         productForm.querySelector('select[name="category_id"]').value = '1';
         showNotice('');
+    }
+
+    function getProductImages(product) {
+        if (Array.isArray(product?.image_urls) && product.image_urls.length) {
+            return product.image_urls.filter(Boolean);
+        }
+        if (product?.image_url) {
+            return [product.image_url];
+        }
+        return [];
     }
 
     function fillForm(product) {
@@ -74,17 +94,59 @@ document.addEventListener('DOMContentLoaded', async function () {
         cancelEditBtn.classList.remove('d-none');
         imageInput.required = false;
         imageInput.value = '';
-        imageHelpText.textContent = 'La imagen es opcional al editar. Si subes una nueva, reemplaza la actual.';
+        imageHelpText.textContent = 'Las imagenes son opcionales al editar. Si subes nuevas, se agregan a la galeria actual.';
 
-        if (product.image_url) {
-            currentImagePreview.src = product.image_url;
-            currentImageWrap.classList.remove('d-none');
-        } else {
-            currentImagePreview.src = '';
-            currentImageWrap.classList.add('d-none');
-        }
+        editingImageUrls = [...getProductImages(product)];
+        renderEditingGallery(product.name);
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderSelectedImages(files) {
+        const list = Array.from(files || []);
+        if (!list.length) {
+            selectedImagesWrap.classList.add('d-none');
+            selectedImagesCount.textContent = '';
+            selectedImagesPreview.innerHTML = '';
+            return;
+        }
+
+        selectedImagesWrap.classList.remove('d-none');
+        selectedImagesCount.textContent = `${list.length} imagen(es) seleccionada(s)`;
+        selectedImagesPreview.innerHTML = list.map((file) => `
+            <span class="badge text-bg-light border">${file.name}</span>
+        `).join('');
+    }
+
+    function renderEditingGallery(productName) {
+        const currentImages = [...editingImageUrls];
+        if (!currentImages.length) {
+            currentImageCount.textContent = '0 imagen(es) guardada(s)';
+            currentImagePreviewList.innerHTML = '<span class="small text-muted">Sin imagenes guardadas.</span>';
+            currentImageWrap.classList.remove('d-none');
+            return;
+        }
+
+        currentImageCount.textContent = `${currentImages.length} imagen(es) guardada(s)`;
+        currentImagePreviewList.innerHTML = currentImages.map((imageUrl, index) => `
+            <div class="admin-image-card">
+                <img
+                    src="${imageUrl}"
+                    alt="Imagen ${index + 1} de ${productName || 'producto'}"
+                    class="admin-image-thumb"
+                >
+                <button
+                    type="button"
+                    class="btn btn-sm btn-danger admin-image-remove"
+                    data-remove-image-index="${index}"
+                    title="Quitar imagen"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
+                <span class="admin-image-label">Imagen ${index + 1}</span>
+            </div>
+        `).join('');
+        currentImageWrap.classList.remove('d-none');
     }
 
     async function loadProducts() {
@@ -116,6 +178,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     <div>
                         <h6 class="mb-1">${product.name}</h6>
                         <div class="small text-muted">${GolazoStore.formatPrice(product.price)} | Stock: ${product.stock}</div>
+                        <div class="small text-muted">Imagenes: ${getProductImages(product).length}</div>
                         <div class="small text-muted">${product.description || 'Sin descripcion'}</div>
                     </div>
                 </div>
@@ -155,6 +218,19 @@ document.addEventListener('DOMContentLoaded', async function () {
         resetForm();
     });
 
+    imageInput?.addEventListener('change', function () {
+        renderSelectedImages(this.files);
+    });
+
+    currentImagePreviewList?.addEventListener('click', function (event) {
+        const removeImageButton = event.target.closest('[data-remove-image-index]');
+        if (!removeImageButton || !isEditing()) return;
+
+        const index = Number(removeImageButton.dataset.removeImageIndex);
+        editingImageUrls = editingImageUrls.filter((_, imageIndex) => imageIndex !== index);
+        renderEditingGallery(productForm.querySelector('input[name="name"]').value || 'producto');
+    });
+
     productForm?.addEventListener('submit', async function (event) {
         event.preventDefault();
         showNotice('');
@@ -186,6 +262,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const editing = isEditing();
         const targetId = productIdInput.value;
+        if (editing) {
+            formData.set('image_urls', JSON.stringify(editingImageUrls));
+        }
 
         try {
             const response = await fetch(editing ? `${API_URL}/${targetId}` : API_URL, {
@@ -196,7 +275,13 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: formData
             });
 
-            const data = await response.json().catch(() => ({}));
+            const rawResponse = await response.text();
+            let data = {};
+            try {
+                data = rawResponse ? JSON.parse(rawResponse) : {};
+            } catch (parseError) {
+                data = {};
+            }
             if (!response.ok || !data.success) {
                 throw new Error(data.message || (editing ? 'No se pudo actualizar el producto' : 'No se pudo crear el producto'));
             }

@@ -67,7 +67,6 @@
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item"><a class="nav-link ${isActive('home.html') ? 'active' : ''}" href="${GolazoStore.paths.home()}"><i class="fas fa-house"></i> Inicio</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('catalogo.html') ? 'active' : ''}" href="${GolazoStore.paths.catalog()}"><i class="fas fa-store"></i> Catalogo</a></li>
-                            <li class="nav-item"><a class="nav-link ${window.location.search.includes('cat=shorts') ? 'active' : ''}" href="${GolazoStore.paths.catalog('shorts')}"><i class="fas fa-person-running"></i> Shorts</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('contacto.html') ? 'active' : ''}" href="${GolazoStore.paths.contact()}"><i class="fas fa-envelope"></i> Contacto</a></li>
                             ${adminPrimaryLink}
                         </ul>
@@ -113,7 +112,6 @@
                         <h5 class="text-uppercase fw-bold footer-title">Navegacion</h5>
                         <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.home()}">Inicio</a></p>
                         <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.catalog()}">Catalogo</a></p>
-                        <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.catalog('shorts')}">Shorts</a></p>
                         <p class="mb-0"><a class="footer-link" href="${GolazoStore.paths.contact()}">Contacto</a></p>
                     </div>
                     <div class="col-md-4">
@@ -144,7 +142,6 @@
                 <div class="offcanvas-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><a href="${GolazoStore.paths.catalog()}" class="text-decoration-none text-dark"><i class="fas fa-shirt me-2"></i>Todas las camisetas</a></li>
-                        <li class="list-group-item"><a href="${GolazoStore.paths.catalog('shorts')}" class="text-decoration-none text-dark"><i class="fas fa-person-running me-2"></i>Shorts</a></li>
                         <li class="list-group-item"><a href="${GolazoStore.paths.cart()}" class="text-decoration-none text-dark"><i class="fas fa-cart-shopping me-2"></i>Mi carrito</a></li>
                         ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark"><i class="fas fa-shield-halved me-2"></i>Panel admin</a></li>` : ''}
                         <li class="list-group-item"><a href="${GolazoStore.paths.contact()}" class="text-decoration-none text-dark"><i class="fas fa-headset me-2"></i>Hablar con soporte</a></li>

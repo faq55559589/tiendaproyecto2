@@ -58,11 +58,11 @@
   ],
   "config": {
     "frontend": {
-      "port": 3000,
+      "port": 8000,
       "build": "production"
     },
     "backend": {
-      "port": 8000,
+      "port": 3000,
       "environment": "development"
     }
   }

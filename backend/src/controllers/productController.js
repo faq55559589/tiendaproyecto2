@@ -1,14 +1,55 @@
 const Product = require('../models/Product');
 
 class ProductController {
+    static getUploadedImageUrls(req) {
+        const baseUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+        return (req.files || []).map((file) => `${baseUrl}/${file.filename}`);
+    }
+
+    static parseImageUrls(rawValue) {
+        if (!rawValue) return [];
+        if (Array.isArray(rawValue)) {
+            return rawValue.map((item) => String(item || '').trim()).filter(Boolean);
+        }
+
+        try {
+            const parsedValue = JSON.parse(rawValue);
+            if (Array.isArray(parsedValue)) {
+                return parsedValue.map((item) => String(item || '').trim()).filter(Boolean);
+            }
+        } catch (error) {
+            return String(rawValue)
+                .split(',')
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+
+        return [];
+    }
+
+    static normalizeImageUrls(imageUrls) {
+        return [...new Set((imageUrls || []).map((item) => String(item || '').trim()).filter(Boolean))];
+    }
+
+    static formatProduct(product) {
+        const imageUrls = ProductController.normalizeImageUrls([
+            ...ProductController.parseImageUrls(product.image_urls),
+            ...(product.image_url ? [product.image_url] : [])
+        ]);
+
+        return {
+            ...product,
+            sizes: JSON.parse(product.sizes || '[]'),
+            image_url: imageUrls[0] || null,
+            image_urls: imageUrls
+        };
+    }
+
     // Obtener todos los productos
     static getAll(req, res) {
         try {
             const products = Product.getAll();
-            const formattedProducts = products.map(product => ({
-                ...product,
-                sizes: JSON.parse(product.sizes || '[]')
-            }));
+            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
             res.json({
                 success: true,
                 products: formattedProducts
@@ -33,10 +74,9 @@ class ProductController {
                     message: 'Producto no encontrado'
                 });
             }
-            product.sizes = JSON.parse(product.sizes || '[]');
             res.json({
                 success: true,
-                product
+                product: ProductController.formatProduct(product)
             });
         } catch (error) {
             console.error('Error obteniendo producto:', error);
@@ -58,10 +98,7 @@ class ProductController {
                 });
             }
             const products = Product.search(q);
-            const formattedProducts = products.map(product => ({
-                ...product,
-                sizes: JSON.parse(product.sizes || '[]')
-            }));
+            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
             res.json({
                 success: true,
                 products: formattedProducts,
@@ -80,21 +117,23 @@ class ProductController {
     static create(req, res) {
         try {
             const { name, description, price, stock, sizes, category_id, specifications } = req.body;
-            let image_url = req.body.image_url; // Fallback URL if provided manually
-
-            // If file uploaded, use the file path
-            if (req.file) {
-                // Construct the full URL for the uploaded file
-                // Assuming backend runs on port 3000
-                const baseUrl = process.env.BACKEND_URL || 'http://localhost:3000';
-                image_url = `${baseUrl}/${req.file.filename}`;
-            }
+            const uploadedImageUrls = ProductController.getUploadedImageUrls(req);
+            const imageUrls = ProductController.normalizeImageUrls(
+                uploadedImageUrls.length
+                    ? uploadedImageUrls
+                    : [
+                        ...ProductController.parseImageUrls(req.body.image_urls),
+                        ...(req.body.image_url ? [req.body.image_url] : [])
+                    ]
+            );
+            const image_url = imageUrls[0] || null;
 
             const productId = Product.create({
                 name,
                 description,
                 price,
                 image_url,
+                image_urls: imageUrls,
                 stock,
                 sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
                 category_id,
@@ -129,18 +168,23 @@ class ProductController {
             }
 
             const { name, description, price, image_url, stock, sizes, category_id, specifications } = req.body;
-            let finalImageUrl = image_url || existingProduct.image_url;
-
-            if (req.file) {
-                const baseUrl = process.env.BACKEND_URL || 'http://localhost:3000';
-                finalImageUrl = `${baseUrl}/${req.file.filename}`;
-            }
+            const existingImageUrls = ProductController.normalizeImageUrls([
+                ...ProductController.parseImageUrls(existingProduct.image_urls),
+                ...(existingProduct.image_url ? [existingProduct.image_url] : [])
+            ]);
+            const uploadedImageUrls = ProductController.getUploadedImageUrls(req);
+            const hasImageUrlsField = Object.prototype.hasOwnProperty.call(req.body, 'image_urls');
+            const requestedImageUrls = ProductController.parseImageUrls(req.body.image_urls);
+            const baseImageUrls = hasImageUrlsField ? requestedImageUrls : existingImageUrls;
+            const nextImageUrls = ProductController.normalizeImageUrls([...baseImageUrls, ...uploadedImageUrls]);
+            const finalImageUrl = nextImageUrls[0] || null;
 
             await Product.update(id, {
                 name,
                 description,
                 price,
                 image_url: finalImageUrl,
+                image_urls: nextImageUrls,
                 stock,
                 sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
                 category_id,

@@ -27,7 +27,7 @@
                     <div>
                         <p class="eyebrow mb-2">Gestion</p>
                         <h1 class="mb-1">Panel de productos</h1>
-                        <p class="text-muted mb-0">Crea productos con imagen, stock y especificaciones desde tu cuenta admin.</p>
+                        <p class="text-muted mb-0">Crea productos con una o varias imagenes, stock y especificaciones desde tu cuenta admin.</p>
                     </div>
                     <a href="catalogo.html" class="btn btn-outline-danger">Ver catalogo</a>
                 </div>
@@ -87,17 +87,21 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Imagen del producto</label>
-                                        <input type="file" class="form-control" name="image" accept="image/*" required>
-                                        <div class="form-text" id="imageHelpText">Formatos permitidos: JPG, PNG, WEBP.</div>
+                                        <label class="form-label">Imagenes del producto</label>
+                                        <input type="file" class="form-control" name="images" accept="image/*" multiple required>
+                                        <div class="form-text" id="imageHelpText">Puedes subir una o varias imagenes. Formatos permitidos: JPG, PNG, WEBP.</div>
+                                    </div>
+
+                                    <div class="mb-3 d-none" id="selectedImagesWrap">
+                                        <label class="form-label">Archivos seleccionados</label>
+                                        <div class="small text-muted mb-2" id="selectedImagesCount"></div>
+                                        <div class="d-flex flex-wrap gap-2" id="selectedImagesPreview"></div>
                                     </div>
 
                                     <div class="mb-3 d-none" id="currentImageWrap">
-                                        <label class="form-label">Imagen actual</label>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <img id="currentImagePreview" src="" alt="Imagen actual" class="rounded border" style="width: 88px; height: 88px; object-fit: cover;">
-                                            <span class="small text-muted">Si subes otra imagen, se reemplaza la actual.</span>
-                                        </div>
+                                        <label class="form-label">Galeria actual</label>
+                                        <div class="small text-muted mb-2" id="currentImageCount"></div>
+                                        <div class="d-flex flex-wrap gap-2" id="currentImagePreviewList"></div>
                                     </div>
 
                                     <input type="hidden" name="sizes" value='["S","M","L","XL"]'>

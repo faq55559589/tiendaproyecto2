@@ -76,6 +76,44 @@ Fecha de referencia: 2026-03-07
 - Si cambias middleware/backend, hay que reiniciar el servidor Node para tomar el cambio.
 - La subida de imagen requiere que el backend corra con el middleware actualizado.
 
+## Cambios recientes (2026-03-07) - Entorno local y catalogo final
+
+- Se normalizo el arranque local:
+  - `INICIAR_TODO.bat` es ahora el punto de entrada oficial en Windows.
+  - cierra procesos viejos en `3000` y `8000`.
+  - levanta backend y frontend en ventanas separadas.
+  - valida puertos antes de abrir el navegador.
+- Se reemplazo `node --watch` por un watcher propio para backend:
+  - `scripts/dev-backend.js`
+  - motivo: en este entorno `node --watch` y `nodemon` fallaban con `spawn EPERM`.
+- Se alinearon puertos y documentacion:
+  - backend local `3000`
+  - frontend local `8000`
+
+## Cambios recientes (2026-03-07) - Galeria de producto y admin
+
+- Productos ahora soportan multiples imagenes:
+  - `image_urls` persiste la galeria completa.
+  - `image_url` queda como imagen principal.
+- El panel admin ahora:
+  - muestra toda la galeria real del producto al editar.
+  - permite agregar nuevas imagenes sin reemplazar las existentes.
+  - permite quitar imagenes individuales antes de guardar.
+- La API de productos normaliza `sizes`, `image_url` e `image_urls` al responder:
+  - evita inconsistencias entre catalogo, ficha y panel admin.
+
+## Cambios recientes (2026-03-07) - Ficha de producto y navegacion
+
+- Se mejoro la ficha de producto:
+  - galeria con multiples imagenes y navegacion lateral.
+  - tabs de `Descripcion`, `Especificaciones` y `Reseñas` con mejor contraste visual.
+  - textos con acentos corregidos.
+- Se elimino la navegacion visible de `Shorts`:
+  - navbar, footer, offcanvas y home ya no muestran una categoria separada.
+  - catalogo vuelve a operar como catalogo unico.
+- Se limpio la logica residual de `shorts` en frontend:
+  - ya no se infiere categoria por texto en nombre o descripcion.
+
 ## Resumen ejecutivo
 
 - El MVP de compra ya corre con backend real.

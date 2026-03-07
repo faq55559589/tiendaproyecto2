@@ -40,9 +40,7 @@
             const haystack = `${product.name} ${product.description || ''} ${product.category_name || ''}`.toLowerCase();
             const matchesSearch = !search || haystack.includes(search);
             const matchesCategory = !categoryParam
-                || (categoryParam === 'shorts'
-                    ? haystack.includes('short')
-                    : String(product.category_name || '').toLowerCase().includes(categoryParam));
+                || String(product.category_name || '').toLowerCase().includes(categoryParam);
             return matchesSearch && matchesCategory;
         });
 
@@ -53,13 +51,13 @@
         });
 
         if (catalogTitle) {
-            catalogTitle.textContent = categoryParam === 'shorts' ? 'Shorts de futbol' : 'Catalogo completo';
+            catalogTitle.textContent = 'Catalogo completo';
         }
 
         if (filterInfo) {
             filterInfo.textContent = visibleProducts.length
                 ? `${visibleProducts.length} producto(s) encontrados`
-                : (categoryParam === 'shorts' ? 'No hay shorts cargados en este momento.' : 'No encontramos productos para este filtro.');
+                : 'No encontramos productos para este filtro.';
         }
 
         if (searchResultsDiv) {
