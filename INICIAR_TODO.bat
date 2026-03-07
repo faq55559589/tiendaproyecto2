@@ -15,8 +15,8 @@ echo   - Backend con autorestart en http://localhost:3000
 echo   - Frontend con live reload en http://localhost:8000/frontend/home.html
 echo.
 
-start "GolazoStore Backend" cmd /k "cd /d "%ROOT%backend" && npm run dev"
-start "GolazoStore Frontend" cmd /k "cd /d "%ROOT%" && npm run frontend:dev"
+start "GolazoStore Backend" cmd /k "cd /d "%ROOT%backend" && node --watch server.js"
+start "GolazoStore Frontend" cmd /k "cd /d "%ROOT%" && node scripts\\serve-frontend.js"
 
 timeout /t 5 /nobreak >nul
 start "" http://localhost:8000/frontend/home.html

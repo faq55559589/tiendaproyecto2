@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
+const frontendDir = path.join(rootDir, 'frontend');
 const port = Number(process.env.PORT || 8000);
+const liveReloadClients = new Set();
 
 const mimeTypes = {
     '.html': 'text/html; charset=utf-8',
@@ -18,6 +20,21 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
+const liveReloadScript = `
+<script>
+(() => {
+    if (window.__golazoLiveReload) return;
+    window.__golazoLiveReload = true;
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const source = new EventSource(protocol + '//' + window.location.host + '/__livereload');
+    source.onmessage = (event) => {
+        if (event.data === 'reload') {
+            window.location.reload();
+        }
+    };
+})();
+</script>`;
+
 function resolvePath(urlPath) {
     const cleanPath = decodeURIComponent((urlPath || '/').split('?')[0]);
     const requested = cleanPath === '/' ? '/index.html' : cleanPath;
@@ -30,7 +47,38 @@ function resolvePath(urlPath) {
     return fullPath;
 }
 
+function sendReload() {
+    for (const client of liveReloadClients) {
+        client.write('data: reload\n\n');
+    }
+}
+
+function watchPath(targetPath) {
+    if (!fs.existsSync(targetPath)) return;
+
+    fs.watch(targetPath, { recursive: true }, (eventType, filename) => {
+        if (!filename) return;
+        const normalized = String(filename).replace(/\\/g, '/');
+        if (normalized.includes('node_modules') || normalized.includes('.git')) return;
+        sendReload();
+    });
+}
+
 const server = http.createServer((req, res) => {
+    if ((req.url || '').startsWith('/__livereload')) {
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Connection: 'keep-alive'
+        });
+        res.write('\n');
+        liveReloadClients.add(res);
+        req.on('close', () => {
+            liveReloadClients.delete(res);
+        });
+        return;
+    }
+
     const filePath = resolvePath(req.url);
 
     if (!filePath) {
@@ -57,17 +105,28 @@ const server = http.createServer((req, res) => {
                 return;
             }
 
+            let body = data;
+            if (ext === '.html') {
+                const html = data.toString('utf8');
+                body = html.includes('</body>')
+                    ? html.replace('</body>', `${liveReloadScript}\n</body>`)
+                    : `${html}\n${liveReloadScript}`;
+            }
+
             res.writeHead(200, {
                 'Content-Type': contentType,
                 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
                 Pragma: 'no-cache',
                 Expires: '0'
             });
-            res.end(data);
+            res.end(body);
         });
     });
 });
 
+watchPath(frontendDir);
+watchPath(path.join(rootDir, 'index.html'));
+
 server.listen(port, () => {
-    console.log(`Frontend disponible en http://localhost:${port}`);
+    console.log(`Frontend disponible en http://localhost:${port}/frontend/home.html`);
 });

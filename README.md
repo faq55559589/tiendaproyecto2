@@ -52,14 +52,14 @@ Backend con autorestart:
 
 ```powershell
 cd backend
-npm run dev
+node --watch server.js
 ```
 
 Frontend con live reload:
 
 ```powershell
 cd ..
-npm run frontend:dev
+node scripts/serve-frontend.js
 ```
 
 O todo junto:
@@ -70,7 +70,7 @@ INICIAR_TODO.bat
 
 Notas:
 - cambios de `frontend/` se reflejan al guardar y recargar automaticamente
-- cambios de backend reinician Node automaticamente con `nodemon`
+- cambios de backend reinician Node automaticamente con `node --watch`
 - si cambias dependencias o `.env`, conviene reiniciar el proceso manualmente
 
 ## Nota de entorno
