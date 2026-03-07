@@ -89,6 +89,11 @@ Fecha de referencia: 2026-03-07
 - Se alinearon puertos y documentacion:
   - backend local `3000`
   - frontend local `8000`
+- Se agrego operacion minima local:
+  - `scripts/backup-local-state.js`
+  - `scripts/restore-local-state.js`
+  - respaldan SQLite + `uploads`
+  - restauran estado local desde `backups/`
 
 ## Cambios recientes (2026-03-07) - Galeria de producto y admin
 
@@ -101,6 +106,29 @@ Fecha de referencia: 2026-03-07
   - permite quitar imagenes individuales antes de guardar.
 - La API de productos normaliza `sizes`, `image_url` e `image_urls` al responder:
   - evita inconsistencias entre catalogo, ficha y panel admin.
+- La baja admin de productos vendidos ya no cae en error interno:
+  - si el producto forma parte de `order_items`, responde `409` con mensaje claro.
+
+## Cambios recientes (2026-03-07) - Estado comercial de productos
+
+- Se agrego `is_active` en productos para manejar catalogo sin romper historial.
+- La logica admin ahora diferencia:
+  - `Activos`
+  - `Inactivos`
+  - `Sin stock`
+- Si un producto ya fue vendido:
+  - no se elimina fisicamente,
+  - se desactiva y sale del catalogo publico,
+  - se conserva para pedidos historicos.
+- El panel admin ahora muestra todos los productos y permite filtrarlos por estado:
+  - `Todos`
+  - `Activos`
+  - `Inactivos`
+  - `Sin stock`
+- El panel admin permite:
+  - editar,
+  - activar/desactivar,
+  - eliminar fisicamente solo si el producto no tiene pedidos asociados.
 
 ## Cambios recientes (2026-03-07) - Ficha de producto y navegacion
 
@@ -120,6 +148,8 @@ Fecha de referencia: 2026-03-07
 - Registro/login/verificacion/reset estan implementados.
 - Carrito y pedidos ya no dependen de localStorage como fuente principal.
 - `Mercado Pago` queda definido como mejora post-MVP.
+- QA de cierre MVP ejecutado con `16/16 PASS`.
+- El admin ya permite gestionar productos activos/inactivos sin perder trazabilidad de ventas.
 - Falta el bloque final de hardening + despliegue publico.
 
 ## Lo que ya esta cerrado

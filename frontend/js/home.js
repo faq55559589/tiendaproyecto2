@@ -8,9 +8,9 @@
     } catch (error) {
         container.innerHTML = `
             <div class="col-12 text-center py-5">
-                <i class="fas fa-triangle-exclamation fa-3x text-danger mb-3"></i>
+                <i class="fas fa-triangle-exclamation fa-3x icon-accent mb-3"></i>
                 <h4>No pudimos cargar los destacados</h4>
-                <p class="text-muted">Verifica que el backend este disponible en el puerto 3000.</p>
+                <p class="text-ui-muted">Verifica que el backend este disponible en el puerto 3000.</p>
                 <a href="catalogo.html" class="btn btn-danger">Ir al catalogo</a>
             </div>
         `;
@@ -29,8 +29,8 @@
     function createProductCard(product) {
         const category = GolazoStore.getCategoryLabel(product);
         const stockBadge = product.stock > 0
-            ? `<span class="badge text-bg-light border">Stock ${product.stock}</span>`
-            : `<span class="badge text-bg-danger">Sin stock</span>`;
+            ? `<span class="badge badge-soft-neutral">Stock ${product.stock}</span>`
+            : `<span class="badge badge-soft-danger">Sin stock</span>`;
 
         return `
             <div class="col-lg-3 col-md-6 mb-4">
@@ -40,13 +40,13 @@
                     </a>
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                            <span class="badge text-bg-danger-subtle text-danger-emphasis">${category}</span>
+                            <span class="badge badge-soft-brand">${category}</span>
                             ${stockBadge}
                         </div>
                         <h3 class="h6 card-title">${product.name}</h3>
-                        <p class="text-muted small flex-grow-1">${(product.description || 'Producto oficial de futbol.').slice(0, 96)}...</p>
+                        <p class="text-ui-muted small flex-grow-1">${(product.description || 'Producto oficial de futbol.').slice(0, 96)}...</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <strong class="text-danger">${GolazoStore.formatPrice(product.price)}</strong>
+                            <strong class="text-price-accent">${GolazoStore.formatPrice(product.price)}</strong>
                             <button class="btn btn-danger btn-sm" data-add-home="${product.id}" ${product.stock < 1 ? 'disabled' : ''}>Agregar</button>
                         </div>
                     </div>

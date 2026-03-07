@@ -21,6 +21,7 @@ Documentacion esencial para entender y cerrar el proyecto sin ruido.
 ## Operacion
 
 - [Guia de troubleshooting](./operacion/GUIA_SOLUCION_PROBLEMAS_SERVER.md)
+- [Guia de backup y restore local](./operacion/GUIA_BACKUP_RESTORE_LOCAL.md)
 
 ## QA
 

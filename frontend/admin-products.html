@@ -27,9 +27,9 @@
                     <div>
                         <p class="eyebrow mb-2">Gestion</p>
                         <h1 class="mb-1">Panel de productos</h1>
-                        <p class="text-muted mb-0">Crea productos con una o varias imagenes, stock y especificaciones desde tu cuenta admin.</p>
+                        <p class="text-ui-muted mb-0">Crea productos con una o varias imagenes, stock y especificaciones desde tu cuenta admin.</p>
                     </div>
-                    <a href="catalogo.html" class="btn btn-outline-danger">Ver catalogo</a>
+                    <a href="catalogo.html" class="btn btn-outline-brand">Ver catalogo</a>
                 </div>
 
                 <div id="adminNotice" class="alert alert-danger d-none" role="alert"></div>
@@ -37,7 +37,7 @@
                 <div class="row g-4">
                     <div class="col-lg-5">
                         <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-danger text-white">
+                            <div class="card-header card-header-soft">
                                 <h2 class="h5 mb-0" id="productFormTitle"><i class="fas fa-plus-circle me-2"></i>Nuevo producto</h2>
                             </div>
                             <div class="card-body p-4">
@@ -120,10 +120,37 @@
                     <div class="col-lg-7">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
                                     <div>
                                         <h2 class="h5 mb-1">Productos en base</h2>
-                                        <p class="text-muted mb-0 small">Administra el catalogo activo.</p>
+                                        <p class="text-ui-muted mb-0 small">Administra activos, inactivos y productos sin stock desde un solo lugar.</p>
+                                    </div>
+                                </div>
+                                <div class="admin-filters-wrap surface-note p-3 mb-3">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                                        <div>
+                                            <h3 class="h6 mb-1">Vista del panel</h3>
+                                            <p class="text-ui-muted small mb-0">Filtra por estado comercial. Los productos vendidos se conservan y se desactivan.</p>
+                                        </div>
+                                        <span class="badge badge-soft-neutral px-3 py-2" id="productsSummaryBadge">0 productos</span>
+                                    </div>
+                                    <div class="admin-filter-bar" id="adminFilterBar">
+                                        <button type="button" class="btn admin-filter-btn active" data-filter="all">
+                                            <span>Todos</span>
+                                            <span class="badge badge-soft-neutral" id="count-all">0</span>
+                                        </button>
+                                        <button type="button" class="btn admin-filter-btn" data-filter="active">
+                                            <span>Activos</span>
+                                            <span class="badge badge-soft-success" id="count-active">0</span>
+                                        </button>
+                                        <button type="button" class="btn admin-filter-btn" data-filter="inactive">
+                                            <span>Inactivos</span>
+                                            <span class="badge badge-soft-danger" id="count-inactive">0</span>
+                                        </button>
+                                        <button type="button" class="btn admin-filter-btn" data-filter="out-of-stock">
+                                            <span>Sin stock</span>
+                                            <span class="badge badge-soft-brand" id="count-out-of-stock">0</span>
+                                        </button>
                                     </div>
                                 </div>
                                 <div id="productsList" class="list-group">

@@ -91,16 +91,38 @@ Notas:
 - Entorno local normalizado:
   - `INICIAR_TODO.bat` como entrada oficial en Windows
   - `scripts/dev-backend.js` para autorestart compatible con este entorno
+- Operacion minima local:
+  - `npm run ops:backup`
+  - `npm run ops:restore -- <ruta-del-backup>`
 - Panel admin de productos:
   - crear, editar y eliminar productos
   - multiples imagenes por producto
   - quitar imagenes individuales al editar
+  - activar/desactivar productos sin romper historial de pedidos
+  - filtros por estado: `Todos`, `Activos`, `Inactivos`, `Sin stock`
 - Ficha de producto:
   - galeria deslizante de imagenes
   - tabs de descripcion, especificaciones y reseñas con estilo actualizado
 - Navegacion:
   - se removio la categoria visible `Shorts`
   - el catalogo funciona como catalogo unico mientras no exista categoria real en base
+
+## Backup y restore local
+
+Crear backup:
+
+```powershell
+npm run ops:backup
+```
+
+Restore:
+
+```powershell
+npm run ops:restore -- backups/local-state-AAAA-MM-DD_HH-mm-ss
+```
+
+Referencia operativa:
+- [Guia de backup y restore local](./docs/operacion/GUIA_BACKUP_RESTORE_LOCAL.md)
 
 ## Nota de entorno
 

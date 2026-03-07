@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <a href="${GolazoStore.paths.product(item.id)}" class="text-decoration-none text-dark">
                             <h6 class="mb-1">${item.name}</h6>
                         </a>
-                        <small class="text-muted d-block">Talle: ${item.size}</small>
-                        <small class="text-muted">Stock: ${item.stock || 'sin dato'}</small>
+                        <small class="text-ui-muted d-block">Talle: ${item.size}</small>
+                        <small class="text-ui-muted">Stock: ${item.stock || 'sin dato'}</small>
                     </div>
                     <div class="col-md-2">
                         <span class="fw-bold">${GolazoStore.formatPrice(item.price)}</span>
@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             <button class="btn btn-outline-secondary btn-sm" type="button" data-action="increase">+</button>
                         </div>
                     </div>
-                    <div class="col-md-1 text-end">
-                        <span class="fw-bold text-danger">${GolazoStore.formatPrice(item.price * item.quantity)}</span>
+                    <div class="col-md-2 text-md-end">
+                        <span class="fw-bold text-price-accent price-inline d-inline-block">${GolazoStore.formatPrice(item.price * item.quantity)}</span>
                     </div>
                     <div class="col-md-1 text-end">
-                        <button class="btn btn-outline-danger btn-sm" type="button" data-action="remove"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-outline-brand btn-sm" type="button" data-action="remove"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             </div>

@@ -36,10 +36,10 @@
                         <i class="fas fa-user-circle me-2"></i>${user.first_name || 'Mi cuenta'}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.profile()}"><i class="fas fa-user me-2 text-danger"></i>Mi perfil</a></li>
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.orders()}"><i class="fas fa-box me-2 text-danger"></i>Mis pedidos</a></li>
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping me-2 text-danger"></i>Carrito</a></li>
-                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved me-2 text-danger"></i>Panel admin</a></li>` : ''}
+                        <li><a class="dropdown-item" href="${GolazoStore.paths.profile()}"><i class="fas fa-user me-2 icon-accent"></i>Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="${GolazoStore.paths.orders()}"><i class="fas fa-box me-2 icon-accent"></i>Mis pedidos</a></li>
+                        <li><a class="dropdown-item" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping me-2 icon-accent"></i>Carrito</a></li>
+                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved me-2 icon-accent"></i>Panel admin</a></li>` : ''}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="#" data-auth-logout><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesion</a></li>
                     </ul>
@@ -57,7 +57,7 @@
                         <img src="assets/images/logo.png" alt="GolazoStore" height="48" class="me-2">
                         <span class="fw-bold brand-wordmark">GolazoStore</span>
                     </a>
-                    <button class="btn btn-outline-danger d-none d-lg-inline-flex me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
+                    <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
                         <i class="fas fa-bars me-2"></i>Categorias
                     </button>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -72,7 +72,7 @@
                         </ul>
                         <form class="d-flex mx-auto app-search" role="search">
                             <input class="form-control me-2" type="search" placeholder="Buscar camiseta o equipo">
-                            <button class="btn btn-outline-danger" type="submit"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-outline-brand" type="submit"><i class="fas fa-search"></i></button>
                         </form>
                         <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                             ${userMenu}

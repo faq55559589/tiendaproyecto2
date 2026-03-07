@@ -40,6 +40,7 @@ class ProductController {
         return {
             ...product,
             sizes: JSON.parse(product.sizes || '[]'),
+            is_active: Number(product.is_active ?? 1) === 1,
             image_url: imageUrls[0] || null,
             image_urls: imageUrls
         };
@@ -56,6 +57,23 @@ class ProductController {
             });
         } catch (error) {
             console.error('Error obteniendo productos:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor'
+            });
+        }
+    }
+
+    static getAllAdmin(req, res) {
+        try {
+            const products = Product.getAllAdmin();
+            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
+            res.json({
+                success: true,
+                products: formattedProducts
+            });
+        } catch (error) {
+            console.error('Error obteniendo productos admin:', error);
             res.status(500).json({
                 success: false,
                 message: 'Error interno del servidor'
@@ -134,6 +152,7 @@ class ProductController {
                 price,
                 image_url,
                 image_urls: imageUrls,
+                is_active: true,
                 stock,
                 sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
                 category_id,
@@ -158,7 +177,7 @@ class ProductController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const existingProduct = Product.getById(id);
+            const existingProduct = Product.getByIdAdmin(id);
 
             if (!existingProduct) {
                 return res.status(404).json({
@@ -174,6 +193,9 @@ class ProductController {
             ]);
             const uploadedImageUrls = ProductController.getUploadedImageUrls(req);
             const hasImageUrlsField = Object.prototype.hasOwnProperty.call(req.body, 'image_urls');
+            const isActive = Object.prototype.hasOwnProperty.call(req.body, 'is_active')
+                ? String(req.body.is_active) === 'true' || String(req.body.is_active) === '1'
+                : Number(existingProduct.is_active ?? 1) === 1;
             const requestedImageUrls = ProductController.parseImageUrls(req.body.image_urls);
             const baseImageUrls = hasImageUrlsField ? requestedImageUrls : existingImageUrls;
             const nextImageUrls = ProductController.normalizeImageUrls([...baseImageUrls, ...uploadedImageUrls]);
@@ -185,6 +207,7 @@ class ProductController {
                 price,
                 image_url: finalImageUrl,
                 image_urls: nextImageUrls,
+                is_active: isActive,
                 stock,
                 sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
                 category_id,
@@ -207,6 +230,23 @@ class ProductController {
     static async delete(req, res) {
         try {
             const { id } = req.params;
+            const existingProduct = Product.getByIdAdmin(id);
+            if (!existingProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Producto no encontrado'
+                });
+            }
+
+            if (Product.hasOrderReferences(id)) {
+                Product.setActiveState(id, false);
+                return res.json({
+                    success: true,
+                    message: 'Producto desactivado porque ya forma parte de pedidos.',
+                    deactivated: true
+                });
+            }
+
             await Product.delete(id);
             res.json({
                 success: true,

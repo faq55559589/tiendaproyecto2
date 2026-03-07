@@ -27,16 +27,16 @@
                     <div>
                         <p class="eyebrow mb-2">Paso 1 de 3</p>
                         <h1 class="mb-1">Tu carrito</h1>
-                        <p class="text-muted mb-0">Revisa cantidades, talles y total antes de avanzar al checkout.</p>
+                        <p class="text-ui-muted mb-0">Revisa cantidades, talles y total antes de avanzar al checkout.</p>
                     </div>
-                    <a href="catalogo.html" class="btn btn-outline-danger">Seguir comprando</a>
+                    <a href="catalogo.html" class="btn btn-outline-brand">Seguir comprando</a>
                 </div>
 
                 <div id="cartLoading" class="state-panel text-center py-5 px-4 mb-4">
                     <div class="spinner-border text-danger" role="status">
                         <span class="visually-hidden">Cargando...</span>
                     </div>
-                    <p class="text-muted mt-3 mb-0">Cargando carrito...</p>
+                    <p class="text-ui-muted mt-3 mb-0">Cargando carrito...</p>
                 </div>
 
                 <div id="cartNotice" class="alert alert-danger d-none" role="alert"></div>
@@ -44,10 +44,10 @@
                 <div class="row" id="emptyCart" style="display:none;">
                     <div class="col-12">
                         <div class="empty-state text-center py-5 px-4">
-                            <i class="fas fa-cart-shopping fa-4x text-muted mb-3"></i>
-                            <h2 class="h3">Tu carrito esta vacio</h2>
-                            <p class="text-muted mb-4">Agrega productos del catalogo para iniciar el flujo de compra.</p>
-                            <a href="catalogo.html" class="btn btn-danger btn-lg">Ver catalogo</a>
+                            <i class="fas fa-cart-shopping fa-4x text-ui-muted mb-3"></i>
+                            <h2 class="h3">Tu carrito está vacío</h2>
+                            <p class="text-ui-muted mb-4">Agrega productos del catálogo para iniciar el flujo de compra.</p>
+                            <a href="catalogo.html" class="btn btn-danger btn-lg">Ver catálogo</a>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                                 <div id="cartItems"></div>
                                 <div class="d-flex justify-content-between flex-wrap gap-3 mt-4">
                                     <button class="btn btn-outline-secondary" id="clearCartBtn">Vaciar carrito</button>
-                                    <a href="catalogo.html" class="btn btn-link text-danger text-decoration-none">Agregar mas productos</a>
+                                    <a href="catalogo.html" class="btn btn-link text-price-accent text-decoration-none">Agregar más productos</a>
                                 </div>
                             </div>
                         </div>
@@ -69,9 +69,9 @@
                             <div class="card-body p-4">
                                 <h2 class="h5 mb-4">Resumen</h2>
                                 <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong id="subtotal">UYU 0</strong></div>
-                                <div class="d-flex justify-content-between mb-2"><span>Envio</span><strong id="shipping">UYU 0</strong></div>
-                                <div class="d-flex justify-content-between mb-3"><span>Total</span><strong class="text-danger fs-4" id="total">UYU 0</strong></div>
-                                <p class="small text-muted">En checkout eliges el medio de pago y confirmas tu pedido.</p>
+                                <div class="d-flex justify-content-between mb-2"><span>Envío</span><strong id="shipping">UYU 0</strong></div>
+                                <div class="d-flex justify-content-between mb-3"><span>Total</span><strong class="text-price-accent fs-4 price-inline" id="total">UYU 0</strong></div>
+                                <p class="small text-ui-muted">En checkout eliges el medio de pago y confirmas tu pedido.</p>
                                 <button class="btn btn-danger btn-lg w-100" id="checkoutBtn">Ir al checkout</button>
                             </div>
                         </div>

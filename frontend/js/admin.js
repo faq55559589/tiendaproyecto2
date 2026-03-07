@@ -14,10 +14,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     const selectedImagesWrap = document.getElementById('selectedImagesWrap');
     const selectedImagesCount = document.getElementById('selectedImagesCount');
     const selectedImagesPreview = document.getElementById('selectedImagesPreview');
+    const adminFilterBar = document.getElementById('adminFilterBar');
+    const productsSummaryBadge = document.getElementById('productsSummaryBadge');
     const API_URL = `${GolazoStore.config.apiBase}/products`;
+    const ADMIN_PRODUCTS_URL = `${GolazoStore.config.apiBase}/admin/products`;
 
     let productsCache = [];
     let editingImageUrls = [];
+    let currentFilter = 'all';
 
     function showNotice(message) {
         if (!adminNotice) return;
@@ -75,6 +79,75 @@ document.addEventListener('DOMContentLoaded', async function () {
             return [product.image_url];
         }
         return [];
+    }
+
+    function getProductStateCounts(products) {
+        return products.reduce((acc, product) => {
+            acc.all += 1;
+            if (product.is_active) {
+                acc.active += 1;
+            } else {
+                acc.inactive += 1;
+            }
+            if (Number(product.stock || 0) < 1) {
+                acc['out-of-stock'] += 1;
+            }
+            return acc;
+        }, {
+            all: 0,
+            active: 0,
+            inactive: 0,
+            'out-of-stock': 0
+        });
+    }
+
+    function updateFilterCounters(products) {
+        const counts = getProductStateCounts(products);
+        const summaryLabel = counts.all === 1 ? '1 producto' : `${counts.all} productos`;
+        if (productsSummaryBadge) {
+            productsSummaryBadge.textContent = summaryLabel;
+        }
+
+        const mappings = {
+            all: counts.all,
+            active: counts.active,
+            inactive: counts.inactive,
+            'out-of-stock': counts['out-of-stock']
+        };
+
+        Object.entries(mappings).forEach(([filter, count]) => {
+            const node = document.getElementById(`count-${filter}`);
+            if (node) {
+                node.textContent = String(count);
+            }
+        });
+    }
+
+    function getFilteredProducts(products) {
+        switch (currentFilter) {
+        case 'active':
+            return products.filter((product) => product.is_active);
+        case 'inactive':
+            return products.filter((product) => !product.is_active);
+        case 'out-of-stock':
+            return products.filter((product) => Number(product.stock || 0) < 1);
+        case 'all':
+        default:
+            return products;
+        }
+    }
+
+    function setActiveFilterButton() {
+        if (!adminFilterBar) return;
+        adminFilterBar.querySelectorAll('[data-filter]').forEach((button) => {
+            button.classList.toggle('active', button.dataset.filter === currentFilter);
+        });
+    }
+
+    function renderProductsView() {
+        updateFilterCounters(productsCache);
+        setActiveFilterButton();
+        renderProductsList(getFilteredProducts(productsCache));
     }
 
     function fillForm(product) {
@@ -151,7 +224,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function loadProducts() {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(ADMIN_PRODUCTS_URL, {
+                headers: {
+                    Authorization: `Bearer ${getAdminToken()}`
+                }
+            });
             const data = await response.json();
 
             if (!response.ok || !data.success) {
@@ -159,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             productsCache = data.products || [];
-            renderProductsList(productsCache);
+            renderProductsView();
         } catch (error) {
             productsList.innerHTML = '<div class="alert alert-danger">Error cargando productos.</div>';
         }
@@ -167,24 +244,37 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function renderProductsList(products) {
         if (!products.length) {
-            productsList.innerHTML = '<div class="alert alert-info">No hay productos cargados aun.</div>';
+            productsList.innerHTML = `
+                <div class="empty-state text-center py-4 px-3">
+                    <i class="fas fa-box-open icon-accent fs-2 mb-3"></i>
+                    <h3 class="h6 mb-2">No hay productos en esta vista</h3>
+                    <p class="text-ui-muted mb-0 small">Cambia el filtro o crea un producto nuevo desde el formulario.</p>
+                </div>
+            `;
             return;
         }
 
         productsList.innerHTML = products.map((product) => `
-            <div class="list-group-item d-flex justify-content-between align-items-center gap-3 flex-wrap">
-                <div class="d-flex align-items-center gap-3">
+            <div class="list-group-item admin-product-item d-flex justify-content-between align-items-center gap-3 flex-wrap ${product.is_active ? '' : 'is-inactive'}">
+                <div class="d-flex align-items-center gap-3 flex-grow-1">
                     <img src="${product.image_url || 'https://placehold.co/72x72'}" class="rounded" style="width: 72px; height: 72px; object-fit: cover;" alt="${product.name}">
-                    <div>
+                    <div class="flex-grow-1">
                         <h6 class="mb-1">${product.name}</h6>
-                        <div class="small text-muted">${GolazoStore.formatPrice(product.price)} | Stock: ${product.stock}</div>
-                        <div class="small text-muted">Imagenes: ${getProductImages(product).length}</div>
-                        <div class="small text-muted">${product.description || 'Sin descripcion'}</div>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <span class="badge ${product.is_active ? 'badge-soft-success' : 'badge-soft-danger'}">${product.is_active ? 'Activo' : 'Inactivo'}</span>
+                            <span class="badge ${Number(product.stock || 0) > 0 ? 'badge-soft-neutral' : 'badge-soft-brand'}">${Number(product.stock || 0) > 0 ? `Stock ${product.stock}` : 'Sin stock'}</span>
+                            <span class="badge badge-soft-neutral">${getProductImages(product).length} imagen(es)</span>
+                        </div>
+                        <div class="small text-ui-muted">${GolazoStore.formatPrice(product.price)}</div>
+                        <div class="small text-ui-muted">${product.description || 'Sin descripcion'}</div>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-secondary" data-edit-id="${product.id}">
+                    <button class="btn btn-sm btn-outline-brand" data-edit-id="${product.id}">
                         <i class="fas fa-pen me-1"></i>Editar
+                    </button>
+                    <button class="btn btn-sm ${product.is_active ? 'btn-outline-warning' : 'btn-outline-success'}" data-toggle-active-id="${product.id}" data-next-active="${product.is_active ? 'false' : 'true'}">
+                        <i class="fas ${product.is_active ? 'fa-eye-slash' : 'fa-eye'} me-1"></i>${product.is_active ? 'Desactivar' : 'Reactivar'}
                     </button>
                     <button class="btn btn-sm btn-outline-danger" data-delete-id="${product.id}">
                         <i class="fas fa-trash me-1"></i>Eliminar
@@ -213,6 +303,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     resetForm();
     loadProducts();
+
+    adminFilterBar?.addEventListener('click', function (event) {
+        const filterButton = event.target.closest('[data-filter]');
+        if (!filterButton) return;
+
+        currentFilter = filterButton.dataset.filter || 'all';
+        renderProductsView();
+    });
 
     cancelEditBtn?.addEventListener('click', function () {
         resetForm();
@@ -311,6 +409,50 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         const deleteButton = event.target.closest('[data-delete-id]');
+        const toggleActiveButton = event.target.closest('[data-toggle-active-id]');
+        if (toggleActiveButton) {
+            const id = Number(toggleActiveButton.dataset.toggleActiveId);
+            const nextActive = String(toggleActiveButton.dataset.nextActive) === 'true';
+            const product = productsCache.find((item) => Number(item.id) === id);
+            if (!product) {
+                showNotice('No se encontro el producto para actualizar estado.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${getAdminToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: product.name,
+                        description: product.description,
+                        price: product.price,
+                        stock: product.stock,
+                        sizes: product.sizes || ['M'],
+                        category_id: product.category_id,
+                        specifications: product.specifications || '',
+                        image_urls: getProductImages(product),
+                        is_active: nextActive
+                    })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'No se pudo actualizar el estado');
+                }
+                showToast(nextActive ? 'Producto reactivado.' : 'Producto desactivado.');
+                if (isEditing() && Number(productIdInput.value) === id) {
+                    resetForm();
+                }
+                await loadProducts();
+            } catch (error) {
+                showNotice(error.message || 'No se pudo actualizar el estado del producto.');
+            }
+            return;
+        }
+
         if (!deleteButton) return;
 
         const id = Number(deleteButton.dataset.deleteId);
@@ -327,7 +469,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'No se pudo eliminar');
             }
-            showToast('Producto eliminado.');
+            showToast(data.deactivated ? 'Producto desactivado porque ya tenia pedidos.' : 'Producto eliminado.');
             if (isEditing() && Number(productIdInput.value) === id) {
                 resetForm();
             }

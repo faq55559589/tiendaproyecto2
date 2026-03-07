@@ -69,6 +69,7 @@
         return {
             ...product,
             price: Number(product.price || 0),
+            is_active: product.is_active !== false && String(product.is_active) !== '0',
             stock: Number(product.stock || 0),
             sizes: sizes.length ? sizes : ['M'],
             image_url: normalizedImageUrls[0] || primaryImage,

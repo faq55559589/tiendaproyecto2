@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     <img src="${item.image}" alt="${item.name}" width="56" height="56" class="rounded" style="object-fit: cover;">
                     <div class="flex-grow-1">
                         <div class="fw-semibold">${item.name}</div>
-                        <small class="text-muted">Talle ${item.size} · Cantidad ${item.quantity}</small>
+                        <small class="text-ui-muted">Talle ${item.size} · Cantidad ${item.quantity}</small>
                     </div>
                     <strong>${GolazoStore.formatPrice(item.price * item.quantity)}</strong>
                 </div>
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             <hr>
             <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>${GolazoStore.formatPrice(data.subtotal)}</strong></div>
             <div class="d-flex justify-content-between mb-2"><span>Envio</span><strong>${data.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(data.shipping)}</strong></div>
-            <div class="d-flex justify-content-between"><span>Total</span><strong class="text-danger fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
+            <div class="d-flex justify-content-between"><span>Total</span><strong class="text-price-accent fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
         `;
     }
 });

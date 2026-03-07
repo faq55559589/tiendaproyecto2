@@ -96,6 +96,7 @@ function runMigrations() {
     ensureColumn('users', 'verification_token', 'TEXT');
     ensureColumn('products', 'specifications', 'TEXT');
     ensureColumn('products', 'image_urls', 'TEXT');
+    ensureColumn('products', 'is_active', 'INTEGER DEFAULT 1');
 
     ensureColumn('orders', 'total_amount', 'REAL');
     ensureColumn('orders', 'payment_method', "TEXT DEFAULT 'instagram'");

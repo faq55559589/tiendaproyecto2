@@ -28,24 +28,24 @@
                     <div>
                         <p class="eyebrow mb-2">Paso 2 de 3</p>
                         <h1 class="mb-1">Checkout</h1>
-                        <p class="text-muted mb-0">Confirma datos de entrega y medio de pago.</p>
+                        <p class="text-ui-muted mb-0">Confirma datos de entrega y medio de pago.</p>
                     </div>
-                    <a href="carrito.html" class="btn btn-outline-danger">Volver al carrito</a>
+                    <a href="carrito.html" class="btn btn-outline-brand">Volver al carrito</a>
                 </div>
 
                 <div id="checkoutLoading" class="state-panel text-center py-5 px-4 mb-4">
                     <div class="spinner-border text-danger" role="status">
                         <span class="visually-hidden">Cargando...</span>
                     </div>
-                    <p class="text-muted mt-3 mb-0">Preparando checkout...</p>
+                    <p class="text-ui-muted mt-3 mb-0">Preparando checkout...</p>
                 </div>
 
                 <div id="checkoutNotice" class="alert alert-danger d-none" role="alert"></div>
 
                 <div id="checkoutEmpty" class="empty-state text-center py-5 d-none">
-                    <i class="fas fa-bag-shopping fa-4x text-muted mb-3"></i>
+                    <i class="fas fa-bag-shopping fa-4x text-ui-muted mb-3"></i>
                     <h2 class="h3">No hay productos para checkout</h2>
-                    <a href="catalogo.html" class="btn btn-danger mt-3">Ir al catalogo</a>
+                    <a href="catalogo.html" class="btn btn-danger mt-3">Ir al catálogo</a>
                 </div>
 
                 <div class="row g-4" id="checkoutContent">
@@ -62,7 +62,7 @@
                                         <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="customerPhone" class="form-label">Telefono</label>
+                                        <label for="customerPhone" class="form-label">Teléfono</label>
                                         <input type="text" class="form-control" id="customerPhone" name="customerPhone" required>
                                     </div>
                                     <div class="col-md-6">
@@ -70,11 +70,11 @@
                                         <input type="text" class="form-control" id="customerCity" name="customerCity" required>
                                     </div>
                                     <div class="col-12">
-                                        <label for="customerAddress" class="form-label">Direccion de entrega</label>
+                                        <label for="customerAddress" class="form-label">Dirección de entrega</label>
                                         <input type="text" class="form-control" id="customerAddress" name="customerAddress" required>
                                     </div>
                                     <div class="col-12">
-                                        <label for="paymentMethod" class="form-label">Metodo de pago</label>
+                                        <label for="paymentMethod" class="form-label">Método de pago</label>
                                         <select class="form-select" id="paymentMethod" name="paymentMethod" required>
                                             <option value="mercado_pago">Mercado Pago</option>
                                             <option value="instagram">Coordinacion manual</option>

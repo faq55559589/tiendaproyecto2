@@ -65,7 +65,7 @@
         if (dom.originalPrice) dom.originalPrice.remove();
         if (dom.discountBadge) dom.discountBadge.remove();
         if (dom.rating) {
-            dom.rating.innerHTML = '<span class="text-muted small"><i class="fas fa-circle-info me-2"></i>Sin reseñas publicadas por ahora.</span>';
+            dom.rating.innerHTML = '<span class="text-ui-muted small"><i class="fas fa-circle-info icon-accent me-2"></i>Sin reseñas publicadas por ahora.</span>';
         }
         if (dom.reviewsTabBtn) {
             dom.reviewsTabBtn.textContent = 'Reseñas';
@@ -73,8 +73,8 @@
         if (dom.reviewsPane) {
             dom.reviewsPane.innerHTML = `
                 <div class="p-4 text-center">
-                    <i class="fas fa-comment-slash fa-2x text-muted mb-3"></i>
-                    <p class="mb-0 text-muted">Este MVP todavia no publica reseñas. La ficha muestra solo datos reales del producto.</p>
+                    <i class="fas fa-comment-slash fa-2x text-ui-muted mb-3"></i>
+                    <p class="mb-0 text-ui-muted">Este MVP todavia no publica reseñas. La ficha muestra solo datos reales del producto.</p>
                 </div>
             `;
         }
@@ -170,7 +170,7 @@
 
         if (dom.specsList) {
             dom.specsList.innerHTML = specs.slice(0, 5).map(([key, value]) => `
-                <li class="spec-item"><i class="fas fa-check text-success"></i> <strong class="spec-key">${key}:</strong> <span class="spec-value">${value}</span></li>
+                <li class="spec-item"><i class="fas fa-check icon-accent"></i> <strong class="spec-key">${key}:</strong> <span class="spec-value">${value}</span></li>
             `).join('');
         }
 
@@ -203,8 +203,8 @@
                         <a href="${GolazoStore.paths.product(item.id)}"><img src="${item.image_url}" class="card-img-top" alt="${item.name}" style="height: 240px; object-fit: cover;"></a>
                         <div class="card-body text-center">
                             <h3 class="h6">${item.name}</h3>
-                            <p class="fw-bold text-danger">${GolazoStore.formatPrice(item.price)}</p>
-                            <a class="btn btn-outline-danger btn-sm" href="${GolazoStore.paths.product(item.id)}">Ver producto</a>
+                            <p class="fw-bold text-price-accent">${GolazoStore.formatPrice(item.price)}</p>
+                            <a class="btn btn-outline-brand btn-sm" href="${GolazoStore.paths.product(item.id)}">Ver producto</a>
                         </div>
                     </article>
                 </div>

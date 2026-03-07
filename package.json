@@ -8,6 +8,8 @@
     "preview": "INICIAR_TODO.bat",
     "dev": "node scripts/serve-frontend.js",
     "frontend:dev": "node scripts/serve-frontend.js",
+    "ops:backup": "node scripts/backup-local-state.js",
+    "ops:restore": "node scripts/restore-local-state.js",
     "backend:init": "cd backend && npm init -y",
     "backend:install": "cd backend && npm install express cors helmet morgan dotenv bcryptjs jsonwebtoken better-sqlite3 multer express-validator nodemon",
     "backend:dev": "cd backend && npm run dev",

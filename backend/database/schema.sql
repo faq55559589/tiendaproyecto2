@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS products (
     price REAL NOT NULL,
     image_url TEXT,
     image_urls TEXT,
+    is_active INTEGER DEFAULT 1,
     stock INTEGER DEFAULT 0,
     sizes TEXT,
     specifications TEXT,
