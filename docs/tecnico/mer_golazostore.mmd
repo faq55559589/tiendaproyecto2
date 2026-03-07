@@ -1,0 +1,89 @@
+erDiagram
+    USERS {
+        int id PK
+        string email UK
+        string password
+        string first_name
+        string last_name
+        string role
+        string phone
+        int newsletter
+        int is_verified
+        string verification_token
+        datetime created_at
+        datetime updated_at
+    }
+
+    CATEGORIES {
+        int id PK
+        string name
+        string description
+        datetime created_at
+    }
+
+    PRODUCTS {
+        int id PK
+        string name
+        string description
+        float price
+        string image_url
+        int stock
+        string sizes
+        string specifications
+        int category_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    CART_ITEMS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+        string size
+        datetime created_at
+    }
+
+    ORDERS {
+        int id PK
+        int user_id FK
+        float total
+        float total_amount
+        string status
+        string payment_method
+        string payment_status
+        string external_payment_id
+        string contact_channel
+        string customer_name
+        string customer_phone
+        string shipping_address
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        float price
+        string size
+    }
+
+    PASSWORD_RESET_TOKENS {
+        int id PK
+        int user_id FK
+        string token UK
+        datetime expires_at
+        int used
+        datetime created_at
+    }
+
+    USERS ||--o{ CART_ITEMS : "user_id"
+    PRODUCTS ||--o{ CART_ITEMS : "product_id"
+    CATEGORIES ||--o{ PRODUCTS : "category_id"
+    USERS o|--o{ ORDERS : "user_id (nullable)"
+    ORDERS ||--o{ ORDER_ITEMS : "order_id"
+    PRODUCTS ||--o{ ORDER_ITEMS : "product_id"
+    USERS ||--o{ PASSWORD_RESET_TOKENS : "user_id"

@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo - GolazoStore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+</head>
+<body>
+    <header></header>
+    <main>
+        <nav aria-label="breadcrumb">
+            <div class="container">
+                <ol class="breadcrumb py-3 mb-0">
+                    <li class="breadcrumb-item"><a href="home.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Catalogo</li>
+                </ol>
+            </div>
+        </nav>
+
+        <section class="catalog-section py-5">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                    <div>
+                        <p class="eyebrow mb-2">Tienda</p>
+                        <h1 class="mb-2" id="catalogTitle">Catalogo completo</h1>
+                        <p class="text-muted mb-0" id="filterInfo">Cargando productos...</p>
+                    </div>
+                    <div class="catalog-toolbar d-flex flex-wrap gap-2 align-items-center">
+                        <label for="sortSelect" class="small text-muted mb-0">Ordenar por</label>
+                        <select id="sortSelect" class="form-select">
+                            <option value="recent">Mas recientes</option>
+                            <option value="price-asc">Precio menor</option>
+                            <option value="price-desc">Precio mayor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="searchResults" class="alert alert-light border alert-dismissible fade show" style="display:none;" role="alert">
+                    <i class="fas fa-search me-2"></i>Busqueda activa: <strong id="searchTerm"></strong>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="clearSearch()"></button>
+                </div>
+
+                <div class="row" id="productsContainer">
+                    <div class="col-12 text-center py-5" id="loadingSpinner">
+                        <div class="spinner-border text-danger" role="status"><span class="visually-hidden">Cargando...</span></div>
+                        <p class="mt-3 text-muted">Cargando catalogo...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/shell.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/catalogo.js"></script>
+</body>
+</html>

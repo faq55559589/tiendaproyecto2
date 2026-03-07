@@ -1,0 +1,69 @@
+{
+  "name": "fankit-tienda-camisetas",
+  "version": "1.0.0",
+  "description": "Tienda online profesional de camisetas de fútbol - Frontend completo listo para backend",
+  "main": "frontend/index.html",
+  "scripts": {
+    "start": "node scripts/serve-frontend.js",
+    "preview": "INICIAR_TODO.bat",
+    "dev": "live-server . --port=8000 --watch=frontend --ignore=backend,database,docs,.git --open=/frontend/home.html",
+    "frontend:dev": "live-server . --port=8000 --watch=frontend --ignore=backend,database,docs,.git --open=/frontend/home.html",
+    "backend:init": "cd backend && npm init -y",
+    "backend:install": "cd backend && npm install express cors helmet morgan dotenv bcryptjs jsonwebtoken better-sqlite3 multer express-validator nodemon",
+    "backend:dev": "cd backend && npm run dev",
+    "docs": "echo 'Documentación disponible en la carpeta docs/'"
+  },
+  "keywords": [
+    "e-commerce",
+    "tienda-online",
+    "camisetas-futbol",
+    "frontend",
+    "responsive",
+    "javascript",
+    "bootstrap",
+    "html5",
+    "css3"
+  ],
+  "author": "Facundo Pintado",
+  "license": "Private",
+  "repository": {
+    "type": "git",
+    "url": "private"
+  },
+  "bugs": {
+    "url": "private"
+  },
+  "homepage": "frontend/index.html",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "directories": {
+    "frontend": "frontend/",
+    "backend": "backend/",
+    "docs": "docs/"
+  },
+  "files": [
+    "frontend/",
+    "backend/",
+    "docs/",
+    "README.md",
+    "package.json"
+  ],
+  "config": {
+    "frontend": {
+      "port": 3000,
+      "build": "production"
+    },
+    "backend": {
+      "port": 8000,
+      "environment": "development"
+    }
+  }
+}
