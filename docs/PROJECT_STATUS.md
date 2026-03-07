@@ -119,6 +119,7 @@ Fecha de referencia: 2026-03-07
 - El MVP de compra ya corre con backend real.
 - Registro/login/verificacion/reset estan implementados.
 - Carrito y pedidos ya no dependen de localStorage como fuente principal.
+- `Mercado Pago` queda definido como mejora post-MVP.
 - Falta el bloque final de hardening + despliegue publico.
 
 ## Lo que ya esta cerrado
@@ -157,6 +158,7 @@ Fecha de referencia: 2026-03-07
    - logs/monitoring basico,
    - validacion final de secretos.
 4. Pulido visual/UX final (loading/error/vacio/responsive).
+5. Actualizar URLs publicas de verificacion/reset y probar email fuera de localhost.
 
 ## Riesgos actuales
 

@@ -47,7 +47,7 @@ Cerrar el MVP con flujo real de compra, documentacion ordenada y base lista para
 - Confirmar HTTPS activo.
 - Ejecutar checklist final de deploy.
 
-## 5) Decision cerrada de infraestructura y pagos
+## 5) Decision cerrada de infraestructura y roadmap post-MVP
 
 ### Infraestructura (enfoque pragmatico, sin cambios grandes)
 
@@ -59,9 +59,10 @@ Cerrar el MVP con flujo real de compra, documentacion ordenada y base lista para
 
 ### Pagos online
 
-- Pasarela elegida para MVP: `Mercado Pago Checkout` (pasarela unica).
-- `Stripe` se mantiene como alternativa futura, fuera del alcance de cierre MVP.
-- Implementacion requerida:
+- El MVP cierra con coordinacion/manual y creacion real de pedido.
+- `Mercado Pago` queda explicitamente como mejora `post-MVP`.
+- `Stripe` tambien queda fuera del alcance de cierre MVP.
+- Roadmap post-MVP sugerido:
   - crear `preference` en backend,
   - redirigir a checkout de Mercado Pago,
   - confirmar pago por `webhook`,
@@ -78,4 +79,6 @@ Cerrar el MVP con flujo real de compra, documentacion ordenada y base lista para
 - [ ] Rutas admin protegidas por rol.
 - [ ] Documentacion actualizada y accesible desde `docs/README.md`.
 - [ ] Decision de despliegue cerrada sin migracion mayor de arquitectura.
-- [ ] Integracion de `Mercado Pago` activa en sandbox con `webhooks`.
+- [ ] Dominio publico + `FRONTEND_URL` real configurado.
+- [ ] CORS ajustado a dominios reales.
+- [ ] Backups y checklist minimo de operacion definidos.

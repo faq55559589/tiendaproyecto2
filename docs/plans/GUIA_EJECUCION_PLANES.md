@@ -26,10 +26,10 @@ Esta guia define el orden unico para terminar GolazoStore usando solo el plan ac
    - Verificacion de email y reset con URL publica.
    - Checklist final de despliegue.
 
-5. **Infraestructura y pagos**
+5. **Infraestructura y roadmap post-MVP**
    - Sin migracion grande de infraestructura antes del cierre MVP.
    - Backend/DB en entorno con persistencia de disco (manteniendo Node + SQLite).
-   - Pasarela cerrada para MVP: `Mercado Pago` en sandbox + webhooks.
+   - `Mercado Pago` queda fuera del MVP y pasa a roadmap post-MVP.
 
 ## Criterio de terminado
 
@@ -38,3 +38,4 @@ Esta guia define el orden unico para terminar GolazoStore usando solo el plan ac
 - Checkout crea pedido y limpia carrito.
 - Admin protegido por rol y operativo.
 - Documentacion minima actualizada (`docs/README.md` + `docs/PROJECT_STATUS.md`).
+- No depende de pagos automáticos para considerarse MVP cerrado.
