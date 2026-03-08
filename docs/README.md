@@ -22,6 +22,7 @@ Documentacion esencial para entender y cerrar el proyecto sin ruido.
 
 - [Guia de troubleshooting](./operacion/GUIA_SOLUCION_PROBLEMAS_SERVER.md)
 - [Guia de backup y restore local](./operacion/GUIA_BACKUP_RESTORE_LOCAL.md)
+- [Guia SQLite y DB Browser](./operacion/GUIA_SQLITE_DB_BROWSER.md)
 
 ## QA
 

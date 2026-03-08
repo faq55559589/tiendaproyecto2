@@ -196,6 +196,20 @@ Fecha de referencia: 2026-03-08
   - `Admin productos`
   - `Admin pedidos`
 
+## Cambios recientes (2026-03-08) - Toolbox SQLite local
+
+- Se agrego script operativo:
+  - `scripts/db-admin.js`
+- Comandos utiles incorporados:
+  - `db:summary`
+  - `db:users`
+  - `db:products`
+  - `db:orders`
+- Se documento flujo recomendado para trabajar con `DB Browser for SQLite` sin perder cambios ni tocar una copia equivocada.
+- Se formalizo la regla:
+  - GUI para inspeccion,
+  - scripts para operaciones rutinarias y verificables.
+
 ## Cambios recientes (2026-03-07) - Ficha de producto y navegacion
 
 - Se mejoro la ficha de producto:

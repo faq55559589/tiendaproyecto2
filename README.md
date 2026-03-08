@@ -94,6 +94,10 @@ Notas:
 - Operacion minima local:
   - `npm run ops:backup`
   - `npm run ops:restore -- <ruta-del-backup>`
+  - `npm run db:summary`
+  - `npm run db:users`
+  - `npm run db:products`
+  - `npm run db:orders`
 - Panel admin de productos:
   - crear, editar y eliminar productos
   - multiples imagenes por producto
@@ -132,6 +136,7 @@ npm run ops:restore -- backups/local-state-AAAA-MM-DD_HH-mm-ss
 
 Referencia operativa:
 - [Guia de backup y restore local](./docs/operacion/GUIA_BACKUP_RESTORE_LOCAL.md)
+- [Guia SQLite y DB Browser](./docs/operacion/GUIA_SQLITE_DB_BROWSER.md)
 
 ## Nota de entorno
 
