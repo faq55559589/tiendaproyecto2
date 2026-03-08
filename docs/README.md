@@ -26,6 +26,7 @@ Documentacion esencial para entender y cerrar el proyecto sin ruido.
 ## QA
 
 - [QA Fase 2 MVP (2026-03-07)](./qa/QA_FASE2_MVP_2026-03-07.md)
+- [QA Cierre MVP (2026-03-07)](./qa/QA_CIERRE_MVP_2026-03-07.md)
 
 ## Alcance de esta documentacion
 
