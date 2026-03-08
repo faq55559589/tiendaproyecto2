@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS orders (
     payment_method TEXT DEFAULT 'instagram',
     payment_status TEXT,
     external_payment_id TEXT,
+    expires_at DATETIME,
     contact_channel TEXT DEFAULT 'instagram',
     customer_name TEXT,
     customer_phone TEXT,

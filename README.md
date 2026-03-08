@@ -100,6 +100,15 @@ Notas:
   - quitar imagenes individuales al editar
   - activar/desactivar productos sin romper historial de pedidos
   - filtros por estado: `Todos`, `Activos`, `Inactivos`, `Sin stock`
+- Panel admin de pedidos:
+  - listado operativo de pedidos
+  - filtros por estado y metodo de pago
+  - acciones admin para confirmar, cancelar, entregar y abrir Instagram
+- Checkout manual por Instagram:
+  - crea el pedido primero en SQLite
+  - deja `payment_status = pending_contact`
+  - abre el chat de Instagram como paso siguiente de coordinacion
+  - si no hay avance, el pedido manual vence automaticamente y repone stock
 - Ficha de producto:
   - galeria deslizante de imagenes
   - tabs de descripcion, especificaciones y reseñas con estilo actualizado
@@ -142,12 +151,14 @@ EMAIL_FROM=tu_correo@gmail.com
 EMAIL_REQUIRED=true
 EMAIL_USER=tu_correo@gmail.com
 EMAIL_PASS=tu_app_password
+INSTAGRAM_ORDER_EXPIRATION_HOURS=12
 ```
 
 Notas:
 - `JWT_SECRET` es obligatorio y no puede ser un valor debil/de ejemplo.
 - `CORS_ORIGINS` debe contener dominios reales en staging/produccion (separados por coma).
 - En desarrollo, si `CORS_ORIGINS` no esta definida, se usan origenes localhost por defecto.
+- `INSTAGRAM_ORDER_EXPIRATION_HOURS` define cuantas horas se reserva un pedido manual antes de expirar automaticamente.
 
 ## Planes de trabajo
 

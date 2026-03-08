@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     const orderId = sessionStorage.getItem('lastOrderId');
     const emptyState = document.getElementById('confirmationFallback');
     const content = document.getElementById('confirmationContent');
+    const instagramPanel = document.getElementById('confirmationInstagramPanel');
+    const instagramLink = document.getElementById('confirmationInstagramLink');
+    const instagramMessagePreview = document.getElementById('instagramMessagePreview');
+    const copyInstagramMessageBtn = document.getElementById('copyInstagramMessageBtn');
+    const confirmationStatusNote = document.getElementById('confirmationStatusNote');
 
     let order = null;
     try {
@@ -38,4 +43,37 @@ document.addEventListener('DOMContentLoaded', async function () {
             <strong>${GolazoStore.formatPrice(item.price * item.quantity)}</strong>
         </div>
     `).join('');
+
+    const instagramChatUrl = sessionStorage.getItem('instagramChatUrl');
+    const instagramOrderMessage = sessionStorage.getItem('instagramOrderMessage');
+    const shouldOpenInstagram = sessionStorage.getItem('openInstagramAfterCheckout') === 'true';
+
+    if (order.paymentMethod === 'instagram' && instagramPanel && instagramLink && instagramMessagePreview) {
+        instagramPanel.classList.remove('d-none');
+        instagramLink.href = instagramChatUrl || GolazoStore.getInstagramChatUrl();
+        instagramMessagePreview.textContent = instagramOrderMessage || `Hola, quiero coordinar mi pedido #${order.id}.`;
+        const expirationCopy = order.expiresAt
+            ? ` La reserva manual vence el ${new Date(order.expiresAt).toLocaleString('es-UY')}.`
+            : '';
+        confirmationStatusNote.textContent = `Pedido creado correctamente. El estado de pago quedó pendiente de contacto por Instagram.${expirationCopy}`;
+
+        if (shouldOpenInstagram) {
+            sessionStorage.removeItem('openInstagramAfterCheckout');
+            window.open(instagramLink.href, '_blank', 'noopener');
+        }
+
+        copyInstagramMessageBtn?.addEventListener('click', async function () {
+            try {
+                await navigator.clipboard.writeText(instagramMessagePreview.textContent);
+                GolazoStore.ui.toast('Mensaje copiado para Instagram.', 'success');
+            } catch (error) {
+                GolazoStore.ui.toast('No se pudo copiar el mensaje automaticamente.', 'warning');
+            }
+        });
+        return;
+    }
+
+    if (confirmationStatusNote) {
+        confirmationStatusNote.textContent = 'Pedido creado correctamente. El seguimiento del pago quedará asociado a esta orden.';
+    }
 });

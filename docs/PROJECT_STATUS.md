@@ -130,6 +130,72 @@ Fecha de referencia: 2026-03-07
   - activar/desactivar,
   - eliminar fisicamente solo si el producto no tiene pedidos asociados.
 
+## Cambios recientes (2026-03-08) - Checkout manual por Instagram
+
+- Se implemento el flujo `Instagram / Coordinacion manual` sobre la misma entidad `orders`.
+- La regla de negocio ahora es:
+  - primero se crea el pedido en la base,
+  - luego se abre el chat de Instagram como siguiente paso operativo.
+- Para pedidos manuales:
+  - `payment_method = instagram`
+  - `payment_status = pending_contact`
+  - `status = pending_contact`
+- El checkout ahora:
+  - muestra ayuda contextual segun metodo elegido,
+  - guarda el pedido,
+  - redirige a confirmacion,
+  - abre el chat de Instagram en una nueva pestaña.
+- La confirmacion ahora muestra:
+  - boton para abrir Instagram,
+  - mensaje sugerido para copiar,
+  - estado pendiente de contacto asociado al pedido.
+
+### Impacto operativo
+
+- Instagram pasa a ser un canal de coordinacion, no la fuente de verdad del pedido.
+- El control del pedido sigue centralizado en SQLite.
+- `Mercado Pago` permanece como camino separado y futuro para pago online, sin reemplazar la tabla `orders`.
+
+## Cambios recientes (2026-03-08) - Expiracion automatica de pedidos manuales
+
+- Se agrego `expires_at` en `orders`.
+- Los pedidos `instagram` ahora se crean con una ventana de vigencia automatica.
+- Regla actual:
+  - si `payment_method = instagram`
+  - y `status = pending_contact`
+  - y `payment_status = pending_contact`
+  - y `expires_at` ya vencio,
+  - el backend expira el pedido automaticamente.
+- Al expirar:
+  - `status -> cancelled`
+  - `payment_status -> expired`
+  - se repone stock de todos los `order_items`
+  - el pedido se conserva en la base para trazabilidad
+- La expiracion corre:
+  - al arrancar el backend
+  - y periodicamente mientras el servidor esta activo
+
+### Impacto operativo
+
+- Se evita bloquear stock por pedidos manuales muertos.
+- Ya no hace falta borrar registros para "limpiar basura".
+- La limpieza correcta del negocio ahora es por expiracion, no por `DELETE`.
+
+## Cambios recientes (2026-03-08) - Panel admin de pedidos
+
+- Se agrego vista admin para operar pedidos:
+  - `frontend/admin-orders.html`
+  - `frontend/js/admin-orders.js`
+- El panel permite:
+  - listar todos los pedidos,
+  - filtrar por estado y metodo de pago,
+  - ver cliente, items, total, vencimiento y notas,
+  - cambiar estado a `confirmed`, `cancelled` o `delivered`,
+  - abrir Instagram para seguimiento de pedidos manuales.
+- Se agregaron accesos desde la navegacion admin:
+  - `Admin productos`
+  - `Admin pedidos`
+
 ## Cambios recientes (2026-03-07) - Ficha de producto y navegacion
 
 - Se mejoro la ficha de producto:

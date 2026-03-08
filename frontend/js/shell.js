@@ -27,7 +27,7 @@
         const user = getUser();
         const isAdmin = Boolean(user && user.role === 'admin');
         const adminPrimaryLink = isAdmin
-            ? `<a class="nav-link ${isActive('admin-products.html') ? 'active' : ''}" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved"></i> Admin</a>`
+            ? `<a class="nav-link ${(isActive('admin-products.html') || isActive('admin-orders.html')) ? 'active' : ''}" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved"></i> Admin</a>`
             : '';
         const userMenu = isLoggedIn() && user
             ? `
@@ -39,7 +39,8 @@
                         <li><a class="dropdown-item" href="${GolazoStore.paths.profile()}"><i class="fas fa-user me-2 icon-accent"></i>Mi perfil</a></li>
                         <li><a class="dropdown-item" href="${GolazoStore.paths.orders()}"><i class="fas fa-box me-2 icon-accent"></i>Mis pedidos</a></li>
                         <li><a class="dropdown-item" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping me-2 icon-accent"></i>Carrito</a></li>
-                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved me-2 icon-accent"></i>Panel admin</a></li>` : ''}
+                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shirt me-2 icon-accent"></i>Admin productos</a></li>` : ''}
+                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminOrders()}"><i class="fas fa-receipt me-2 icon-accent"></i>Admin pedidos</a></li>` : ''}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="#" data-auth-logout><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesion</a></li>
                     </ul>
@@ -143,7 +144,8 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><a href="${GolazoStore.paths.catalog()}" class="text-decoration-none text-dark"><i class="fas fa-shirt me-2"></i>Todas las camisetas</a></li>
                         <li class="list-group-item"><a href="${GolazoStore.paths.cart()}" class="text-decoration-none text-dark"><i class="fas fa-cart-shopping me-2"></i>Mi carrito</a></li>
-                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark"><i class="fas fa-shield-halved me-2"></i>Panel admin</a></li>` : ''}
+                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark"><i class="fas fa-shirt me-2"></i>Admin productos</a></li>` : ''}
+                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminOrders()}" class="text-decoration-none text-dark"><i class="fas fa-receipt me-2"></i>Admin pedidos</a></li>` : ''}
                         <li class="list-group-item"><a href="${GolazoStore.paths.contact()}" class="text-decoration-none text-dark"><i class="fas fa-headset me-2"></i>Hablar con soporte</a></li>
                     </ul>
                 </div>

@@ -94,7 +94,8 @@
         config: {
             apiBase: 'http://localhost:3000/api',
             freeShippingThreshold: 12000,
-            shippingCost: 1200
+            shippingCost: 1200,
+            instagramUsername: 'golazofutstore_'
         },
         paths: {
             currentPage,
@@ -110,7 +111,8 @@
             register: () => pagePath('registro.html'),
             profile: () => pagePath('perfil.html'),
             orders: () => pagePath('mis-pedidos.html'),
-            adminProducts: () => pagePath('admin-products.html')
+            adminProducts: () => pagePath('admin-products.html'),
+            adminOrders: () => pagePath('admin-orders.html')
         },
         formatPrice(value) {
             return currency.format(Number(value || 0));
@@ -118,8 +120,35 @@
         formatPaymentMethod(value) {
             const method = String(value || '').toLowerCase();
             if (method === 'mercado_pago') return 'Mercado Pago';
-            if (method === 'instagram') return 'Coordinacion manual';
+            if (method === 'instagram') return 'Instagram / Coordinacion manual';
             return value || 'No definido';
+        },
+        getInstagramChatUrl() {
+            return `https://ig.me/m/${this.config.instagramUsername}`;
+        },
+        buildInstagramOrderMessage({ order, customer, summary }) {
+            const lines = [
+                'Hola, quiero coordinar mi pedido de GolazoStore.',
+                `Pedido: #${order.id}`,
+                `Nombre: ${customer.name || '-'}`,
+                `Email: ${customer.email || '-'}`,
+                `Telefono: ${customer.phone || '-'}`,
+                `Entrega: ${[customer.address, customer.city].filter(Boolean).join(', ') || '-'}`,
+                `Total: ${this.formatPrice(summary.total)}`
+            ];
+
+            if (summary.items?.length) {
+                lines.push('Productos:');
+                summary.items.forEach((item) => {
+                    lines.push(`- ${item.name} | Talle ${item.size} | Cant. ${item.quantity}`);
+                });
+            }
+
+            if (customer.notes) {
+                lines.push(`Observaciones: ${customer.notes}`);
+            }
+
+            return lines.join('\n');
         },
         getCategoryLabel(product) {
             const category = String(product.category_name || '').toLowerCase();
@@ -261,9 +290,11 @@
                 return {
                     id: order.id,
                     createdAt: order.created_at || new Date().toISOString(),
+                    expiresAt: order.expires_at || null,
                     status: order.status || 'pending_contact',
                     total: Number(order.total_amount || order.total || 0),
                     paymentMethod: order.payment_method || 'instagram',
+                    paymentStatus: order.payment_status || (order.payment_method === 'mercado_pago' ? 'pending_payment' : 'pending_contact'),
                     shippingAddress: order.shipping_address || '-',
                     customerName: order.customer_name || '-',
                     customerPhone: order.customer_phone || '-',
@@ -284,11 +315,13 @@
                 const address = [customer.address, customer.city].filter(Boolean).join(', ');
                 const paymentMethod = customer.paymentMethod === 'instagram' ? 'instagram' : 'mercado_pago';
                 const contactChannel = paymentMethod === 'instagram' ? 'instagram' : 'mercado_pago';
+                const paymentStatus = paymentMethod === 'instagram' ? 'pending_contact' : 'pending_payment';
 
                 const data = await GolazoStore.api('/orders', {
                     method: 'POST',
                     body: JSON.stringify({
                         payment_method: paymentMethod,
+                        payment_status: paymentStatus,
                         contact_channel: contactChannel,
                         customer_name: customer.name || null,
                         customer_phone: customer.phone || null,

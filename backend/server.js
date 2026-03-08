@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
 const { runMigrations } = require('./src/config/migrations');
+const { startOrderExpirationJob } = require('./src/services/orderExpirationService');
 const { getAllowedOrigins, getJwtSecret } = require('./src/config/env');
 
 const app = express();
@@ -41,6 +42,7 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static('uploads'));
 runMigrations();
+const expirationJob = startOrderExpirationJob();
 
 // Rutas
 app.use('/api/auth', require('./src/routes/auth'));
@@ -65,6 +67,7 @@ server.on('error', (err) => {
 
 process.on('SIGINT', () => {
     console.log('\nCerrando servidor...');
+    clearInterval(expirationJob);
     server.close(() => {
         process.exit(0);
     });

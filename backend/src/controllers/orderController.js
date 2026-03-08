@@ -1,10 +1,17 @@
 const Order = require('../models/Order');
 
 const VALID_STATUSES = new Set(['pending_contact', 'confirmed', 'cancelled', 'delivered']);
+const VALID_PAYMENT_METHODS = new Set(['instagram', 'mercado_pago']);
+const DEFAULT_PAYMENT_STATUSES = {
+    instagram: 'pending_contact',
+    mercado_pago: 'pending_payment'
+};
+const INSTAGRAM_ORDER_EXPIRATION_HOURS = Math.max(1, Number(process.env.INSTAGRAM_ORDER_EXPIRATION_HOURS || 12));
 
 class OrderController {
     static create(req, res) {
         try {
+            Order.expirePendingInstagramOrders();
             const body = req.body || {};
             const status = body.status || 'pending_contact';
 
@@ -13,13 +20,20 @@ class OrderController {
             }
 
             const paymentMethod = body.payment_method || 'instagram';
-            if (!['instagram', 'mercado_pago'].includes(paymentMethod)) {
+            if (!VALID_PAYMENT_METHODS.has(paymentMethod)) {
                 return res.status(400).json({ success: false, message: 'Metodo de pago invalido' });
             }
+
+            const paymentStatus = body.payment_status || DEFAULT_PAYMENT_STATUSES[paymentMethod];
+            const expiresAt = paymentMethod === 'instagram'
+                ? Order.buildExpirationDate(INSTAGRAM_ORDER_EXPIRATION_HOURS)
+                : null;
 
             const order = Order.createFromCart(req.user.id, {
                 status,
                 payment_method: paymentMethod,
+                payment_status: paymentStatus,
+                expires_at: expiresAt,
                 contact_channel: body.contact_channel || 'instagram',
                 customer_name: body.customer_name || null,
                 customer_phone: body.customer_phone || null,
@@ -47,6 +61,7 @@ class OrderController {
 
     static getMine(req, res) {
         try {
+            Order.expirePendingInstagramOrders();
             const orders = Order.getByUser(req.user.id);
             return res.json({ success: true, orders });
         } catch (error) {
@@ -57,6 +72,7 @@ class OrderController {
 
     static getById(req, res) {
         try {
+            Order.expirePendingInstagramOrders();
             const order = Order.getById(Number(req.params.id), req.user.id);
             if (!order) {
                 return res.status(404).json({ success: false, message: 'Pedido no encontrado' });
@@ -70,6 +86,7 @@ class OrderController {
 
     static getAllAdmin(req, res) {
         try {
+            Order.expirePendingInstagramOrders();
             const orders = Order.getAll();
             return res.json({ success: true, orders });
         } catch (error) {

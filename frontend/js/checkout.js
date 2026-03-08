@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const pageWrap = document.getElementById('checkoutContent');
     const checkoutLoading = document.getElementById('checkoutLoading');
     const checkoutNotice = document.getElementById('checkoutNotice');
+    const paymentMethodInput = document.getElementById('paymentMethod');
+    const paymentMethodHelp = document.getElementById('paymentMethodHelp');
 
     function setLoading(isLoading) {
         if (checkoutLoading) checkoutLoading.style.display = isLoading ? 'block' : 'none';
@@ -63,11 +65,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     renderSummary(summary);
+    syncPaymentMethodHelp();
 
     form?.addEventListener('input', function () {
         const formData = Object.fromEntries(new FormData(form).entries());
         GolazoStore.checkoutDraft.save(formData);
     });
+
+    paymentMethodInput?.addEventListener('change', syncPaymentMethodHelp);
 
     form?.addEventListener('submit', async function (event) {
         event.preventDefault();
@@ -95,6 +100,29 @@ document.addEventListener('DOMContentLoaded', async function () {
                     paymentMethod: formData.paymentMethod || 'mercado_pago'
                 }
             });
+
+            if (order.paymentMethod === 'instagram') {
+                const instagramMessage = GolazoStore.buildInstagramOrderMessage({
+                    order,
+                    customer: {
+                        name: formData.customerName,
+                        email: formData.customerEmail,
+                        phone: formData.customerPhone,
+                        address: formData.customerAddress,
+                        city: formData.customerCity,
+                        notes: formData.customerNotes
+                    },
+                    summary
+                });
+
+                sessionStorage.setItem('instagramChatUrl', GolazoStore.getInstagramChatUrl());
+                sessionStorage.setItem('instagramOrderMessage', instagramMessage);
+                sessionStorage.setItem('openInstagramAfterCheckout', 'true');
+            } else {
+                sessionStorage.removeItem('instagramChatUrl');
+                sessionStorage.removeItem('instagramOrderMessage');
+                sessionStorage.removeItem('openInstagramAfterCheckout');
+            }
 
             GolazoStore.checkoutDraft.clear();
             GolazoStore.cart.saveCache([]);
@@ -124,5 +152,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             <div class="d-flex justify-content-between mb-2"><span>Envio</span><strong>${data.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(data.shipping)}</strong></div>
             <div class="d-flex justify-content-between"><span>Total</span><strong class="text-price-accent fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
         `;
+    }
+
+    function syncPaymentMethodHelp() {
+        if (!paymentMethodHelp || !paymentMethodInput) return;
+        if (paymentMethodInput.value === 'instagram') {
+            paymentMethodHelp.textContent = 'Si eliges Instagram, crearemos el pedido y abriremos el chat para coordinar pago y entrega.';
+            return;
+        }
+        paymentMethodHelp.textContent = 'Mercado Pago queda reservado para el flujo online. Por ahora el canal manual operativo es Instagram.';
     }
 });

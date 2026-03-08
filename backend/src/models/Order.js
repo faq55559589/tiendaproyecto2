@@ -1,5 +1,9 @@
 const db = require('../config/database');
 
+function toSqliteDate(date) {
+    return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+}
+
 class Order {
     static createFromCart(userId, payload) {
         const cartItems = db
@@ -54,15 +58,17 @@ class Order {
                     INSERT INTO orders (
                         user_id,
                         total,
-                        total_amount,
-                        status,
-                        payment_method,
-                        contact_channel,
-                        customer_name,
-                        customer_phone,
-                        shipping_address,
-                        notes
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    total_amount,
+                    status,
+                    payment_method,
+                    payment_status,
+                    expires_at,
+                    contact_channel,
+                    customer_name,
+                    customer_phone,
+                    shipping_address,
+                    notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     `
                 )
                 .run(
@@ -71,6 +77,8 @@ class Order {
                     total,
                     payload.status || 'pending_contact',
                     payload.payment_method || 'instagram',
+                    payload.payment_status || 'pending_contact',
+                    payload.expires_at || null,
                     payload.contact_channel || 'instagram',
                     payload.customer_name || null,
                     payload.customer_phone || null,
@@ -107,6 +115,64 @@ class Order {
             throw error;
         }
         return this.getById(orderId, userId);
+    }
+
+    static expirePendingInstagramOrders() {
+        const expiredOrders = db
+            .prepare(
+                `
+                SELECT id
+                FROM orders
+                WHERE payment_method = 'instagram'
+                  AND status = 'pending_contact'
+                  AND payment_status = 'pending_contact'
+                  AND expires_at IS NOT NULL
+                  AND datetime(expires_at) <= datetime('now')
+                ORDER BY id ASC
+                `
+            )
+            .all();
+
+        if (!expiredOrders.length) {
+            return { expiredCount: 0, restockedItems: 0 };
+        }
+
+        const transaction = db.transaction(() => {
+            let restockedItems = 0;
+            const orderItemsStmt = db.prepare(
+                `
+                SELECT product_id, quantity
+                FROM order_items
+                WHERE order_id = ?
+                `
+            );
+            const restockStmt = db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?');
+            const updateOrderStmt = db.prepare(
+                `
+                UPDATE orders
+                SET status = 'cancelled',
+                    payment_status = 'expired',
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                `
+            );
+
+            expiredOrders.forEach((order) => {
+                const items = orderItemsStmt.all(order.id);
+                items.forEach((item) => {
+                    restockStmt.run(item.quantity, item.product_id);
+                    restockedItems += Number(item.quantity || 0);
+                });
+                updateOrderStmt.run(order.id);
+            });
+
+            return {
+                expiredCount: expiredOrders.length,
+                restockedItems
+            };
+        });
+
+        return transaction();
     }
 
     static getById(orderId, userId = null) {
@@ -194,6 +260,11 @@ class Order {
         return db
             .prepare("UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
             .run(status, orderId);
+    }
+
+    static buildExpirationDate(hoursFromNow = 12) {
+        const normalizedHours = Math.max(1, Number(hoursFromNow || 12));
+        return toSqliteDate(Date.now() + normalizedHours * 60 * 60 * 1000);
     }
 }
 

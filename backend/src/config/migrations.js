@@ -52,6 +52,7 @@ function migrateOrdersUserForeignKeyToSetNull() {
                 payment_method TEXT DEFAULT 'instagram',
                 payment_status TEXT,
                 external_payment_id TEXT,
+                expires_at DATETIME,
                 contact_channel TEXT DEFAULT 'instagram',
                 customer_name TEXT,
                 customer_phone TEXT,
@@ -64,12 +65,12 @@ function migrateOrdersUserForeignKeyToSetNull() {
 
             INSERT INTO orders_new (
                 id, user_id, total, total_amount, status, payment_method, payment_status,
-                external_payment_id, contact_channel, customer_name, customer_phone,
+                external_payment_id, expires_at, contact_channel, customer_name, customer_phone,
                 shipping_address, notes, created_at, updated_at
             )
             SELECT
                 id, user_id, total, total_amount, status, payment_method, payment_status,
-                external_payment_id, contact_channel, customer_name, customer_phone,
+                external_payment_id, expires_at, contact_channel, customer_name, customer_phone,
                 shipping_address, notes, created_at, updated_at
             FROM orders;
 
@@ -102,6 +103,7 @@ function runMigrations() {
     ensureColumn('orders', 'payment_method', "TEXT DEFAULT 'instagram'");
     ensureColumn('orders', 'payment_status', 'TEXT');
     ensureColumn('orders', 'external_payment_id', 'TEXT');
+    ensureColumn('orders', 'expires_at', 'DATETIME');
     ensureColumn('orders', 'contact_channel', "TEXT DEFAULT 'instagram'");
     ensureColumn('orders', 'customer_name', 'TEXT');
     ensureColumn('orders', 'customer_phone', 'TEXT');
