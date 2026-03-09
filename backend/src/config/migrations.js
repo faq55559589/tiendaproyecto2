@@ -1,4 +1,14 @@
+const fs = require('fs');
+const path = require('path');
 const db = require('./database');
+
+function bootstrapSchemaIfNeeded() {
+    if (hasTable('users')) return;
+
+    const schemaPath = path.join(__dirname, '..', '..', 'database', 'schema.sql');
+    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+    db.exec(schemaSql);
+}
 
 function hasColumn(table, column) {
     const columns = db.prepare(`PRAGMA table_info(${table})`).all();
@@ -92,6 +102,8 @@ function migrateOrdersUserForeignKeyToSetNull() {
 }
 
 function runMigrations() {
+    bootstrapSchemaIfNeeded();
+
     ensureColumn('users', 'role', "TEXT DEFAULT 'user'");
     ensureColumn('users', 'is_verified', 'INTEGER DEFAULT 0');
     ensureColumn('users', 'verification_token', 'TEXT');
