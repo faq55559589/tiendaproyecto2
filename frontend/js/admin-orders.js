@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const user = await GolazoAuth.syncSession();
     if (!user) {
-        GolazoStore.ui.toast('Inicia sesion para entrar al panel admin.', 'warning');
+        GolazoStore.ui.toast('Inicia sesión para entrar al panel admin.', 'warning');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.login();
         }, 700);
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     if (user.role !== 'admin') {
-        showNotice('Tu sesion esta activa, pero tu usuario no tiene rol admin.');
+        showNotice('Tu sesión está activa, pero tu usuario no tiene rol admin.');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.home();
         }, 1200);
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const orderId = Number(instagramButton.dataset.instagramOrder);
         const order = ordersCache.find((item) => Number(item.id) === orderId);
         if (!order) {
-            showNotice('No se encontro el pedido para abrir Instagram.');
+            showNotice('No se encontró el pedido para abrir Instagram.');
             return;
         }
 
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             await navigator.clipboard.writeText(buildInstagramMessage(order));
             GolazoStore.ui.toast('Mensaje de seguimiento copiado.', 'success');
         } catch (error) {
-            GolazoStore.ui.toast('No se pudo copiar el mensaje automaticamente.', 'warning');
+            GolazoStore.ui.toast('No se pudo copiar el mensaje automáticamente.', 'warning');
         }
 
         window.open(GolazoStore.getInstagramChatUrl(), '_blank', 'noopener');

@@ -81,6 +81,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         return [];
     }
 
+    function canDeleteProduct(product) {
+        return !product?.has_order_references;
+    }
+
     function getProductStateCounts(products) {
         return products.reduce((acc, product) => {
             acc.all += 1;
@@ -264,9 +268,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                             <span class="badge ${product.is_active ? 'badge-soft-success' : 'badge-soft-danger'}">${product.is_active ? 'Activo' : 'Inactivo'}</span>
                             <span class="badge ${Number(product.stock || 0) > 0 ? 'badge-soft-neutral' : 'badge-soft-brand'}">${Number(product.stock || 0) > 0 ? `Stock ${product.stock}` : 'Sin stock'}</span>
                             <span class="badge badge-soft-neutral">${getProductImages(product).length} imagen(es)</span>
+                            ${product.has_order_references ? '<span class="badge badge-soft-warning">Con historial de pedidos</span>' : ''}
                         </div>
                         <div class="small text-ui-muted">${GolazoStore.formatPrice(product.price)}</div>
                         <div class="small text-ui-muted">${product.description || 'Sin descripcion'}</div>
+                        ${product.has_order_references ? '<div class="small text-ui-muted mt-1">No se puede borrar porque este producto ya forma parte de pedidos. Puedes dejarlo inactivo para ocultarlo del catálogo.</div>' : ''}
                     </div>
                 </div>
                 <div class="d-flex gap-2">
@@ -276,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     <button class="btn btn-sm ${product.is_active ? 'btn-outline-warning' : 'btn-outline-success'}" data-toggle-active-id="${product.id}" data-next-active="${product.is_active ? 'false' : 'true'}">
                         <i class="fas ${product.is_active ? 'fa-eye-slash' : 'fa-eye'} me-1"></i>${product.is_active ? 'Desactivar' : 'Reactivar'}
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" data-delete-id="${product.id}">
+                    <button class="btn btn-sm btn-outline-danger" data-delete-id="${product.id}" ${canDeleteProduct(product) ? '' : 'disabled title="No se puede borrar un producto con historial de pedidos"'}>
                         <i class="fas fa-trash me-1"></i>Eliminar
                     </button>
                 </div>
@@ -286,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const user = await GolazoAuth.syncSession();
     if (!user) {
-        GolazoStore.ui.toast('Inicia sesion para entrar al panel admin.', 'warning');
+        GolazoStore.ui.toast('Inicia sesión para entrar al panel admin.', 'warning');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.login();
         }, 700);
@@ -294,7 +300,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     if (user.role !== 'admin') {
-        showNotice('Tu sesion esta activa, pero tu usuario no tiene rol admin.');
+        showNotice('Tu sesión está activa, pero tu usuario no tiene rol admin.');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.home();
         }, 1200);
@@ -343,7 +349,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             try {
                 JSON.parse(specsInput.value);
             } catch (error) {
-                showNotice('El JSON de especificaciones es invalido.');
+                showNotice('El JSON de especificaciones es inválido.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
                 return;
@@ -401,7 +407,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const id = Number(editButton.dataset.editId);
             const product = productsCache.find((item) => Number(item.id) === id);
             if (!product) {
-                showNotice('No se encontro el producto para editar.');
+                showNotice('No se encontró el producto para editar.');
                 return;
             }
             fillForm(product);
@@ -415,7 +421,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const nextActive = String(toggleActiveButton.dataset.nextActive) === 'true';
             const product = productsCache.find((item) => Number(item.id) === id);
             if (!product) {
-                showNotice('No se encontro el producto para actualizar estado.');
+                showNotice('No se encontró el producto para actualizar estado.');
                 return;
             }
 
@@ -456,7 +462,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!deleteButton) return;
 
         const id = Number(deleteButton.dataset.deleteId);
-        if (!confirm('Seguro que deseas eliminar este producto?')) return;
+        if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
 
         try {
             const response = await fetch(`${API_URL}/${id}`, {
@@ -469,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'No se pudo eliminar');
             }
-            showToast(data.deactivated ? 'Producto desactivado porque ya tenia pedidos.' : 'Producto eliminado.');
+            showToast('Producto eliminado.');
             if (isEditing() && Number(productIdInput.value) === id) {
                 resetForm();
             }

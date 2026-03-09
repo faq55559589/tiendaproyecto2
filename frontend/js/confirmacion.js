@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 await navigator.clipboard.writeText(instagramMessagePreview.textContent);
                 GolazoStore.ui.toast('Mensaje copiado para Instagram.', 'success');
             } catch (error) {
-                GolazoStore.ui.toast('No se pudo copiar el mensaje automaticamente.', 'warning');
+                GolazoStore.ui.toast('No se pudo copiar el mensaje automáticamente.', 'warning');
             }
         });
         return;

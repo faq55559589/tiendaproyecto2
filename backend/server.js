@@ -6,6 +6,7 @@ require('dotenv').config();
 const { runMigrations } = require('./src/config/migrations');
 const { startOrderExpirationJob } = require('./src/services/orderExpirationService');
 const { getAllowedOrigins, getJwtSecret } = require('./src/config/env');
+const { uploadsDir, ensureDir } = require('./src/config/paths');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,7 +41,8 @@ app.use(helmet({
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(express.json());
-app.use(express.static('uploads'));
+ensureDir(uploadsDir);
+app.use(express.static(uploadsDir));
 runMigrations();
 const expirationJob = startOrderExpirationJob();
 

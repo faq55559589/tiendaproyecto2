@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             `).join('')}
             <hr>
             <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>${GolazoStore.formatPrice(data.subtotal)}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Envio</span><strong>${data.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(data.shipping)}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Envío</span><strong>${data.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(data.shipping)}</strong></div>
             <div class="d-flex justify-content-between"><span>Total</span><strong class="text-price-accent fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
         `;
     }

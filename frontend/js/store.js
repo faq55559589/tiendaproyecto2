@@ -1,4 +1,14 @@
 (function () {
+    function readRuntimeConfig() {
+        const fromWindow = window.GOLAZOSTORE_CONFIG && typeof window.GOLAZOSTORE_CONFIG === 'object'
+            ? window.GOLAZOSTORE_CONFIG
+            : {};
+        const fromMeta = document.querySelector('meta[name="golazo-api-base"]')?.content || '';
+        return {
+            apiBase: String(fromWindow.apiBase || fromMeta || 'http://localhost:3000/api').replace(/\/+$/, '')
+        };
+    }
+
     const STORAGE_KEYS = {
         cart: 'cartItems',
         checkout: 'golazoCheckoutDraft'
@@ -92,7 +102,7 @@
 
     const GolazoStore = {
         config: {
-            apiBase: 'http://localhost:3000/api',
+            apiBase: readRuntimeConfig().apiBase,
             freeShippingThreshold: 12000,
             shippingCost: 1200,
             instagramUsername: 'golazofutstore_'
@@ -120,7 +130,7 @@
         formatPaymentMethod(value) {
             const method = String(value || '').toLowerCase();
             if (method === 'mercado_pago') return 'Mercado Pago';
-            if (method === 'instagram') return 'Instagram / Coordinacion manual';
+            if (method === 'instagram') return 'Instagram / Coordinación manual';
             return value || 'No definido';
         },
         getInstagramChatUrl() {
@@ -132,7 +142,7 @@
                 `Pedido: #${order.id}`,
                 `Nombre: ${customer.name || '-'}`,
                 `Email: ${customer.email || '-'}`,
-                `Telefono: ${customer.phone || '-'}`,
+                `Teléfono: ${customer.phone || '-'}`,
                 `Entrega: ${[customer.address, customer.city].filter(Boolean).join(', ') || '-'}`,
                 `Total: ${this.formatPrice(summary.total)}`
             ];
@@ -160,7 +170,7 @@
         async api(path, options = {}, requireAuth = false) {
             const token = getToken();
             if (requireAuth && !token) {
-                throw new Error('Debes iniciar sesion para continuar');
+                throw new Error('Debes iniciar sesión para continuar');
             }
 
             const headers = {

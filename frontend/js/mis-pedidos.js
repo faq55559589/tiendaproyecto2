@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     if (ordersNotice) {
-        ordersNotice.innerHTML = '<i class="fas fa-circle-check me-2"></i>Estos pedidos se leen desde backend real.';
+        ordersNotice.innerHTML = '<i class="fas fa-circle-check me-2"></i>Estos pedidos se leen desde el backend real.';
         ordersNotice.className = 'alert surface-note border-0';
     }
 

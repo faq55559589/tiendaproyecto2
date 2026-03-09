@@ -46,7 +46,7 @@
             <div class="container text-center py-5">
                 <i class="fas fa-circle-xmark fa-3x text-danger mb-3"></i>
                 <h3>Producto no encontrado</h3>
-                <a href="catalogo.html" class="btn btn-danger mt-3">Volver al catalogo</a>
+                <a href="catalogo.html" class="btn btn-danger mt-3">Volver al catálogo</a>
             </div>
         `;
     }
@@ -54,7 +54,7 @@
     function renderProduct(product) {
         dom.title.textContent = product.name;
         dom.price.textContent = GolazoStore.formatPrice(product.price);
-        dom.lead.textContent = product.description || 'Producto oficial de futbol listo para tu carrito.';
+        dom.lead.textContent = product.description || 'Producto oficial de fútbol listo para tu carrito.';
         dom.bodyText.textContent = product.description || 'Sin descripcion adicional cargada.';
         dom.mainImage.src = product.image_url;
         dom.mainImage.alt = product.name;

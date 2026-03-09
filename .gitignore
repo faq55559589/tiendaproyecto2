@@ -17,6 +17,7 @@ yarn.lock
 .env.production
 .env.test
 *.env
+!*.env.example
 
 # ===== ARCHIVOS DE SISTEMA =====
 # Windows

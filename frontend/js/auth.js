@@ -31,7 +31,7 @@ function clearSession() {
 function logout(options = {}) {
     const shouldRedirect = options.redirect !== false;
     clearSession();
-    GolazoStore.ui.toast('Sesion cerrada.', 'info');
+    GolazoStore.ui.toast('Sesión cerrada.', 'info');
 
     if (shouldRedirect) {
         setTimeout(() => {
@@ -56,7 +56,7 @@ async function authFetch(endpoint, options = {}) {
 
     if (response.status === 401) {
         logout();
-        throw new Error('Sesion expirada');
+        throw new Error('Sesión expirada');
     }
 
     return response;
@@ -64,7 +64,7 @@ async function authFetch(endpoint, options = {}) {
 
 function requireAuth() {
     if (!isLoggedIn()) {
-        GolazoStore.ui.toast('Debes iniciar sesion para continuar.', 'warning');
+        GolazoStore.ui.toast('Debes iniciar sesión para continuar.', 'warning');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.login();
         }, 900);
@@ -84,7 +84,7 @@ async function syncSession() {
         const data = await response.json();
 
         if (!response.ok || !data.success || !data.user) {
-            throw new Error('Sesion invalida');
+            throw new Error('Sesión inválida');
         }
 
         localStorage.setItem('user', JSON.stringify(data.user));

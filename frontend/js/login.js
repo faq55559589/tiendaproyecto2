@@ -1,5 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
-    const API_BASE = 'http://localhost:3000/api';
+document.addEventListener('DOMContentLoaded', function () {
+    const API_BASE = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
     const loginForm = document.getElementById('loginForm');
     const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
@@ -42,7 +42,7 @@
             const data = await response.json();
 
             if (!response.ok || !data.success) {
-                throw new Error(data.message || 'No pudimos iniciar sesion');
+                throw new Error(data.message || 'No pudimos iniciar sesión');
             }
 
             localStorage.setItem('token', data.token);

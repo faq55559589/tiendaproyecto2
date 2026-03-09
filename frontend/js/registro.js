@@ -1,11 +1,11 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const registerForm = document.getElementById('registerForm');
     const togglePasswordBtn = document.getElementById('togglePassword');
     const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const phoneInput = document.getElementById('phone');
-    const API_URL = 'http://localhost:3000/api';
+    const API_URL = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
 
     if (localStorage.getItem('token') && localStorage.getItem('user')) {
         window.location.href = 'home.html';

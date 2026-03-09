@@ -25,6 +25,8 @@ Ver detalle en:
 - [Documentacion central](./docs/README.md)
 - [Estado actual](./docs/PROJECT_STATUS.md)
 - [Guia de ejecucion de planes](./docs/plans/GUIA_EJECUCION_PLANES.md)
+- [Guia general de produccion](./docs/operacion/GUIA_PRODUCCION.md)
+- [Guia deploy Vercel + Railway](./docs/operacion/GUIA_DEPLOY_VERCEL_RAILWAY.md)
 
 ## Levantar en local
 
@@ -157,6 +159,9 @@ EMAIL_REQUIRED=true
 EMAIL_USER=tu_correo@gmail.com
 EMAIL_PASS=tu_app_password
 INSTAGRAM_ORDER_EXPIRATION_HOURS=12
+BACKEND_URL=http://localhost:3000
+SQLITE_DB_PATH=
+UPLOADS_DIR=
 ```
 
 Notas:
@@ -164,6 +169,24 @@ Notas:
 - `CORS_ORIGINS` debe contener dominios reales en staging/produccion (separados por coma).
 - En desarrollo, si `CORS_ORIGINS` no esta definida, se usan origenes localhost por defecto.
 - `INSTAGRAM_ORDER_EXPIRATION_HOURS` define cuantas horas se reserva un pedido manual antes de expirar automaticamente.
+- `BACKEND_URL` se usa para construir URLs absolutas de imagenes subidas.
+- `SQLITE_DB_PATH` y `UPLOADS_DIR` permiten mover almacenamiento a rutas persistentes en deploy.
+
+## Configuracion del frontend
+
+Archivo clave:
+
+- `frontend/js/runtime-config.js`
+
+En local:
+
+```js
+window.GOLAZOSTORE_CONFIG = {
+    apiBase: 'http://localhost:3000/api'
+};
+```
+
+Antes de produccion, cambia `apiBase` a la URL publica real del backend.
 
 ## Planes de trabajo
 

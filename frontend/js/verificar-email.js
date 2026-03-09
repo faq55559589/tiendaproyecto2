@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const errorState = document.getElementById('errorState');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Obtener token de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
@@ -14,9 +13,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     try {
-        const API_URL = 'http://localhost:3000/api';
-
-        // Llamada al backend
+        const API_URL = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
         const response = await fetch(`${API_URL}/auth/verify-email`, {
             method: 'POST',
             headers: {
@@ -32,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         } else {
             showError(data.message || 'El enlace ha expirado o es inválido.');
         }
-
     } catch (error) {
         console.error('Error:', error);
         showError('Hubo un error de conexión al servidor.');

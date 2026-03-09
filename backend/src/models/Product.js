@@ -3,7 +3,10 @@ const db = require('../config/database');
 class Product {
     static getAll() {
         const query = `
-            SELECT p.*, c.name as category_name 
+            SELECT
+                p.*,
+                c.name as category_name,
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE COALESCE(p.is_active, 1) = 1
@@ -14,7 +17,10 @@ class Product {
 
     static getAllAdmin() {
         const query = `
-            SELECT p.*, c.name as category_name 
+            SELECT
+                p.*,
+                c.name as category_name,
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
@@ -24,7 +30,10 @@ class Product {
 
     static getById(id) {
         const query = `
-            SELECT p.*, c.name as category_name 
+            SELECT
+                p.*,
+                c.name as category_name,
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = ? AND COALESCE(p.is_active, 1) = 1
@@ -34,7 +43,10 @@ class Product {
 
     static getByIdAdmin(id) {
         const query = `
-            SELECT p.*, c.name as category_name 
+            SELECT
+                p.*,
+                c.name as category_name,
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = ?

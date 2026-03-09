@@ -42,12 +42,12 @@
                         ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shirt me-2 icon-accent"></i>Admin productos</a></li>` : ''}
                         ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminOrders()}"><i class="fas fa-receipt me-2 icon-accent"></i>Admin pedidos</a></li>` : ''}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#" data-auth-logout><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesion</a></li>
+                        <li><a class="dropdown-item text-danger" href="#" data-auth-logout><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
                     </ul>
                 </div>
             `
             : `
-                <a class="nav-link ${isActive('login.html') ? 'active' : ''}" href="${GolazoStore.paths.login()}"><i class="fas fa-user"></i> Iniciar sesion</a>
+                <a class="nav-link ${isActive('login.html') ? 'active' : ''}" href="${GolazoStore.paths.login()}"><i class="fas fa-user"></i> Iniciar sesión</a>
                 <a class="nav-link ${isActive('registro.html') ? 'active' : ''}" href="${GolazoStore.paths.register()}"><i class="fas fa-user-plus"></i> Registrarse</a>
             `;
 
@@ -59,7 +59,7 @@
                         <span class="fw-bold brand-wordmark">GolazoStore</span>
                     </a>
                     <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
-                        <i class="fas fa-bars me-2"></i>Categorias
+                        <i class="fas fa-bars me-2"></i>Categorías
                     </button>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                         <span class="navbar-toggler-icon"></span>
@@ -67,7 +67,7 @@
                     <div class="collapse navbar-collapse" id="navbarContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item"><a class="nav-link ${isActive('home.html') ? 'active' : ''}" href="${GolazoStore.paths.home()}"><i class="fas fa-house"></i> Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link ${isActive('catalogo.html') ? 'active' : ''}" href="${GolazoStore.paths.catalog()}"><i class="fas fa-store"></i> Catalogo</a></li>
+                            <li class="nav-item"><a class="nav-link ${isActive('catalogo.html') ? 'active' : ''}" href="${GolazoStore.paths.catalog()}"><i class="fas fa-store"></i> Catálogo</a></li>
                             <li class="nav-item"><a class="nav-link ${isActive('contacto.html') ? 'active' : ''}" href="${GolazoStore.paths.contact()}"><i class="fas fa-envelope"></i> Contacto</a></li>
                             ${adminPrimaryLink}
                         </ul>
@@ -107,19 +107,19 @@
                 <div class="row g-4">
                     <div class="col-md-4">
                         <h5 class="text-uppercase fw-bold footer-title">GolazoStore</h5>
-                        <p class="mb-0">Tienda online de camisetas y coleccionables de futbol con un flujo de compra claro, rapido y responsive.</p>
+                        <p class="mb-0">Tienda online de camisetas y coleccionables de fútbol con un flujo de compra claro, rápido y responsive.</p>
                     </div>
                     <div class="col-md-4">
-                        <h5 class="text-uppercase fw-bold footer-title">Navegacion</h5>
+                        <h5 class="text-uppercase fw-bold footer-title">Navegación</h5>
                         <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.home()}">Inicio</a></p>
-                        <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.catalog()}">Catalogo</a></p>
+                        <p class="mb-2"><a class="footer-link" href="${GolazoStore.paths.catalog()}">Catálogo</a></p>
                         <p class="mb-0"><a class="footer-link" href="${GolazoStore.paths.contact()}">Contacto</a></p>
                     </div>
                     <div class="col-md-4">
                         <h5 class="text-uppercase fw-bold footer-title">Compra segura</h5>
-                        <p class="mb-2">Envios a todo Uruguay</p>
+                        <p class="mb-2">Envíos a todo Uruguay</p>
                         <p class="mb-2">Soporte por email y WhatsApp</p>
-                        <p class="mb-0">Coordinacion de pago por Instagram para el MVP</p>
+                        <p class="mb-0">Coordinación de pago por Instagram para el MVP</p>
                     </div>
                 </div>
                 <hr class="my-4 border-secondary">

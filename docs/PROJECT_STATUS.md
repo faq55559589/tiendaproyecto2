@@ -2,6 +2,40 @@
 
 Fecha de referencia: 2026-03-08
 
+## Cambios recientes (2026-03-08) - Preparacion deploy Railway + Vercel
+
+- Backend preparado para rutas configurables de almacenamiento:
+  - `backend/src/config/paths.js`
+  - `backend/src/config/database.js`
+  - `backend/src/middleware/upload.js`
+  - `backend/server.js`
+- Nuevas variables soportadas:
+  - `BACKEND_URL`
+  - `SQLITE_DB_PATH`
+  - `UPLOADS_DIR`
+- Frontend preparado para `apiBase` configurable sin editar la logica principal:
+  - `frontend/js/runtime-config.js`
+  - `frontend/js/store.js`
+- Se agrego documentacion operativa de salida a produccion:
+  - `docs/operacion/GUIA_PRODUCCION.md`
+  - `docs/operacion/GUIA_DEPLOY_VERCEL_RAILWAY.md`
+
+### Impacto operativo
+
+- Railway ya puede usar un volume persistente para SQLite y `uploads`.
+- Vercel ya puede apuntar al backend publico ajustando `frontend/js/runtime-config.js`.
+- El proyecto queda mejor preparado para separar frontend y backend por entorno.
+
+## Cambios recientes (2026-03-08) - Regla de borrado y UX admin
+
+- Se corrigio la regresion de borrado de productos vendidos:
+  - si un producto ya forma parte de pedidos, el backend responde `409`.
+- El panel admin ahora deja mas claro por que ciertos productos no se pueden borrar:
+  - muestra si el producto tiene historial de pedidos.
+  - deshabilita la accion de eliminar cuando corresponde.
+- Validacion ejecutada en instancia limpia:
+  - `scripts/qa_cierre_mvp.js`: `16/16 PASS`
+
 ## Cambios recientes (2026-03-07) - Fase 1 hardening
 
 - Se elimino el fallback inseguro de `JWT_SECRET` en auth:

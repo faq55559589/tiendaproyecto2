@@ -11,7 +11,7 @@
                 <i class="fas fa-triangle-exclamation fa-3x icon-accent mb-3"></i>
                 <h4>No pudimos cargar los destacados</h4>
                 <p class="text-ui-muted">Verifica que el backend este disponible en el puerto 3000.</p>
-                <a href="catalogo.html" class="btn btn-danger">Ir al catalogo</a>
+                <a href="catalogo.html" class="btn btn-danger">Ir al catálogo</a>
             </div>
         `;
     }
@@ -44,7 +44,7 @@
                             ${stockBadge}
                         </div>
                         <h3 class="h6 card-title">${product.name}</h3>
-                        <p class="text-ui-muted small flex-grow-1">${(product.description || 'Producto oficial de futbol.').slice(0, 96)}...</p>
+                        <p class="text-ui-muted small flex-grow-1">${(product.description || 'Producto oficial de fútbol.').slice(0, 96)}...</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <strong class="text-price-accent">${GolazoStore.formatPrice(product.price)}</strong>
                             <button class="btn btn-danger btn-sm" data-add-home="${product.id}" ${product.stock < 1 ? 'disabled' : ''}>Agregar</button>

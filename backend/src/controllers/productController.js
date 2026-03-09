@@ -41,6 +41,7 @@ class ProductController {
             ...product,
             sizes: JSON.parse(product.sizes || '[]'),
             is_active: Number(product.is_active ?? 1) === 1,
+            has_order_references: Number(product.has_order_references || 0) === 1,
             image_url: imageUrls[0] || null,
             image_urls: imageUrls
         };
@@ -239,11 +240,9 @@ class ProductController {
             }
 
             if (Product.hasOrderReferences(id)) {
-                Product.setActiveState(id, false);
-                return res.json({
-                    success: true,
-                    message: 'Producto desactivado porque ya forma parte de pedidos.',
-                    deactivated: true
+                return res.status(409).json({
+                    success: false,
+                    message: 'No puedes eliminar un producto que ya forma parte de pedidos. Desactivalo para quitarlo del catalogo.'
                 });
             }
 

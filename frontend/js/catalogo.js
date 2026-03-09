@@ -20,7 +20,7 @@
             <div class="col-12">
                 <div class="state-panel text-center py-5 text-danger">
                 <i class="fas fa-plug-circle-xmark fa-3x mb-3"></i>
-                <h4>No pudimos cargar el catalogo</h4>
+                <h4>No pudimos cargar el catálogo</h4>
                 <p class="text-ui-muted">Revisa el backend y vuelve a intentar.</p>
                 <button type="button" class="btn btn-outline-brand mt-2" onclick="window.location.reload()">Reintentar</button>
                 </div>
@@ -51,7 +51,7 @@
         });
 
         if (catalogTitle) {
-            catalogTitle.textContent = 'Catalogo completo';
+            catalogTitle.textContent = 'Catálogo completo';
         }
 
         if (filterInfo) {
@@ -76,7 +76,7 @@
                     <div class="state-panel text-center py-5">
                     <i class="fas fa-shirt fa-3x text-ui-muted mb-3"></i>
                     <h4>No hay productos disponibles con este criterio</h4>
-                    <p class="text-ui-muted">Prueba otra busqueda o vuelve al catalogo completo.</p>
+                    <p class="text-ui-muted">Prueba otra búsqueda o vuelve al catálogo completo.</p>
                     <a class="btn btn-outline-brand" href="catalogo.html">Ver todo</a>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                                 <span class="badge ${product.stock > 0 ? 'badge-soft-neutral' : 'badge-soft-danger'}">${stockText}</span>
                             </div>
                             <h3 class="h5 mb-2">${product.name}</h3>
-                            <p class="text-ui-muted small flex-grow-1">${product.description || 'Producto de futbol sin descripcion adicional.'}</p>
+                            <p class="text-ui-muted small flex-grow-1">${product.description || 'Producto de fútbol sin descripción adicional.'}</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <strong class="text-price-accent fs-5">${GolazoStore.formatPrice(product.price)}</strong>
                                 <div class="d-flex gap-2">
