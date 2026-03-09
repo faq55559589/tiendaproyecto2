@@ -5,9 +5,15 @@ const EMAIL_FROM = process.env.EMAIL_FROM || process.env.EMAIL_USER;
 const EMAIL_REQUIRED = String(process.env.EMAIL_REQUIRED || 'false').toLowerCase() === 'true';
 const GMAIL_EMAIL = (process.env.EMAIL_USER || '').trim();
 const GMAIL_APP_PASSWORD = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
+const BREVO_API_KEY = String(process.env.BREVO_API_KEY || '').trim();
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
 function hasGmailConfig() {
     return Boolean(GMAIL_EMAIL && GMAIL_APP_PASSWORD);
+}
+
+function hasBrevoApiConfig() {
+    return Boolean(BREVO_API_KEY);
 }
 
 function hasSmtpConfig() {
@@ -49,7 +55,9 @@ function createTransporter() {
 
 const transporter = createTransporter();
 
-if (transporter) {
+if (hasBrevoApiConfig()) {
+    console.log('Servicio de email configurado con Brevo API');
+} else if (transporter) {
     transporter.verify((error) => {
         if (error) {
             console.error('Error configurando email SMTP:', error.message);
@@ -58,10 +66,68 @@ if (transporter) {
         }
     });
 } else {
-    console.warn('Email no configurado: define SMTP_* o EMAIL_USER/EMAIL_PASS');
+    console.warn('Email no configurado: define BREVO_API_KEY o SMTP_* o EMAIL_USER/EMAIL_PASS');
+}
+
+async function sendWithBrevoApi({ to, subject, html }) {
+    const response = await fetch(BREVO_API_URL, {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+            'api-key': BREVO_API_KEY,
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            sender: {
+                name: 'GolazoStore',
+                email: EMAIL_FROM
+            },
+            to: [{ email: to }],
+            subject,
+            htmlContent: html
+        })
+    });
+
+    const rawBody = await response.text();
+    let data = null;
+
+    try {
+        data = rawBody ? JSON.parse(rawBody) : null;
+    } catch {
+        data = rawBody;
+    }
+
+    if (!response.ok) {
+        const errorMessage = typeof data === 'object' && data !== null
+            ? data.message || JSON.stringify(data)
+            : rawBody || `HTTP ${response.status}`;
+        throw new Error(`Brevo API error (${response.status}): ${errorMessage}`);
+    }
+
+    return {
+        success: true,
+        messageId: data && typeof data === 'object' ? data.messageId : undefined
+    };
 }
 
 async function sendMail({ to, subject, html }) {
+    if (!EMAIL_FROM) {
+        throw new Error('Falta EMAIL_FROM o EMAIL_USER en variables de entorno');
+    }
+
+    if (hasBrevoApiConfig()) {
+        try {
+            return await sendWithBrevoApi({ to, subject, html });
+        } catch (error) {
+            if (EMAIL_REQUIRED) {
+                throw error;
+            }
+
+            console.warn(`Fallo el envio de email por Brevo API a ${to}: ${error.message}. Continuando sin bloquear la operacion.`);
+            return { success: true, mocked: true, messageId: 'brevo-api-send-failed-but-ignored' };
+        }
+    }
+
     if (!transporter) {
         const message = 'Servicio de email no configurado';
         if (EMAIL_REQUIRED) {
@@ -69,10 +135,6 @@ async function sendMail({ to, subject, html }) {
         }
         console.warn(`${message}. Simulando envio a ${to}.`);
         return { success: true, mocked: true, messageId: 'mock-message-id' };
-    }
-
-    if (!EMAIL_FROM) {
-        throw new Error('Falta EMAIL_FROM o EMAIL_USER en variables de entorno');
     }
 
     try {

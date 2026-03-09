@@ -15,6 +15,9 @@ const allowedOrigins = getAllowedOrigins();
 // Force JWT validation at startup so production never runs with weak defaults.
 getJwtSecret();
 
+// Railway forwards client IPs through a proxy/load balancer.
+app.set('trust proxy', 1);
+
 // Configuracion CORS (restringido a origenes definidos)
 const corsOptions = {
     origin: (origin, callback) => {

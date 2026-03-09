@@ -10,10 +10,15 @@ function printUsage() {
 Uso:
   node scripts/db-admin.js summary
   node scripts/db-admin.js users
+  node scripts/db-admin.js user <email>
   node scripts/db-admin.js products
   node scripts/db-admin.js orders
   node scripts/db-admin.js user-orders <email>
   node scripts/db-admin.js promote-admin <email>
+  node scripts/db-admin.js set-role <email> <role>
+  node scripts/db-admin.js verify-user <email>
+  node scripts/db-admin.js delete-user <email>
+  node scripts/db-admin.js delete-users <email1> <email2> [...]
 `);
 }
 
@@ -39,12 +44,31 @@ function summary() {
 
 function users() {
     const rows = db.prepare(`
-        SELECT id, email, role, is_verified, created_at
+        SELECT id, email, first_name, last_name, role, is_verified, created_at
         FROM users
         ORDER BY id DESC
         LIMIT 30
     `).all();
     printRows(rows);
+}
+
+function userByEmail(email) {
+    if (!email) {
+        throw new Error('Debes indicar un email. Ej: node scripts/db-admin.js user facundonew2003@gmail.com');
+    }
+
+    const row = db.prepare(`
+        SELECT id, email, first_name, last_name, phone, newsletter, role, is_verified, created_at
+        FROM users
+        WHERE email = ?
+    `).get(email);
+
+    if (!row) {
+        console.log(`No se encontro usuario con email: ${email}`);
+        return;
+    }
+
+    console.table([row]);
 }
 
 function products() {
@@ -109,8 +133,70 @@ function promoteAdmin(email) {
     console.log(`Usuario promovido a admin: ${email}`);
 }
 
+function setRole(email, role) {
+    if (!email || !role) {
+        throw new Error('Debes indicar email y rol. Ej: node scripts/db-admin.js set-role facundonew2003@gmail.com admin');
+    }
+
+    const allowedRoles = new Set(['user', 'admin']);
+    if (!allowedRoles.has(role)) {
+        throw new Error(`Rol no valido: ${role}. Roles permitidos: ${Array.from(allowedRoles).join(', ')}`);
+    }
+
+    const result = db.prepare('UPDATE users SET role = ? WHERE email = ?').run(role, email);
+    if (result.changes === 0) {
+        console.log(`No se encontro usuario con email: ${email}`);
+        return;
+    }
+
+    console.log(`Rol actualizado: ${email} -> ${role}`);
+}
+
+function verifyUser(email) {
+    if (!email) {
+        throw new Error('Debes indicar un email. Ej: node scripts/db-admin.js verify-user facundonew2003@gmail.com');
+    }
+
+    const result = db.prepare('UPDATE users SET is_verified = 1 WHERE email = ?').run(email);
+    if (result.changes === 0) {
+        console.log(`No se encontro usuario con email: ${email}`);
+        return;
+    }
+
+    console.log(`Usuario marcado como verificado: ${email}`);
+}
+
+function deleteUser(email) {
+    if (!email) {
+        throw new Error('Debes indicar un email. Ej: node scripts/db-admin.js delete-user facundonew2003@gmail.com');
+    }
+
+    const result = db.prepare('DELETE FROM users WHERE email = ?').run(email);
+    if (result.changes === 0) {
+        console.log(`No se encontro usuario con email: ${email}`);
+        return;
+    }
+
+    console.log(`Usuario eliminado: ${email}`);
+}
+
+function deleteUsers(emails) {
+    if (!emails.length) {
+        throw new Error('Debes indicar al menos un email. Ej: node scripts/db-admin.js delete-users uno@mail.com dos@mail.com');
+    }
+
+    const stmt = db.prepare('DELETE FROM users WHERE email = ?');
+    let total = 0;
+    for (const email of emails) {
+        total += stmt.run(email).changes;
+    }
+
+    console.log(`Usuarios eliminados: ${total}`);
+}
+
 const command = process.argv[2];
 const arg = process.argv[3];
+const arg2 = process.argv[4];
 
 try {
     switch (command) {
@@ -119,6 +205,9 @@ try {
         break;
     case 'users':
         users();
+        break;
+    case 'user':
+        userByEmail(arg);
         break;
     case 'products':
         products();
@@ -131,6 +220,18 @@ try {
         break;
     case 'promote-admin':
         promoteAdmin(arg);
+        break;
+    case 'set-role':
+        setRole(arg, arg2);
+        break;
+    case 'verify-user':
+        verifyUser(arg);
+        break;
+    case 'delete-user':
+        deleteUser(arg);
+        break;
+    case 'delete-users':
+        deleteUsers(process.argv.slice(3));
         break;
     default:
         printUsage();

@@ -11,6 +11,14 @@ Dejar una forma simple de respaldar y recuperar el estado local del MVP:
 
 ## Alcance
 
+Esta guia aplica al entorno local.
+
+No opera sobre la base de produccion de Railway.
+
+Para flujo local-produccion, ver tambien:
+
+- `docs/operacion/GUIA_SQLITE_DB_BROWSER.md`
+
 Estos comandos operan sobre:
 
 - `backend/database/golazostore.db`
@@ -79,3 +87,19 @@ node scripts/restore-local-state.js backups/local-state-AAAA-MM-DD_HH-mm-ss
 - no resuelve conflictos de datos si el backend sigue escribiendo durante el restore
 - si el backup fue hecho con el servidor muy activo, el respaldo puede no ser ideal
 - es una solucion operativa local de MVP, no un sistema de backup productivo
+
+## Nota sobre Railway
+
+En produccion, la base real vive en el volume de Railway:
+
+- `/app/data/golazostore.db`
+
+Y los uploads en:
+
+- `/app/data/uploads`
+
+Eso significa:
+
+- `npm run ops:backup` no respalda produccion
+- `npm run ops:restore` no restaura produccion
+- para produccion necesitas un flujo separado de snapshot/export/import
