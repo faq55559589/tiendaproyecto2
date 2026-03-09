@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const API_BASE = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
+    const API_BASE = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
     const loginForm = document.getElementById('loginForm');
     const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');

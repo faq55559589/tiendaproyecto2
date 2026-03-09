@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const phoneInput = document.getElementById('phone');
-    const API_URL = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
+    const API_URL = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
 
     if (localStorage.getItem('token') && localStorage.getItem('user')) {
         window.location.href = 'home.html';

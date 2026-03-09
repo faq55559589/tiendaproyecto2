@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     try {
-        const API_URL = window.GolazoStore?.config?.apiBase || 'http://localhost:3000/api';
+        const API_URL = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
         const response = await fetch(`${API_URL}/auth/verify-email`, {
             method: 'POST',
             headers: {

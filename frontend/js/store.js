@@ -5,7 +5,7 @@
             : {};
         const fromMeta = document.querySelector('meta[name="golazo-api-base"]')?.content || '';
         return {
-            apiBase: String(fromWindow.apiBase || fromMeta || 'http://localhost:3000/api').replace(/\/+$/, '')
+            apiBase: String(fromWindow.apiBase || fromMeta || 'https://api.golazofutstore.com/api').replace(/\/+$/, '')
         };
     }
 
