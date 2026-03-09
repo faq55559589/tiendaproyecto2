@@ -34,7 +34,9 @@ function createTransporter() {
 
     if (hasGmailConfig()) {
         return nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 user: GMAIL_EMAIL,
                 pass: GMAIL_APP_PASSWORD
@@ -73,14 +75,23 @@ async function sendMail({ to, subject, html }) {
         throw new Error('Falta EMAIL_FROM o EMAIL_USER en variables de entorno');
     }
 
-    const info = await transporter.sendMail({
-        from: `"GolazoStore" <${EMAIL_FROM}>`,
-        to,
-        subject,
-        html
-    });
+    try {
+        const info = await transporter.sendMail({
+            from: `"GolazoStore" <${EMAIL_FROM}>`,
+            to,
+            subject,
+            html
+        });
 
-    return { success: true, messageId: info.messageId };
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        if (EMAIL_REQUIRED) {
+            throw error;
+        }
+
+        console.warn(`Fallo el envio de email a ${to}: ${error.message}. Continuando sin bloquear la operacion.`);
+        return { success: true, mocked: true, messageId: 'email-send-failed-but-ignored' };
+    }
 }
 
 function renderEmailLayout({ title, intro, ctaLabel, ctaHref, note }) {
