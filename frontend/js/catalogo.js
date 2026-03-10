@@ -54,6 +54,14 @@
             catalogTitle.textContent = 'Catálogo completo';
         }
 
+        if (window.GolazoSEO) {
+            window.GolazoSEO.applyCatalogSeo({
+                category: categoryParam,
+                search,
+                total: visibleProducts.length
+            });
+        }
+
         if (filterInfo) {
             filterInfo.textContent = visibleProducts.length
                 ? `${visibleProducts.length} producto(s) encontrados`

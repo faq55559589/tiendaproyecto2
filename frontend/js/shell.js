@@ -55,8 +55,8 @@
             <nav class="navbar navbar-expand-lg navbar-dark fixed-top app-navbar">
                 <div class="container-fluid">
                     <a class="navbar-brand d-flex align-items-center" href="${GolazoStore.paths.home()}">
-                        <img src="assets/images/logo.png" alt="GolazoStore" height="48" class="me-2">
-                        <span class="fw-bold brand-wordmark">GolazoStore</span>
+                        <img src="assets/images/logo.png" alt="Golazo FutStore" height="48" class="me-2">
+                        <span class="fw-bold brand-wordmark">Golazo FutStore</span>
                     </a>
                     <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3 categories-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
                         <i class="fas fa-bars"></i>Categorías
@@ -106,7 +106,7 @@
             <div class="container text-center text-md-start">
                 <div class="row g-4">
                     <div class="col-md-4">
-                        <h5 class="text-uppercase fw-bold footer-title">GolazoStore</h5>
+                        <h5 class="text-uppercase fw-bold footer-title">Golazo FutStore</h5>
                         <p class="mb-3">Camisetas de clubes y selecciones para hinchas que quieren comprar con claridad, confianza y estilo.</p>
                         <a class="btn btn-outline-light btn-sm footer-ig-btn" href="${GolazoStore.getInstagramProfileUrl()}" target="_blank" rel="noreferrer">
                             <i class="fab fa-instagram me-2"></i>Seguinos en Instagram
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <hr class="my-4 border-secondary">
-                <p class="mb-0 text-center small">© 2026 GolazoStore. Fútbol, identidad y camisetas para vestir tus colores.</p>
+                <p class="mb-0 text-center small">© 2026 Golazo FutStore. Futbol, identidad y camisetas para vestir tus colores.</p>
             </div>
         `;
     }

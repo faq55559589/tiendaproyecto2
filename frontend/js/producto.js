@@ -110,7 +110,11 @@
         dom.mainImage.alt = product.name;
         dom.breadcrumbs.textContent = product.name;
         dom.stock.textContent = product.stock;
-        document.title = `${product.name} - GolazoStore`;
+        document.title = `${product.name} | Golazo FutStore`;
+
+        if (window.GolazoSEO) {
+            window.GolazoSEO.applyProductSeo(product);
+        }
 
         if (dom.originalPrice) dom.originalPrice.remove();
         if (dom.discountBadge) dom.discountBadge.remove();

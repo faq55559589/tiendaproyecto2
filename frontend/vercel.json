@@ -3,7 +3,7 @@
     {
       "source": "/",
       "destination": "/home.html",
-      "permanent": false
+      "permanent": true
     }
   ]
 }
