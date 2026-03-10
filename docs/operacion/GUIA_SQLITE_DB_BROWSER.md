@@ -219,7 +219,13 @@ Railway sirve muy bien para:
 - networking
 - volumes
 
-Pero no esta pensado como gestor visual de SQLite.
+Pero no esta pensado como gestor visual de SQLite ni como explorador de archivos del volume.
+
+Punto importante:
+
+- `railway ssh` te deja entrar al contenedor
+- pero no ofrece `scp` ni `sftp`
+- Railway tampoco expone una descarga visual simple del archivo `/app/data/golazostore.db`
 
 Por eso, para este proyecto, el flujo recomendado es:
 
@@ -227,26 +233,71 @@ Por eso, para este proyecto, el flujo recomendado es:
 2. mantener una copia local editable con `DB Browser`
 3. tratar la base local como tu area de trabajo
 
-## 9. Flujo recomendado para traer produccion a local
+## 9. Paso a paso real para traer produccion a local
 
-Este es el flujo recomendado cuando queres revisar o editar localmente la base mas reciente de produccion.
+Este es el procedimiento realista hoy si queres abrir la base actual de produccion en tu maquina y verla con `DB Browser`.
 
-### Opcion recomendada
+### Lo que si puedes hacer comodo
 
-1. conectarte a Railway por shell
-2. inspeccionar si realmente necesitas la base completa o solo ciertos datos
-3. si necesitas la base completa, generar una copia desde el volume
-4. traer esa copia a tu maquina por un flujo manual o tecnico
-5. abrirla en `DB Browser`
+Una vez que el archivo este en tu PC:
 
-### Advertencia importante
+1. abrir `DB Browser for SQLite`
+2. hacer `Open Database`
+3. elegir el archivo `.db`
+4. entrar en `Browse Data`
+5. revisar o editar tablas visualmente
 
-Hoy Railway no te da una descarga visual simple del archivo del volume.
+### Lo que falta resolver hoy
 
-Entonces, para el trabajo diario:
+El paso incomodo no es abrir la base local.
 
-- no conviene depender de "bajar la base" todo el tiempo
-- conviene preparar y mantener bien la base local
+El paso incomodo es bajar la copia actual desde Railway, porque Railway no da una descarga directa del archivo del volume.
+
+### Flujo actual minimo viable
+
+1. entrar al proyecto de Railway donde corre el backend
+2. verificar que la base activa esta en:
+   - `/app/data/golazostore.db`
+3. instalar y autenticar `Railway CLI` en tu maquina
+4. vincular la carpeta local a ese proyecto o copiar el comando SSH desde el panel de Railway
+5. abrir una shell remota con `railway ssh`
+6. dentro del contenedor, generar una copia de trabajo de la base
+7. sacar esa copia del entorno remoto por un flujo tecnico adicional
+8. guardar esa copia en tu maquina, por ejemplo en:
+   - `backups/produccion/golazostore-AAAA-MM-DD.db`
+9. abrir ese archivo con `DB Browser`
+
+### Honestamente: que significa el paso 7
+
+Ese paso 7 hoy no esta resuelto de forma prolija dentro del proyecto.
+
+Con el stack actual tienes tres caminos:
+
+1. usar un flujo manual de terminal para volcar el archivo
+2. montar una herramienta temporal de exportacion
+3. agregar al proyecto una descarga protegida para snapshots
+
+### Recomendacion para este proyecto
+
+Si queres evitar depender de comandos para consultar tablas o inspeccionar datos, la mejora correcta no es usar mas shell.
+
+La mejora correcta es agregar una forma de exportar la base actual desde produccion y bajarla a local como archivo.
+
+Ejemplo de mejora razonable:
+
+- endpoint admin protegido que genere snapshot
+- descarga del `.db` o `.zip`
+- guardado local en `backups/`
+- apertura posterior con `DB Browser`
+
+### Conclusión operativa
+
+Hoy:
+
+- abrir la base local con `DB Browser` es facil
+- bajar la base actual de Railway no es un flujo visual resuelto
+- para trabajo diario, conviene usar la base local como entorno de edicion
+- si queres comodidad real para traer produccion a local, hay que agregar una herramienta de exportacion al proyecto
 
 ## 10. Flujo recomendado para publicar una base local en Railway
 

@@ -6,7 +6,14 @@ class Product {
             SELECT
                 p.*,
                 c.name as category_name,
-                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references,
+                EXISTS(
+                    SELECT 1
+                    FROM order_items oi
+                    LEFT JOIN orders o ON o.id = oi.order_id
+                    WHERE oi.product_id = p.id
+                      AND (o.id IS NULL OR o.status != 'cancelled')
+                ) as has_blocking_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE COALESCE(p.is_active, 1) = 1
@@ -20,7 +27,14 @@ class Product {
             SELECT
                 p.*,
                 c.name as category_name,
-                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references,
+                EXISTS(
+                    SELECT 1
+                    FROM order_items oi
+                    LEFT JOIN orders o ON o.id = oi.order_id
+                    WHERE oi.product_id = p.id
+                      AND (o.id IS NULL OR o.status != 'cancelled')
+                ) as has_blocking_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
@@ -33,7 +47,14 @@ class Product {
             SELECT
                 p.*,
                 c.name as category_name,
-                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references,
+                EXISTS(
+                    SELECT 1
+                    FROM order_items oi
+                    LEFT JOIN orders o ON o.id = oi.order_id
+                    WHERE oi.product_id = p.id
+                      AND (o.id IS NULL OR o.status != 'cancelled')
+                ) as has_blocking_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = ? AND COALESCE(p.is_active, 1) = 1
@@ -46,7 +67,14 @@ class Product {
             SELECT
                 p.*,
                 c.name as category_name,
-                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references
+                EXISTS(SELECT 1 FROM order_items oi WHERE oi.product_id = p.id) as has_order_references,
+                EXISTS(
+                    SELECT 1
+                    FROM order_items oi
+                    LEFT JOIN orders o ON o.id = oi.order_id
+                    WHERE oi.product_id = p.id
+                      AND (o.id IS NULL OR o.status != 'cancelled')
+                ) as has_blocking_order_references
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = ?
@@ -130,6 +158,18 @@ class Product {
 
     static hasOrderReferences(id) {
         const query = 'SELECT COUNT(*) as total FROM order_items WHERE product_id = ?';
+        const result = db.prepare(query).get(id);
+        return Number(result && result.total) > 0;
+    }
+
+    static hasBlockingOrderReferences(id) {
+        const query = `
+            SELECT COUNT(*) as total
+            FROM order_items oi
+            LEFT JOIN orders o ON o.id = oi.order_id
+            WHERE oi.product_id = ?
+              AND (o.id IS NULL OR o.status != 'cancelled')
+        `;
         const result = db.prepare(query).get(id);
         return Number(result && result.total) > 0;
     }

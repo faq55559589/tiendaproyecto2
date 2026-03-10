@@ -36,13 +36,13 @@
                         <i class="fas fa-user-circle me-2"></i>${user.first_name || 'Mi cuenta'}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.profile()}"><i class="fas fa-user me-2 icon-accent"></i>Mi perfil</a></li>
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.orders()}"><i class="fas fa-box me-2 icon-accent"></i>Mis pedidos</a></li>
-                        <li><a class="dropdown-item" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping me-2 icon-accent"></i>Carrito</a></li>
-                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shirt me-2 icon-accent"></i>Admin productos</a></li>` : ''}
-                        ${isAdmin ? `<li><a class="dropdown-item" href="${GolazoStore.paths.adminOrders()}"><i class="fas fa-receipt me-2 icon-accent"></i>Admin pedidos</a></li>` : ''}
+                        <li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.profile()}"><i class="fas fa-user icon-accent"></i><span>Mi perfil</span></a></li>
+                        <li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.orders()}"><i class="fas fa-box icon-accent"></i><span>Mis pedidos</span></a></li>
+                        <li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping icon-accent"></i><span>Carrito</span></a></li>
+                        ${isAdmin ? `<li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shirt icon-accent"></i><span>Admin productos</span></a></li>` : ''}
+                        ${isAdmin ? `<li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.adminOrders()}"><i class="fas fa-receipt icon-accent"></i><span>Admin pedidos</span></a></li>` : ''}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#" data-auth-logout><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
+                        <li><a class="dropdown-item text-danger account-menu-link" href="#" data-auth-logout><i class="fas fa-sign-out-alt"></i><span>Cerrar sesión</span></a></li>
                     </ul>
                 </div>
             `
@@ -58,8 +58,8 @@
                         <img src="assets/images/logo.png" alt="GolazoStore" height="48" class="me-2">
                         <span class="fw-bold brand-wordmark">GolazoStore</span>
                     </a>
-                    <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
-                        <i class="fas fa-bars me-2"></i>Categorías
+                    <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3 categories-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
+                        <i class="fas fa-bars"></i>Categorías
                     </button>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                         <span class="navbar-toggler-icon"></span>
@@ -72,7 +72,7 @@
                             ${adminPrimaryLink}
                         </ul>
                         <form class="d-flex mx-auto app-search" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Buscar camiseta o equipo">
+                            <input class="form-control me-2" type="search" placeholder="Buscar club, selección o camiseta">
                             <button class="btn btn-outline-brand" type="submit"><i class="fas fa-search"></i></button>
                         </form>
                         <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
@@ -107,7 +107,10 @@
                 <div class="row g-4">
                     <div class="col-md-4">
                         <h5 class="text-uppercase fw-bold footer-title">GolazoStore</h5>
-                        <p class="mb-0">Tienda online de camisetas y coleccionables de fútbol con un flujo de compra claro, rápido y responsive.</p>
+                        <p class="mb-3">Camisetas de clubes y selecciones para hinchas que quieren comprar con claridad, confianza y estilo.</p>
+                        <a class="btn btn-outline-light btn-sm footer-ig-btn" href="${GolazoStore.getInstagramProfileUrl()}" target="_blank" rel="noreferrer">
+                            <i class="fab fa-instagram me-2"></i>Seguinos en Instagram
+                        </a>
                     </div>
                     <div class="col-md-4">
                         <h5 class="text-uppercase fw-bold footer-title">Navegación</h5>
@@ -116,14 +119,14 @@
                         <p class="mb-0"><a class="footer-link" href="${GolazoStore.paths.contact()}">Contacto</a></p>
                     </div>
                     <div class="col-md-4">
-                        <h5 class="text-uppercase fw-bold footer-title">Compra segura</h5>
-                        <p class="mb-2">Envíos a todo Uruguay</p>
-                        <p class="mb-2">Soporte por email y WhatsApp</p>
-                        <p class="mb-0">Coordinación de pago por Instagram para el MVP</p>
+                        <h5 class="text-uppercase fw-bold footer-title">Compra con confianza</h5>
+                        <p class="mb-2">Envíos dentro de Montevideo</p>
+                        <p class="mb-2">Atención directa para resolver dudas</p>
+                        <p class="mb-0">Coordinación simple por Instagram para acompañarte en cada pedido</p>
                     </div>
                 </div>
                 <hr class="my-4 border-secondary">
-                <p class="mb-0 text-center small">© 2026 GolazoStore. Frontend alineado al MVP operativo.</p>
+                <p class="mb-0 text-center small">© 2026 GolazoStore. Fútbol, identidad y camisetas para vestir tus colores.</p>
             </div>
         `;
     }
@@ -141,12 +144,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="${GolazoStore.paths.catalog()}" class="text-decoration-none text-dark"><i class="fas fa-shirt me-2"></i>Todas las camisetas</a></li>
-                        <li class="list-group-item"><a href="${GolazoStore.paths.cart()}" class="text-decoration-none text-dark"><i class="fas fa-cart-shopping me-2"></i>Mi carrito</a></li>
-                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark"><i class="fas fa-shirt me-2"></i>Admin productos</a></li>` : ''}
-                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminOrders()}" class="text-decoration-none text-dark"><i class="fas fa-receipt me-2"></i>Admin pedidos</a></li>` : ''}
-                        <li class="list-group-item"><a href="${GolazoStore.paths.contact()}" class="text-decoration-none text-dark"><i class="fas fa-headset me-2"></i>Hablar con soporte</a></li>
+                    <ul class="list-group list-group-flush offcanvas-categories-list">
+                        <li class="list-group-item"><a href="${GolazoStore.paths.catalog()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-shirt"></i><span>Todas las camisetas</span></a></li>
+                        <li class="list-group-item"><a href="${GolazoStore.paths.cart()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-cart-shopping"></i><span>Mi carrito</span></a></li>
+                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-shirt"></i><span>Admin productos</span></a></li>` : ''}
+                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminOrders()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-receipt"></i><span>Admin pedidos</span></a></li>` : ''}
+                        <li class="list-group-item"><a href="${GolazoStore.getInstagramProfileUrl()}" class="text-decoration-none text-dark offcanvas-category-link" target="_blank" rel="noreferrer"><i class="fab fa-instagram"></i><span>Instagram</span></a></li>
+                        <li class="list-group-item"><a href="${GolazoStore.paths.contact()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-headset"></i><span>Hablar con soporte</span></a></li>
                     </ul>
                 </div>
             </div>

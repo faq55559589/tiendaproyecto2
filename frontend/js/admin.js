@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         selectedImagesCount.textContent = '';
         selectedImagesPreview.innerHTML = '';
         imageInput.required = true;
-        imageHelpText.textContent = 'Puedes subir una o varias imagenes. Formatos permitidos: JPG, PNG, WEBP.';
+        imageHelpText.textContent = 'Puedes subir una o varias imágenes. Formatos permitidos: JPG, PNG, WEBP.';
         productForm.querySelector('input[name="stock"]').value = '1';
         productForm.querySelector('input[name="sizesText"]').value = 'S,M,L,XL';
         productForm.querySelector('select[name="category_id"]').value = '1';
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function canDeleteProduct(product) {
-        return !product?.has_order_references;
+        return !product?.has_blocking_order_references;
     }
 
     function getProductStateCounts(products) {
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         cancelEditBtn.classList.remove('d-none');
         imageInput.required = false;
         imageInput.value = '';
-        imageHelpText.textContent = 'Las imagenes son opcionales al editar. Si subes nuevas, se agregan a la galeria actual.';
+        imageHelpText.textContent = 'Las imágenes son opcionales al editar. Si subes nuevas, se agregan a la galería actual.';
 
         editingImageUrls = [...getProductImages(product)];
         renderEditingGallery(product.name);
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const currentImages = [...editingImageUrls];
         if (!currentImages.length) {
             currentImageCount.textContent = '0 imagen(es) guardada(s)';
-            currentImagePreviewList.innerHTML = '<span class="small text-muted">Sin imagenes guardadas.</span>';
+            currentImagePreviewList.innerHTML = '<span class="small text-muted">Sin imágenes guardadas.</span>';
             currentImageWrap.classList.remove('d-none');
             return;
         }
@@ -258,36 +258,44 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        productsList.innerHTML = products.map((product) => `
-            <div class="list-group-item admin-product-item d-flex justify-content-between align-items-center gap-3 flex-wrap ${product.is_active ? '' : 'is-inactive'}">
-                <div class="d-flex align-items-center gap-3 flex-grow-1">
-                    <img src="${product.image_url || 'https://placehold.co/72x72'}" class="rounded" style="width: 72px; height: 72px; object-fit: cover;" alt="${product.name}">
-                    <div class="flex-grow-1">
-                        <h6 class="mb-1">${product.name}</h6>
-                        <div class="d-flex flex-wrap gap-2 mb-2">
-                            <span class="badge ${product.is_active ? 'badge-soft-success' : 'badge-soft-danger'}">${product.is_active ? 'Activo' : 'Inactivo'}</span>
-                            <span class="badge ${Number(product.stock || 0) > 0 ? 'badge-soft-neutral' : 'badge-soft-brand'}">${Number(product.stock || 0) > 0 ? `Stock ${product.stock}` : 'Sin stock'}</span>
-                            <span class="badge badge-soft-neutral">${getProductImages(product).length} imagen(es)</span>
-                            ${product.has_order_references ? '<span class="badge badge-soft-warning">Con historial de pedidos</span>' : ''}
+        productsList.innerHTML = products.map((product) => {
+            const historyNotice = product.has_blocking_order_references
+                ? '<div class="small text-ui-muted mt-1">No se puede borrar porque este producto forma parte de pedidos activos o entregados. Puedes dejarlo inactivo para ocultarlo del catálogo.</div>'
+                : product.has_order_references
+                    ? '<div class="small text-ui-muted mt-1">Este producto solo tiene pedidos cancelados o expirados, así que puedes borrarlo si ya no necesitas conservarlo.</div>'
+                    : '';
+
+            return `
+                <div class="list-group-item admin-product-item d-flex justify-content-between align-items-center gap-3 flex-wrap ${product.is_active ? '' : 'is-inactive'}">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                        <img src="${product.image_url || 'https://placehold.co/72x72'}" class="rounded" style="width: 72px; height: 72px; object-fit: cover;" alt="${product.name}">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${product.name}</h6>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge ${product.is_active ? 'badge-soft-success' : 'badge-soft-danger'}">${product.is_active ? 'Activo' : 'Inactivo'}</span>
+                                <span class="badge ${Number(product.stock || 0) > 0 ? 'badge-soft-neutral' : 'badge-soft-brand'}">${Number(product.stock || 0) > 0 ? `Stock ${product.stock}` : 'Sin stock'}</span>
+                                <span class="badge badge-soft-neutral">${getProductImages(product).length} imagen(es)</span>
+                                ${product.has_order_references ? '<span class="badge badge-soft-warning">Con historial de pedidos</span>' : ''}
+                            </div>
+                            <div class="small text-ui-muted">${GolazoStore.formatPrice(product.price)}</div>
+                            <div class="small text-ui-muted">${product.description || 'Sin descripción cargada.'}</div>
+                            ${historyNotice}
                         </div>
-                        <div class="small text-ui-muted">${GolazoStore.formatPrice(product.price)}</div>
-                        <div class="small text-ui-muted">${product.description || 'Sin descripcion'}</div>
-                        ${product.has_order_references ? '<div class="small text-ui-muted mt-1">No se puede borrar porque este producto ya forma parte de pedidos. Puedes dejarlo inactivo para ocultarlo del catálogo.</div>' : ''}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-brand" data-edit-id="${product.id}">
+                            <i class="fas fa-pen me-1"></i>Editar
+                        </button>
+                        <button class="btn btn-sm ${product.is_active ? 'btn-outline-warning' : 'btn-outline-success'}" data-toggle-active-id="${product.id}" data-next-active="${product.is_active ? 'false' : 'true'}">
+                            <i class="fas ${product.is_active ? 'fa-eye-slash' : 'fa-eye'} me-1"></i>${product.is_active ? 'Desactivar' : 'Reactivar'}
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" data-delete-id="${product.id}" ${canDeleteProduct(product) ? '' : 'disabled title="No se puede borrar un producto con pedidos activos o entregados"'}>
+                            <i class="fas fa-trash me-1"></i>Eliminar
+                        </button>
                     </div>
                 </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-brand" data-edit-id="${product.id}">
-                        <i class="fas fa-pen me-1"></i>Editar
-                    </button>
-                    <button class="btn btn-sm ${product.is_active ? 'btn-outline-warning' : 'btn-outline-success'}" data-toggle-active-id="${product.id}" data-next-active="${product.is_active ? 'false' : 'true'}">
-                        <i class="fas ${product.is_active ? 'fa-eye-slash' : 'fa-eye'} me-1"></i>${product.is_active ? 'Desactivar' : 'Reactivar'}
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" data-delete-id="${product.id}" ${canDeleteProduct(product) ? '' : 'disabled title="No se puede borrar un producto con historial de pedidos"'}>
-                        <i class="fas fa-trash me-1"></i>Eliminar
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     const user = await GolazoAuth.syncSession();

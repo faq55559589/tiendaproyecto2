@@ -55,17 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             <img src="${item.image}" class="img-fluid rounded" alt="${item.name}" style="max-height: 120px; object-fit: cover;">
                         </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <a href="${GolazoStore.paths.product(item.id)}" class="text-decoration-none text-dark">
                             <h6 class="mb-1">${item.name}</h6>
                         </a>
                         <small class="text-ui-muted d-block">Talle: ${item.size}</small>
                         <small class="text-ui-muted">Stock: ${item.stock || 'sin dato'}</small>
+                        <small class="text-ui-muted d-block mt-2">Precio unitario: <strong>${GolazoStore.formatPrice(item.price)}</strong></small>
                     </div>
-                    <div class="col-md-2">
-                        <span class="fw-bold">${GolazoStore.formatPrice(item.price)}</span>
-                    </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="input-group" style="max-width: 130px;">
                             <button class="btn btn-outline-secondary btn-sm" type="button" data-action="decrease">-</button>
                             <input type="number" class="form-control text-center" value="${item.quantity}" min="1" max="${item.stock || 99}" data-action="update">
@@ -73,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                     <div class="col-md-2 text-md-end">
+                        <small class="text-ui-muted d-block mb-1">Subtotal</small>
                         <span class="fw-bold text-price-accent price-inline d-inline-block">${GolazoStore.formatPrice(item.price * item.quantity)}</span>
                     </div>
                     <div class="col-md-1 text-end">
@@ -83,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
 
         subtotalElement.textContent = GolazoStore.formatPrice(summary.subtotal);
-        shippingElement.textContent = summary.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(summary.shipping);
+        shippingElement.textContent = summary.shippingLabel || 'A coordinar';
         totalElement.textContent = GolazoStore.formatPrice(summary.total);
         if (discountRow) discountRow.remove();
     }

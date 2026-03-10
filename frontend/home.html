@@ -12,30 +12,31 @@
 <body>
     <header></header>
     <main>
-        <section class="hero-section">
+        <section class="hero-section home-hero">
             <div class="hero-overlay"></div>
             <div class="container hero-content">
                 <div class="row align-items-center gy-5">
                     <div class="col-lg-6 text-white">
-                        <span class="eyebrow mb-3 d-inline-flex">Colección de camisetas</span>
-                        <h1 class="display-4 fw-bold mb-3">Compra clara, rápida y lista para vender.</h1>
-                        <p class="lead mb-4">Explora camisetas oficiales, revisa stock real y completa tu compra en un flujo simple: catálogo, producto, carrito y checkout.</p>
+                        <span class="eyebrow mb-3 d-inline-flex">Pasión por el fútbol</span>
+                        <h1 class="display-4 fw-bold mb-3">Vestí tus colores dentro y fuera de la cancha.</h1>
+                        <p class="lead mb-4">Descubrí camisetas de clubes y selecciones con una experiencia de compra clara, ágil y pensada para hinchas de verdad.</p>
                         <div class="d-flex flex-wrap gap-3">
                             <a href="catalogo.html" class="btn btn-danger btn-lg">Ver catálogo</a>
+                            <a href="https://www.instagram.com/golazofutstore_/" class="btn btn-outline-light btn-lg" target="_blank" rel="noreferrer">Ir a Instagram</a>
                         </div>
                         <div class="hero-metrics row g-3 mt-4">
-                            <div class="col-sm-4"><div class="metric-card"><strong>Stock real</strong><span>Sin fichas engañosas</span></div></div>
-                            <div class="col-sm-4"><div class="metric-card"><strong>Compra directa</strong><span>Carrito y checkout operativos</span></div></div>
-                            <div class="col-sm-4"><div class="metric-card"><strong>MVP limpio</strong><span>Solo flujos operativos</span></div></div>
+                            <div class="col-sm-4"><div class="metric-card"><strong>Clubes y selecciones</strong><span>Modelos para cada pasión</span></div></div>
+                            <div class="col-sm-4"><div class="metric-card"><strong>Compra simple</strong><span>Elegí, agregá y confirmá</span></div></div>
+                            <div class="col-sm-4"><div class="metric-card"><strong>Atención cercana</strong><span>Te acompañamos en cada pedido</span></div></div>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="hero-visual card border-0 shadow-lg">
                             <img src="assets/images/logo.png" alt="GolazoStore" class="img-fluid hero-logo-large mx-auto d-block">
                             <div class="hero-visual-copy text-center">
-                                <p class="mb-1 text-uppercase small text-danger fw-semibold">Frontend alineado</p>
-                                <h2 class="h4 mb-2">Tienda enfocada en conversión</h2>
-                                <p class="text-muted mb-0">Sin rutas muertas, sin datos falsos, sin checkout roto.</p>
+                                <p class="mb-1 text-uppercase small text-danger fw-semibold">GolazoStore</p>
+                                <h2 class="h4 mb-2">Una tienda hecha para fanáticos</h2>
+                                <p class="text-muted mb-0">Encontrá camisetas que conectan con tu equipo, tu historia y tu forma de vivir el fútbol.</p>
                             </div>
                         </div>
                     </div>
@@ -43,40 +44,40 @@
             </div>
         </section>
 
-        <section class="py-5 bg-light">
+        <section class="py-5 bg-light home-benefits">
             <div class="container">
                 <div class="row g-4">
                     <div class="col-md-4">
                         <article class="feature-panel h-100">
                             <i class="fas fa-truck-fast text-danger fa-2x mb-3"></i>
-                            <h2 class="h5">Envío claro</h2>
-                            <p class="mb-0 text-muted">Costo visible en carrito y checkout. Envío gratis desde UYU 12.000.</p>
+                            <h2 class="h5">Envíos en Montevideo</h2>
+                            <p class="mb-0 text-muted">Coordinamos entregas dentro de Montevideo con información clara antes de confirmar tu compra.</p>
                         </article>
                     </div>
                     <div class="col-md-4">
                         <article class="feature-panel h-100">
                             <i class="fas fa-shield-heart text-danger fa-2x mb-3"></i>
-                            <h2 class="h5">Datos honestos</h2>
-                            <p class="mb-0 text-muted">Producto, stock, talles y precio salen del backend. Sin descuentos inventados.</p>
+                            <h2 class="h5">Información real</h2>
+                            <p class="mb-0 text-muted">Stock, talles, fotos y precio visibles para que compres con confianza.</p>
                         </article>
                     </div>
                     <div class="col-md-4">
                         <article class="feature-panel h-100">
                             <i class="fas fa-credit-card text-danger fa-2x mb-3"></i>
-                            <h2 class="h5">Checkout MVP</h2>
-                            <p class="mb-0 text-muted">Confirmación inmediata con coordinación por Instagram.</p>
+                            <h2 class="h5">Compra simple y encargos</h2>
+                            <p class="mb-0 text-muted">Si no ves la camiseta que buscas, escríbenos por Instagram y coordinamos tu encargo.</p>
                         </article>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="products-section py-5">
+        <section class="products-section py-5 home-featured">
             <div class="container">
                 <div class="section-heading d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
                     <div>
                         <p class="eyebrow mb-2">Destacados</p>
-                        <h2 class="mb-0">Productos listos para comprar</h2>
+                        <h2 class="mb-0">Camisetas destacadas</h2>
                     </div>
                     <a href="catalogo.html" class="btn btn-outline-danger">Ver todo</a>
                 </div>
@@ -97,11 +98,6 @@
     <script src="js/shell.js"></script>
     <script src="js/main.js"></script>
     <script src="js/home.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.body.innerHTML = document.body.innerHTML.replace('${GolazoStoreThresholdPlaceholder}', new Intl.NumberFormat('es-UY', { style: 'currency', currency: 'UYU', maximumFractionDigits: 0 }).format(window.GolazoStore.config.freeShippingThreshold));
-        });
-    </script>
 </body>
 </html>
 

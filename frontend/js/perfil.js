@@ -19,7 +19,7 @@ function loadProfile(user) {
     document.getElementById('firstName').value = user.first_name || '';
     document.getElementById('lastName').value = user.last_name || '';
     document.getElementById('email').value = user.email || '';
-    document.getElementById('phone').value = user.phone || '';
+    document.getElementById('phone').value = GolazoStore.formatUyPhone(user.phone || '');
     document.getElementById('newsletter').checked = Boolean(user.newsletter);
     document.getElementById('memberSince').textContent = user.created_at
         ? new Date(user.created_at).toLocaleDateString('es-UY')
@@ -58,7 +58,7 @@ async function saveProfile() {
     const payload = {
         first_name: document.getElementById('firstName').value.trim(),
         last_name: document.getElementById('lastName').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
+        phone: GolazoStore.formatUyPhone(document.getElementById('phone').value.trim()),
         newsletter: document.getElementById('newsletter').checked
     };
 
@@ -75,7 +75,7 @@ async function saveProfile() {
         const user = { ...GolazoAuth.getCurrentUser(), ...payload };
         localStorage.setItem('user', JSON.stringify(user));
         alert.className = 'alert alert-success';
-        alert.textContent = 'Perfil actualizado correctamente.';
+        alert.textContent = 'Perfil actualizado correctamente. Ya quedó listo para próximos pedidos y coordinaciones.';
         alert.classList.remove('d-none');
         GolazoAuth.updateNavbar();
         loadProfile(user);

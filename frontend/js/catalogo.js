@@ -88,7 +88,7 @@
             const stockText = product.stock > 0 ? `Stock ${product.stock}` : 'Sin stock';
             const disabled = product.stock > 0 ? '' : 'disabled';
             productsContainer.insertAdjacentHTML('beforeend', `
-                <div class="col-lg-4 col-md-6 mb-4">
+                <div class="col-lg-4 col-md-6">
                     <article class="card product-card h-100 border-0 shadow-sm">
                         <a href="${GolazoStore.paths.product(product.id)}" class="position-relative d-block overflow-hidden">
                             <img src="${product.image_url}" class="card-img-top" alt="${product.name}">
@@ -99,7 +99,7 @@
                                 <span class="badge ${product.stock > 0 ? 'badge-soft-neutral' : 'badge-soft-danger'}">${stockText}</span>
                             </div>
                             <h3 class="h5 mb-2">${product.name}</h3>
-                            <p class="text-ui-muted small flex-grow-1">${product.description || 'Producto de fútbol sin descripción adicional.'}</p>
+                            <p class="text-ui-muted small flex-grow-1">${(product.description || 'Producto de fútbol sin descripción adicional.').slice(0, 140)}</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <strong class="text-price-accent fs-5">${GolazoStore.formatPrice(product.price)}</strong>
                                 <div class="d-flex gap-2">

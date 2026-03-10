@@ -16,14 +16,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         if (ordersNotice) {
             ordersNotice.innerHTML = '<i class="fas fa-circle-exclamation me-2"></i>No se pudo cargar el historial de pedidos.';
-            ordersNotice.className = 'alert surface-note border-0';
+            ordersNotice.className = 'alert surface-note border-0 orders-summary-alert';
         }
         return;
     }
 
     if (ordersNotice) {
-        ordersNotice.innerHTML = '<i class="fas fa-circle-check me-2"></i>Estos pedidos se leen desde el backend real.';
-        ordersNotice.className = 'alert surface-note border-0';
+        ordersNotice.innerHTML = '<i class="fas fa-circle-check me-2"></i>Revisa aqui el estado de cada pedido, la forma de pago y la informacion de entrega.';
+        ordersNotice.className = 'alert surface-note border-0 orders-summary-alert';
     }
 
     ordersCount.textContent = `${orders.length} pedido(s)`;
@@ -37,28 +37,36 @@ document.addEventListener('DOMContentLoaded', async function () {
     emptyOrders.classList.add('d-none');
     ordersList.classList.remove('d-none');
     ordersList.innerHTML = orders.map((order) => `
-        <article class="card mb-3 border-0 shadow-sm">
-            <div class="card-header card-header-soft d-flex justify-content-between align-items-center">
-                <strong>#${order.id}</strong>
-                <span class="badge badge-soft-success text-uppercase">${order.status}</span>
+        <article class="card mb-3 border-0 shadow-sm order-history-card">
+            <div class="card-header card-header-soft d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <strong>Pedido #${order.id}</strong>
+                    <div class="small text-ui-muted">${new Date(order.createdAt).toLocaleString('es-UY')}</div>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="badge ${getOrderStatusBadge(order.status, order.paymentStatus)}">${formatOrderStatus(order.status, order.paymentStatus)}</span>
+                    <span class="badge badge-soft-neutral">${GolazoStore.formatPaymentMethod(order.paymentMethod)}</span>
+                </div>
             </div>
             <div class="card-body">
-                <p class="text-ui-muted small mb-3">${new Date(order.createdAt).toLocaleString('es-UY')}</p>
-                ${order.items.map((item) => `
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <img src="${item.image}" alt="${item.name}" width="56" height="56" class="rounded" style="object-fit: cover;">
-                        <div class="flex-grow-1">
-                            <div class="fw-semibold">${item.name}</div>
-                            <small class="text-ui-muted">Talle ${item.size} · Cantidad ${item.quantity}</small>
+                <div class="order-history-items mb-3">
+                    ${order.items.map((item) => `
+                        <div class="order-history-item d-flex align-items-center gap-3 mb-3">
+                            <img src="${item.image}" alt="${item.name}" width="56" height="56" class="rounded" style="object-fit: cover;">
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">${item.name}</div>
+                                <small class="text-ui-muted">Talle ${item.size} | Cantidad ${item.quantity}</small>
+                            </div>
+                            <strong class="text-price-accent">${GolazoStore.formatPrice(item.price * item.quantity)}</strong>
                         </div>
-                        <strong class="text-price-accent">${GolazoStore.formatPrice(item.price * item.quantity)}</strong>
-                    </div>
-                `).join('')}
+                    `).join('')}
+                </div>
                 <hr>
-                <div class="row g-3">
+                <div class="row g-3 align-items-start">
                     <div class="col-md-8">
-                        <div><strong>Entrega:</strong> ${order.shippingAddress}</div>
+                        <div><strong>Entrega:</strong> ${order.shippingAddress && order.shippingAddress !== '-' ? order.shippingAddress : 'A coordinar'}</div>
                         <div><strong>Pago:</strong> ${GolazoStore.formatPaymentMethod(order.paymentMethod)}</div>
+                        ${renderOrderHelp(order)}
                     </div>
                     <div class="col-md-4 text-md-end">
                         <div class="small text-ui-muted">Total</div>
@@ -69,3 +77,54 @@ document.addEventListener('DOMContentLoaded', async function () {
         </article>
     `).join('');
 });
+
+function formatOrderStatus(status, paymentStatus) {
+    if (paymentStatus === 'expired') return 'Expirado';
+
+    const map = {
+        pending_contact: 'Pendiente de contacto',
+        confirmed: 'Confirmado',
+        cancelled: 'Cancelado',
+        delivered: 'Entregado'
+    };
+
+    return map[status] || 'En proceso';
+}
+
+function getOrderStatusBadge(status, paymentStatus) {
+    if (paymentStatus === 'expired') return 'badge-soft-danger';
+    if (status === 'confirmed' || status === 'delivered') return 'badge-soft-success';
+    if (status === 'cancelled') return 'badge-soft-danger';
+    return 'badge-soft-brand';
+}
+
+function renderOrderHelp(order) {
+    if (order.paymentStatus === 'expired') {
+        return '<div class="small text-ui-muted mt-2">Este pedido vencio por falta de confirmacion y ya no reserva stock.</div>';
+    }
+
+    if (order.status === 'cancelled') {
+        return '<div class="small text-ui-muted mt-2">Este pedido fue cancelado y quedo guardado como referencia en tu historial.</div>';
+    }
+
+    if (order.paymentMethod === 'instagram' && order.status === 'pending_contact') {
+        return `
+            <div class="small text-ui-muted mt-2">Tu pedido quedo pendiente de coordinacion. Si todavia no hablaste con nosotros, puedes seguir por Instagram.</div>
+            <div class="mt-2">
+                <a href="${GolazoStore.getInstagramChatUrl()}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-brand">
+                    <i class="fab fa-instagram me-2"></i>Continuar por Instagram
+                </a>
+            </div>
+        `;
+    }
+
+    if (order.status === 'confirmed') {
+        return '<div class="small text-ui-muted mt-2">Tu pedido ya fue confirmado. Nos falta coordinar la entrega final contigo.</div>';
+    }
+
+    if (order.status === 'delivered') {
+        return '<div class="small text-ui-muted mt-2">Pedido entregado. Se conserva en tu historial como referencia.</div>';
+    }
+
+    return '';
+}

@@ -37,6 +37,52 @@
     let galleryImages = [];
     let activeImageIndex = 0;
 
+    function formatDescription(product) {
+        const rawDescription = String(product.description || '').trim();
+        if (rawDescription) {
+            return {
+                lead: rawDescription,
+                bodyHtml: `<p class="mb-0">${rawDescription}</p>`
+            };
+        }
+
+        const categoryLabel = GolazoStore.getCategoryLabel(product);
+        return {
+            lead: 'Próximamente vamos a sumar una descripción más completa para este producto.',
+            bodyHtml: `
+                <p class="mb-3">Todavía no cargamos una descripción detallada para esta camiseta.</p>
+                <p class="mb-0">Mientras tanto, puedes revisar talles, stock e imágenes disponibles antes de comprar.</p>
+            `
+        };
+    }
+
+    function buildSpecs(product) {
+        const specs = [];
+        specs.push(['Categoría', GolazoStore.getCategoryLabel(product)]);
+        specs.push(['Stock', String(product.stock)]);
+        specs.push(['Talles', product.sizes.join(', ')]);
+
+        if (product.specifications) {
+            try {
+                const parsed = JSON.parse(product.specifications);
+                Object.entries(parsed).forEach(([key, value]) => specs.push([key, String(value)]));
+            } catch (error) {
+                const lines = String(product.specifications)
+                    .split(/\r?\n/)
+                    .map((line) => line.trim())
+                    .filter(Boolean);
+
+                if (lines.length > 1) {
+                    lines.forEach((line, index) => specs.push([index === 0 ? 'Detalle' : 'Info adicional', line]));
+                } else {
+                    specs.push(['Detalles', String(product.specifications)]);
+                }
+            }
+        }
+
+        return specs;
+    }
+
     try {
         product = await GolazoStore.getProduct(productId);
         renderProduct(product);
@@ -52,10 +98,14 @@
     }
 
     function renderProduct(product) {
+        const description = formatDescription(product);
+        const specs = buildSpecs(product);
         dom.title.textContent = product.name;
         dom.price.textContent = GolazoStore.formatPrice(product.price);
-        dom.lead.textContent = product.description || 'Producto oficial de fútbol listo para tu carrito.';
-        dom.bodyText.textContent = product.description || 'Sin descripcion adicional cargada.';
+        dom.lead.textContent = description.lead;
+        if (dom.bodyText) {
+            dom.bodyText.parentElement.innerHTML = description.bodyHtml;
+        }
         dom.mainImage.src = product.image_url;
         dom.mainImage.alt = product.name;
         dom.breadcrumbs.textContent = product.name;
@@ -65,7 +115,7 @@
         if (dom.originalPrice) dom.originalPrice.remove();
         if (dom.discountBadge) dom.discountBadge.remove();
         if (dom.rating) {
-            dom.rating.innerHTML = '<span class="text-ui-muted small"><i class="fas fa-circle-info icon-accent me-2"></i>Sin reseñas publicadas por ahora.</span>';
+            dom.rating.innerHTML = `<span class="text-ui-muted small"><i class="fas fa-circle-info icon-accent me-2"></i>${product.stock > 0 ? 'Disponible para compra inmediata.' : 'Actualmente sin stock disponible.'}</span>`;
         }
         if (dom.reviewsTabBtn) {
             dom.reviewsTabBtn.textContent = 'Reseñas';
@@ -74,13 +124,13 @@
             dom.reviewsPane.innerHTML = `
                 <div class="p-4 text-center">
                     <i class="fas fa-comment-slash fa-2x text-ui-muted mb-3"></i>
-                    <p class="mb-0 text-ui-muted">Este MVP todavia no publica reseñas. La ficha muestra solo datos reales del producto.</p>
+                    <p class="mb-0 text-ui-muted">La sección de reseñas estará disponible próximamente. Por ahora seguimos enfocando la ficha en información clara del producto.</p>
                 </div>
             `;
         }
 
         renderSizes(product.sizes);
-        renderSpecifications(product);
+        renderSpecifications(specs);
 
         setupGallery(product);
 
@@ -154,20 +204,7 @@
         });
     }
 
-    function renderSpecifications(product) {
-        const specs = [];
-        specs.push(['Categoria', GolazoStore.getCategoryLabel(product)]);
-        specs.push(['Stock', String(product.stock)]);
-        specs.push(['Talles', product.sizes.join(', ')]);
-        if (product.specifications) {
-            try {
-                const parsed = JSON.parse(product.specifications);
-                Object.entries(parsed).forEach(([key, value]) => specs.push([key, String(value)]));
-            } catch (error) {
-                specs.push(['Detalles', String(product.specifications)]);
-            }
-        }
-
+    function renderSpecifications(specs) {
         if (dom.specsList) {
             dom.specsList.innerHTML = specs.slice(0, 5).map(([key, value]) => `
                 <li class="spec-item"><i class="fas fa-check icon-accent"></i> <strong class="spec-key">${key}:</strong> <span class="spec-value">${value}</span></li>
@@ -201,10 +238,10 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <article class="card h-100 border-0 shadow-sm">
                         <a href="${GolazoStore.paths.product(item.id)}"><img src="${item.image_url}" class="card-img-top" alt="${item.name}" style="height: 240px; object-fit: cover;"></a>
-                        <div class="card-body text-center">
+                        <div class="card-body text-center d-flex flex-column">
                             <h3 class="h6">${item.name}</h3>
-                            <p class="fw-bold text-price-accent">${GolazoStore.formatPrice(item.price)}</p>
-                            <a class="btn btn-outline-brand btn-sm" href="${GolazoStore.paths.product(item.id)}">Ver producto</a>
+                            <p class="fw-bold text-price-accent mb-3">${GolazoStore.formatPrice(item.price)}</p>
+                            <a class="btn btn-outline-brand btn-sm mt-auto" href="${GolazoStore.paths.product(item.id)}">Ver producto</a>
                         </div>
                     </article>
                 </div>

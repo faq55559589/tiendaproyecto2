@@ -56,12 +56,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (user) {
         document.getElementById('customerName').value = `${user.first_name || ''} ${user.last_name || ''}`.trim();
         document.getElementById('customerEmail').value = user.email || '';
-        document.getElementById('customerPhone').value = user.phone || '';
+        document.getElementById('customerPhone').value = GolazoStore.formatUyPhone(user.phone || '');
     }
 
     Object.entries(draft).forEach(([key, value]) => {
         const input = document.getElementById(key);
-        if (input && !input.value) input.value = value;
+        if (input && !input.value) {
+            input.value = input.type === 'tel' ? GolazoStore.formatUyPhone(value) : value;
+        }
     });
 
     renderSummary(summary);
@@ -93,11 +95,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 customer: {
                     name: formData.customerName,
                     email: formData.customerEmail,
-                    phone: formData.customerPhone,
+                    phone: GolazoStore.formatUyPhone(formData.customerPhone),
                     address: formData.customerAddress,
                     city: formData.customerCity,
                     notes: formData.customerNotes,
-                    paymentMethod: formData.paymentMethod || 'mercado_pago'
+                    paymentMethod: formData.paymentMethod || 'instagram'
                 }
             });
 
@@ -107,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     customer: {
                         name: formData.customerName,
                         email: formData.customerEmail,
-                        phone: formData.customerPhone,
+                        phone: GolazoStore.formatUyPhone(formData.customerPhone),
                         address: formData.customerAddress,
                         city: formData.customerCity,
                         notes: formData.customerNotes
@@ -149,17 +151,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             `).join('')}
             <hr>
             <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>${GolazoStore.formatPrice(data.subtotal)}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Envío</span><strong>${data.shipping === 0 ? 'Gratis' : GolazoStore.formatPrice(data.shipping)}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Envío</span><strong>${data.shippingLabel || 'A coordinar'}</strong></div>
             <div class="d-flex justify-content-between"><span>Total</span><strong class="text-price-accent fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
         `;
     }
 
     function syncPaymentMethodHelp() {
         if (!paymentMethodHelp || !paymentMethodInput) return;
-        if (paymentMethodInput.value === 'instagram') {
-            paymentMethodHelp.textContent = 'Si eliges Instagram, crearemos el pedido y abriremos el chat para coordinar pago y entrega.';
-            return;
-        }
-        paymentMethodHelp.textContent = 'Mercado Pago queda reservado para el flujo online. Por ahora el canal manual operativo es Instagram.';
+        paymentMethodHelp.textContent = 'Hoy estamos coordinando los pedidos por Instagram. Mercado Pago queda reservado para una próxima versión.';
     }
 });
+
+

@@ -1,19 +1,39 @@
-﻿document.addEventListener('DOMContentLoaded', async function () {
+let homeInitialized = false;
+
+async function initHomePage() {
+    if (homeInitialized) return;
+    homeInitialized = true;
+
     const container = document.getElementById('featuredProductsContainer');
     if (!container) return;
+
+    const loadingTimeout = window.setTimeout(() => {
+        if (container.dataset.loaded === 'true') return;
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-clock fa-3x icon-accent mb-3"></i>
+                <h4>Los destacados están tardando más de lo esperado</h4>
+                <p class="text-ui-muted">Puedes seguir navegando por el catálogo mientras terminamos de cargar esta sección.</p>
+                <a href="catalogo.html" class="btn btn-outline-brand">Ver catálogo completo</a>
+            </div>
+        `;
+    }, 8000);
 
     try {
         const products = await GolazoStore.getProducts();
         renderFeatured(products.slice(0, 8));
+        container.dataset.loaded = 'true';
     } catch (error) {
         container.innerHTML = `
             <div class="col-12 text-center py-5">
                 <i class="fas fa-triangle-exclamation fa-3x icon-accent mb-3"></i>
-                <h4>No pudimos cargar los destacados</h4>
-                <p class="text-ui-muted">Verifica que el backend este disponible en el puerto 3000.</p>
+                <h4>No pudimos cargar las camisetas destacadas</h4>
+                <p class="text-ui-muted">Intenta de nuevo en unos segundos o entra directo al catálogo completo.</p>
                 <a href="catalogo.html" class="btn btn-danger">Ir al catálogo</a>
             </div>
         `;
+    } finally {
+        window.clearTimeout(loadingTimeout);
     }
 
     function renderFeatured(products) {
@@ -21,7 +41,8 @@
             ? products.map(createProductCard).join('')
             : `
                 <div class="col-12 text-center py-5">
-                    <h4>No hay productos cargados todavia</h4>
+                    <h4>Pronto vas a ver camisetas destacadas aquí</h4>
+                    <p class="text-ui-muted mb-0">Mientras tanto, puedes explorar todo el catálogo disponible.</p>
                 </div>
             `;
     }
@@ -69,4 +90,10 @@
             GolazoStore.ui.toast(error.message || 'No se pudo agregar al carrito.', 'danger');
         }
     });
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHomePage);
+} else {
+    initHomePage();
+}

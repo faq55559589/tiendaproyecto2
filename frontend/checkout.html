@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -22,13 +22,13 @@
             </div>
         </nav>
 
-        <section class="py-5">
+        <section class="py-5 checkout-section">
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
                     <div>
                         <p class="eyebrow mb-2">Paso 2 de 3</p>
-                        <h1 class="mb-1">Checkout</h1>
-                        <p class="text-ui-muted mb-0">Confirma datos de entrega y medio de pago.</p>
+                        <h1 class="mb-1">Finalizar compra</h1>
+                        <p class="text-ui-muted mb-0">Confirma tus datos y elige cómo quieres coordinar tu pedido.</p>
                     </div>
                     <a href="carrito.html" class="btn btn-outline-brand">Volver al carrito</a>
                 </div>
@@ -63,11 +63,11 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="customerPhone" class="form-label">Teléfono</label>
-                                        <input type="text" class="form-control" id="customerPhone" name="customerPhone" required>
+                                        <input type="tel" class="form-control" id="customerPhone" name="customerPhone" placeholder="+598 99 123 456" inputmode="numeric" maxlength="15" autocomplete="tel" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="customerCity" class="form-label">Ciudad</label>
-                                        <input type="text" class="form-control" id="customerCity" name="customerCity" required>
+                                        <label for="customerCity" class="form-label">Zona / Barrio</label>
+                                        <input type="text" class="form-control" id="customerCity" name="customerCity" placeholder="Ej. Centro, Pocitos, Cordón" required>
                                     </div>
                                     <div class="col-12">
                                         <label for="customerAddress" class="form-label">Dirección de entrega</label>
@@ -76,14 +76,14 @@
                                     <div class="col-12">
                                         <label for="paymentMethod" class="form-label">Método de pago</label>
                                         <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                                            <option value="mercado_pago">Mercado Pago</option>
-                                            <option value="instagram">Instagram / Coordinación manual</option>
+                                            <option value="instagram" selected>Instagram / Coordinación manual</option>
+                                            <option value="mercado_pago" disabled>Mercado Pago (próximamente)</option>
                                         </select>
-                                        <div class="form-text" id="paymentMethodHelp">Si eliges Instagram, crearemos el pedido y abriremos el chat para coordinar pago y entrega.</div>
+                                        <div class="form-text" id="paymentMethodHelp">Hoy estamos coordinando los pedidos por Instagram. Mercado Pago queda reservado para una próxima versión.</div>
                                     </div>
                                     <div class="col-12">
                                         <label for="customerNotes" class="form-label">Observaciones</label>
-                                        <textarea class="form-control" id="customerNotes" name="customerNotes" rows="4" placeholder="Referencia para la entrega, horario, etc."></textarea>
+                                        <textarea class="form-control" id="customerNotes" name="customerNotes" rows="4" placeholder="Referencia para la entrega, horario o camiseta que estás buscando."></textarea>
                                     </div>
                                     <div class="col-12 d-grid d-md-flex justify-content-md-end">
                                         <button type="submit" class="btn btn-danger btn-lg">Confirmar pedido</button>
@@ -96,6 +96,9 @@
                         <div class="card border-0 shadow-sm sticky-lg-top" style="top: 96px;">
                             <div class="card-body p-4">
                                 <h2 class="h5 mb-4">Resumen final</h2>
+                                <div class="surface-note p-3 mb-4 small">
+                                    Entregas coordinadas dentro de Montevideo. Si buscas un modelo específico, puedes dejarlo en observaciones.
+                                </div>
                                 <div id="checkoutSummary"></div>
                             </div>
                         </div>
@@ -114,3 +117,4 @@
     <script src="js/checkout.js"></script>
 </body>
 </html>
+

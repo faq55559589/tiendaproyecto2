@@ -27,13 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         icon.classList.toggle('fa-eye-slash');
     }
 
-    phoneInput?.addEventListener('input', function () {
-        let value = this.value.replace(/\D/g, '');
-        if (value.startsWith('598')) value = value.slice(3);
-        if (value.length >= 8) this.value = `+598 ${value.slice(0, 2)} ${value.slice(2, 5)} ${value.slice(5, 8)}${value.length > 8 ? ' ' + value.slice(8) : ''}`.trim();
-        else if (value.length) this.value = `+598 ${value}`;
-    });
-
     registerForm?.addEventListener('submit', async function (event) {
         event.preventDefault();
         const data = {

@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             notice.textContent = '';
             return;
         }
+
         notice.classList.remove('d-none');
         notice.innerHTML = `<i class="fas fa-circle-exclamation me-2"></i>${message}`;
     }
 
     function showToast(message) {
         const toastEl = document.getElementById('adminOrdersToast');
+        if (!toastEl) return;
         toastEl.querySelector('.toast-body').textContent = message;
         new bootstrap.Toast(toastEl).show();
     }
@@ -32,33 +34,40 @@ document.addEventListener('DOMContentLoaded', async function () {
         return GolazoAuth.getToken();
     }
 
-    function formatOrderStatus(status) {
+    function formatOrderStatus(status, paymentStatus) {
+        if (paymentStatus === 'expired') return 'Expirado';
+
         const map = {
-            pending_contact: 'Pendiente',
+            pending_contact: 'Pendiente de contacto',
             confirmed: 'Confirmado',
             cancelled: 'Cancelado',
             delivered: 'Entregado'
         };
-        return map[status] || status || 'Sin estado';
+
+        return map[status] || 'Sin estado';
     }
 
     function getOrderStatusBadge(status, paymentStatus) {
         if (paymentStatus === 'expired') return 'badge-soft-danger';
-        if (status === 'confirmed') return 'badge-soft-success';
-        if (status === 'delivered') return 'badge-soft-success';
+        if (status === 'confirmed' || status === 'delivered') return 'badge-soft-success';
         if (status === 'cancelled') return 'badge-soft-danger';
         return 'badge-soft-brand';
     }
 
-    function formatPaymentStatus(paymentStatus) {
+    function formatPaymentStatus(paymentStatus, paymentMethod) {
+        if (paymentMethod === 'mercado_pago') {
+            return 'Proximamente';
+        }
+
         const map = {
-            pending_contact: 'Pendiente de contacto',
-            pending_payment: 'Pendiente de pago',
-            approved: 'Aprobado',
-            rejected: 'Rechazado',
+            pending_contact: 'Coordinacion pendiente',
+            pending_payment: 'Proximamente',
+            approved: 'Proximamente',
+            rejected: 'Proximamente',
             expired: 'Expirado'
         };
-        return map[paymentStatus] || paymentStatus || 'Sin estado';
+
+        return map[paymentStatus] || 'Sin estado';
     }
 
     function getFilteredOrders() {
@@ -105,6 +114,26 @@ document.addEventListener('DOMContentLoaded', async function () {
         return lines.join('\n');
     }
 
+    function renderOrderOperationalNote(order) {
+        if (order.payment_method === 'mercado_pago') {
+            return '<div class="small text-ui-muted admin-order-note">Mercado Pago queda reservado para una etapa futura. Hoy el seguimiento real se coordina por Instagram.</div>';
+        }
+
+        if (order.payment_status === 'expired') {
+            return '<div class="small text-ui-muted admin-order-note">Este pedido vencio por falta de confirmacion y ya libero su stock.</div>';
+        }
+
+        if (order.status === 'pending_contact') {
+            return '<div class="small text-ui-muted admin-order-note">Sigue pendiente de contacto. Si ya hablaste con el cliente, puedes confirmarlo o cancelarlo desde aqui.</div>';
+        }
+
+        if (order.status === 'confirmed') {
+            return '<div class="small text-ui-muted admin-order-note">Pedido confirmado. El siguiente paso es coordinar la entrega y marcarlo como entregado cuando corresponda.</div>';
+        }
+
+        return '<div class="small text-ui-muted admin-order-note">Pedido guardado en historial para referencia operativa.</div>';
+    }
+
     function renderOrders() {
         const orders = getFilteredOrders();
         updateCounters();
@@ -114,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <div class="empty-state text-center py-5">
                     <i class="fas fa-receipt icon-accent fs-1 mb-3"></i>
                     <h2 class="h5 mb-2">No hay pedidos en esta vista</h2>
-                    <p class="text-ui-muted mb-0">Cambia los filtros para ver otros pedidos.</p>
+                    <p class="text-ui-muted mb-0">Prueba otros filtros para revisar el historial completo.</p>
                 </div>
             `;
             return;
@@ -135,11 +164,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                         <div>
                             <div class="small text-ui-muted">Pedido #${order.id}</div>
                             <div class="fw-bold">${order.customer_name || order.first_name || 'Cliente sin nombre'}</div>
-                            <div class="small text-ui-muted">${order.email || 'Sin email'} · ${order.customer_phone || 'Sin teléfono'}</div>
+                            <div class="small text-ui-muted">${order.email || 'Sin email'} - ${order.customer_phone || 'Sin telefono'}</div>
                         </div>
                         <div class="d-flex flex-wrap gap-2">
-                            <span class="badge ${getOrderStatusBadge(order.status, order.payment_status)}">${formatOrderStatus(order.status)}</span>
-                            <span class="badge ${order.payment_status === 'expired' ? 'badge-soft-danger' : 'badge-soft-neutral'}">${formatPaymentStatus(order.payment_status)}</span>
+                            <span class="badge ${getOrderStatusBadge(order.status, order.payment_status)}">${formatOrderStatus(order.status, order.payment_status)}</span>
+                            <span class="badge ${order.payment_status === 'expired' ? 'badge-soft-danger' : 'badge-soft-neutral'}">${formatPaymentStatus(order.payment_status, order.payment_method)}</span>
                             <span class="badge badge-soft-neutral">${GolazoStore.formatPaymentMethod(order.payment_method)}</span>
                         </div>
                     </div>
@@ -157,16 +186,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                                     </div>
                                     <div class="col-12">
                                         <div class="small text-ui-muted">Entrega</div>
-                                        <div class="fw-semibold">${order.shipping_address || 'Sin dirección'}</div>
+                                        <div class="fw-semibold">${order.shipping_address || 'A coordinar'}</div>
                                     </div>
                                     <div class="col-12">
                                         <div class="small text-ui-muted">Notas</div>
                                         <div>${order.notes || '<span class="text-ui-muted">Sin observaciones</span>'}</div>
                                     </div>
+                                    <div class="col-12">
+                                        ${renderOrderOperationalNote(order)}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <div class="surface-note p-3 h-100">
+                                <div class="surface-note admin-order-summary p-3 h-100">
                                     <div class="small text-ui-muted mb-1">Total</div>
                                     <div class="fs-4 fw-bold text-price-accent mb-3">${GolazoStore.formatPrice(total)}</div>
                                     <div class="d-grid gap-2">
@@ -180,11 +212,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                         </div>
                         <div class="admin-order-items">
                             ${(order.items || []).map((item) => `
-                                <div class="d-flex align-items-center gap-3 py-2 border-top">
+                                <div class="admin-order-item-row d-flex align-items-center gap-3 py-3 border-top">
                                     <img src="${item.image_url || item.image || 'https://placehold.co/72x72'}" alt="${item.name}" width="56" height="56" class="rounded" style="object-fit: cover;">
                                     <div class="flex-grow-1">
                                         <div class="fw-semibold">${item.name}</div>
-                                        <div class="small text-ui-muted">Talle ${item.size || 'M'} · Cantidad ${item.quantity}</div>
+                                        <div class="small text-ui-muted">Talle ${item.size || 'M'} | Cantidad ${item.quantity}</div>
                                     </div>
                                     <div class="fw-semibold text-price-accent">${GolazoStore.formatPrice(Number(item.price || 0) * Number(item.quantity || 0))}</div>
                                 </div>
@@ -218,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const user = await GolazoAuth.syncSession();
     if (!user) {
-        GolazoStore.ui.toast('Inicia sesión para entrar al panel admin.', 'warning');
+        GolazoStore.ui.toast('Inicia sesion para entrar al panel admin.', 'warning');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.login();
         }, 700);
@@ -226,7 +258,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     if (user.role !== 'admin') {
-        showNotice('Tu sesión está activa, pero tu usuario no tiene rol admin.');
+        showNotice('Tu sesion esta activa, pero tu usuario no tiene rol admin.');
         setTimeout(() => {
             window.location.href = GolazoStore.paths.home();
         }, 1200);
@@ -271,7 +303,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const orderId = Number(instagramButton.dataset.instagramOrder);
         const order = ordersCache.find((item) => Number(item.id) === orderId);
         if (!order) {
-            showNotice('No se encontró el pedido para abrir Instagram.');
+            showNotice('No se encontro el pedido para abrir Instagram.');
             return;
         }
 
@@ -279,7 +311,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             await navigator.clipboard.writeText(buildInstagramMessage(order));
             GolazoStore.ui.toast('Mensaje de seguimiento copiado.', 'success');
         } catch (error) {
-            GolazoStore.ui.toast('No se pudo copiar el mensaje automáticamente.', 'warning');
+            GolazoStore.ui.toast('No se pudo copiar el mensaje automaticamente.', 'warning');
         }
 
         window.open(GolazoStore.getInstagramChatUrl(), '_blank', 'noopener');

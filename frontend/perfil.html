@@ -48,6 +48,7 @@
                                     <div>
                                         <p class="eyebrow mb-2">Cuenta</p>
                                         <h1 class="h3 mb-0">Datos personales</h1>
+                                        <p class="text-ui-muted mb-0 mt-2">Actualiza tu información básica para que podamos coordinar mejor tus pedidos y encargos.</p>
                                     </div>
                                 </div>
 
@@ -63,10 +64,12 @@
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="email" readonly disabled>
+                                        <div class="form-text">El email de acceso no se edita desde esta pantalla.</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="phone" class="form-label">Teléfono</label>
-                                        <input type="tel" class="form-control" id="phone">
+                                        <input type="tel" class="form-control" id="phone" placeholder="+598 99 123 456" inputmode="numeric" maxlength="15" autocomplete="tel">
+                                        <div class="form-text">Usa tu número de contacto principal para coordinar entregas o consultas.</div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
@@ -78,7 +81,7 @@
                                         <div id="profileAlert" class="alert d-none"></div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between flex-wrap gap-3 align-items-center">
-                                        <div class="small text-muted">
+                                        <div class="small text-muted surface-note px-3 py-2 rounded-pill">
                                             Miembro desde: <span id="memberSince">-</span>
                                             <span class="mx-2">·</span>
                                             Pedidos registrados: <span id="totalOrders">0</span>

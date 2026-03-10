@@ -11,9 +11,25 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     GolazoStore.ui.bindSearchForms();
     GolazoStore.ui.updateCartBadges();
+    bindPhoneInputs();
     setupBackToTop();
     bindContactForm();
 });
+
+function bindPhoneInputs() {
+    document.querySelectorAll('input[type="tel"]').forEach((input) => {
+        if (input.dataset.phoneBound === 'true') return;
+        input.dataset.phoneBound = 'true';
+
+        const applyFormat = () => {
+            input.value = GolazoStore.formatUyPhone(input.value);
+        };
+
+        input.addEventListener('input', applyFormat);
+        input.addEventListener('blur', applyFormat);
+        applyFormat();
+    });
+}
 
 function setupBackToTop() {
     let button = document.getElementById('backToTop');
@@ -46,7 +62,20 @@ function bindContactForm() {
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-        form.reset();
-        GolazoStore.ui.toast('Mensaje enviado. Te responderemos por email.', 'success');
+        const name = document.getElementById('contactName')?.value.trim() || '';
+        const email = document.getElementById('contactEmail')?.value.trim() || '';
+        const subject = document.getElementById('contactSubject')?.value.trim() || 'Consulta desde GolazoStore';
+        const message = document.getElementById('contactMessage')?.value.trim() || '';
+
+        const body = [
+            `Nombre: ${name || '-'}`,
+            `Email: ${email || '-'}`,
+            '',
+            message
+        ].join('\n');
+
+        const mailtoUrl = `mailto:golazofutstore@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+        GolazoStore.ui.toast('Se abrio tu aplicacion de correo para enviar el mensaje.', 'info');
     });
 }

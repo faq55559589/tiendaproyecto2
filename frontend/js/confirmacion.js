@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const expirationCopy = order.expiresAt
             ? ` La reserva manual vence el ${new Date(order.expiresAt).toLocaleString('es-UY')}.`
             : '';
-        confirmationStatusNote.textContent = `Pedido creado correctamente. El estado de pago quedó pendiente de contacto por Instagram.${expirationCopy}`;
+        confirmationStatusNote.textContent = `Pedido creado correctamente. Ahora seguimos la coordinación por Instagram.${expirationCopy}`;
 
         if (shouldOpenInstagram) {
             sessionStorage.removeItem('openInstagramAfterCheckout');

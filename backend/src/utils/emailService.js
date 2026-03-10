@@ -156,40 +156,45 @@ async function sendMail({ to, subject, html }) {
     }
 }
 
-function renderEmailLayout({ title, intro, ctaLabel, ctaHref, note }) {
+function renderEmailLayout({ eyebrow, title, intro, ctaLabel, ctaHref, note, outro, preheader }) {
     return `
-        <div style="margin:0;padding:0;background:#f3f4f6;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6;padding:24px 0;">
+        <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">
+            ${preheader || title}
+        </div>
+        <div style="margin:0;padding:0;background:#f4f1ea;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ea;padding:24px 12px;">
                 <tr>
                     <td align="center">
-                        <table role="presentation" width="640" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e5e7eb;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#fffdfa;border-radius:18px;overflow:hidden;border:1px solid #eadfce;">
                             <tr>
-                                <td style="background:linear-gradient(135deg,#b91c1c,#ef4444);padding:22px 28px;">
-                                    <h1 style="margin:0;color:#ffffff;font-family:Arial,sans-serif;font-size:24px;letter-spacing:.4px;">GolazoStore</h1>
-                                    <p style="margin:6px 0 0;color:#fee2e2;font-family:Arial,sans-serif;font-size:13px;">Tienda de camisetas de futbol</p>
+                                <td style="background:#8a1c1c;padding:24px 28px 18px;">
+                                    <p style="margin:0 0 8px;color:#f5d7ba;font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;">GolazoStore</p>
+                                    <h1 style="margin:0;color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.2;">Tienda de camisetas de futbol</h1>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="padding:28px;font-family:Arial,sans-serif;color:#111827;">
-                                    <h2 style="margin:0 0 12px;font-size:23px;line-height:1.3;">${title}</h2>
-                                    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#374151;">${intro}</p>
+                                <td style="padding:32px 28px 18px;font-family:Arial,sans-serif;color:#1f2937;">
+                                    ${eyebrow ? `<p style="margin:0 0 10px;color:#8a1c1c;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">${eyebrow}</p>` : ''}
+                                    <h2 style="margin:0 0 12px;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.25;color:#111111;">${title}</h2>
+                                    <p style="margin:0 0 22px;font-size:15px;line-height:1.75;color:#4b5563;">${intro}</p>
                                     <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 16px;">
                                         <tr>
-                                            <td style="border-radius:8px;background:#dc2626;">
-                                                <a href="${ctaHref}" style="display:inline-block;padding:12px 18px;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;font-family:Arial,sans-serif;">${ctaLabel}</a>
+                                            <td style="border-radius:999px;background:#c2410c;">
+                                                <a href="${ctaHref}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;font-family:Arial,sans-serif;">${ctaLabel}</a>
                                             </td>
                                         </tr>
                                     </table>
-                                    <p style="margin:0 0 6px;font-size:12px;color:#6b7280;">Si el boton no funciona, copia este enlace:</p>
-                                    <p style="margin:0 0 18px;word-break:break-all;"><a href="${ctaHref}" style="font-size:12px;color:#b91c1c;">${ctaHref}</a></p>
-                                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:12px;">
-                                        <p style="margin:0;font-size:12px;line-height:1.6;color:#4b5563;">${note}</p>
+                                    ${outro ? `<p style="margin:0 0 22px;font-size:14px;line-height:1.7;color:#4b5563;">${outro}</p>` : ''}
+                                    <div style="background:#f8f1e7;border:1px solid #eadfce;border-radius:12px;padding:14px 16px;margin:0 0 18px;">
+                                        <p style="margin:0;font-size:12px;line-height:1.7;color:#5b4636;">${note}</p>
                                     </div>
+                                    <p style="margin:0 0 6px;font-size:12px;color:#6b7280;">Si el boton no funciona, copia este enlace:</p>
+                                    <p style="margin:0;word-break:break-all;"><a href="${ctaHref}" style="font-size:12px;color:#8a1c1c;text-decoration:none;">${ctaHref}</a></p>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="padding:14px 28px;background:#f9fafb;border-top:1px solid #e5e7eb;">
-                                    <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;color:#9ca3af;">Este email fue enviado por GolazoStore.</p>
+                                <td style="padding:16px 28px 24px;background:#fffdfa;border-top:1px solid #eadfce;">
+                                    <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#8b7d6b;">Este email fue enviado por GolazoStore. Si no esperabas este mensaje, puedes ignorarlo.</p>
                                 </td>
                             </tr>
                         </table>
@@ -201,16 +206,20 @@ function renderEmailLayout({ title, intro, ctaLabel, ctaHref, note }) {
 }
 
 const sendWelcomeEmail = async (userEmail, firstName) => {
+    const catalogLink = `${FRONTEND_URL}/catalogo.html`;
     return sendMail({
         to: userEmail,
         subject: 'Bienvenido a GolazoStore',
-        html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <h2>Hola ${firstName || 'fan del futbol'}!</h2>
-                <p>Tu cuenta ya esta verificada y lista para comprar.</p>
-                <p><a href="${FRONTEND_URL}/catalogo.html">Ir al catalogo</a></p>
-            </div>
-        `
+        html: renderEmailLayout({
+            eyebrow: 'Cuenta activada',
+            title: `Bienvenido${firstName ? `, ${firstName}` : ''}`,
+            intro: 'Tu cuenta ya esta verificada y lista para entrar, mirar el catalogo y avanzar con tu compra sin pasos extra.',
+            ctaLabel: 'Ir al catalogo',
+            ctaHref: catalogLink,
+            outro: 'Si estabas terminando un registro o una compra, ya puedes volver a la tienda y seguir desde ahi.',
+            note: 'Te recomendamos iniciar sesion con el mismo email con el que creaste la cuenta para ver tus pedidos y completar el checkout mas rapido.',
+            preheader: 'Tu cuenta ya esta activa y lista para comprar.'
+        })
     });
 };
 
@@ -220,11 +229,14 @@ const sendPasswordResetEmail = async (userEmail, firstName, resetToken) => {
         to: userEmail,
         subject: 'Recuperar contrasena - GolazoStore',
         html: renderEmailLayout({
+            eyebrow: 'Recuperacion de acceso',
             title: `Recuperar contrasena${firstName ? `, ${firstName}` : ''}`,
             intro: 'Recibimos una solicitud para restablecer tu contrasena. Si fuiste vos, continua con el boton de abajo.',
             ctaLabel: 'Restablecer contrasena',
             ctaHref: resetLink,
-            note: 'Este enlace expira en 1 hora. Si no solicitaste este cambio, ignora este mensaje.'
+            outro: 'Por seguridad, usa este enlace solo desde un dispositivo de confianza.',
+            note: 'Este enlace expira en 1 hora. Si no solicitaste este cambio, ignora este mensaje.',
+            preheader: 'Usa este enlace para restablecer tu contrasena.'
         })
     });
 };
@@ -235,11 +247,14 @@ const sendVerificationEmail = async (userEmail, firstName, token) => {
         to: userEmail,
         subject: 'Verifica tu cuenta - GolazoStore',
         html: renderEmailLayout({
+            eyebrow: 'Verificacion pendiente',
             title: `Verifica tu cuenta${firstName ? `, ${firstName}` : ''}`,
             intro: 'Tu cuenta ya fue creada. Falta un ultimo paso: confirmar tu email para activar el acceso.',
             ctaLabel: 'Verificar mi email',
             ctaHref: verificationLink,
-            note: 'Si no creaste esta cuenta, puedes ignorar este correo con tranquilidad.'
+            outro: 'Una vez confirmada la direccion, vas a poder iniciar sesion y usar la tienda normalmente.',
+            note: 'Si no creaste esta cuenta, puedes ignorar este correo con tranquilidad.',
+            preheader: 'Confirma tu email para activar tu cuenta.'
         })
     });
 };

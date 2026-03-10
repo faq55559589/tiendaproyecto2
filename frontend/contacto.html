@@ -25,23 +25,23 @@
             <div class="container">
                 <div class="text-center mb-5">
                     <p class="eyebrow mb-2">Soporte</p>
-                    <h1 class="mb-2">Hablemos de tu compra</h1>
-                    <p class="text-muted mb-0">Usa este formulario para consultas de talles, stock, entregas o cambios.</p>
+                    <h1 class="mb-2">Hablemos de tu próxima camiseta</h1>
+                    <p class="text-muted mb-0">Escríbenos para consultar stock, talles, entregas dentro de Montevideo o para pedir un encargo especial.</p>
                 </div>
 
                 <div class="row g-4">
                     <div class="col-lg-4">
                         <div class="feature-panel h-100">
                             <h2 class="h5 mb-3">Canales disponibles</h2>
-                            <p class="mb-2"><strong>Email:</strong> info@golazostore.com</p>
-                            <p class="mb-2"><strong>WhatsApp:</strong> +598 99 123 456</p>
-                            <p class="mb-0"><strong>Ubicacion:</strong> Montevideo, Uruguay</p>
+                            <p class="mb-3"><strong>Email:</strong> <a class="footer-link text-dark" href="mailto:golazofutstore@gmail.com">golazofutstore@gmail.com</a></p>
+                            <p class="mb-3"><strong>Instagram:</strong> <a class="footer-link text-dark" href="https://www.instagram.com/golazofutstore_/" target="_blank" rel="noreferrer">@golazofutstore_</a></p>
+                            <p class="mb-0"><strong>Ubicación:</strong> Montevideo, Uruguay</p>
                         </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <form>
+                                <form id="contactForm">
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label for="contactName" class="form-label">Nombre</label>
@@ -53,14 +53,17 @@
                                         </div>
                                         <div class="col-12">
                                             <label for="contactSubject" class="form-label">Asunto</label>
-                                            <input type="text" class="form-control" id="contactSubject">
+                                            <input type="text" class="form-control" id="contactSubject" placeholder="Consulta por stock, talle o encargo">
                                         </div>
                                         <div class="col-12">
                                             <label for="contactMessage" class="form-label">Mensaje</label>
-                                            <textarea class="form-control" id="contactMessage" rows="6" required></textarea>
+                                            <textarea class="form-control" id="contactMessage" rows="6" required placeholder="Cuéntanos qué camiseta buscas o en qué podemos ayudarte."></textarea>
                                         </div>
                                         <div class="col-12 d-grid">
-                                            <button type="submit" class="btn btn-danger btn-lg">Enviar mensaje</button>
+                                            <button type="submit" class="btn btn-danger btn-lg">Abrir email</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="small text-ui-muted mb-0">Al enviar, se abrirá tu aplicación de correo con el mensaje listo para revisar y enviar.</p>
                                         </div>
                                     </div>
                                 </form>

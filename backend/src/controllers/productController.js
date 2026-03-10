@@ -42,6 +42,7 @@ class ProductController {
             sizes: JSON.parse(product.sizes || '[]'),
             is_active: Number(product.is_active ?? 1) === 1,
             has_order_references: Number(product.has_order_references || 0) === 1,
+            has_blocking_order_references: Number(product.has_blocking_order_references || 0) === 1,
             image_url: imageUrls[0] || null,
             image_urls: imageUrls
         };
@@ -239,10 +240,10 @@ class ProductController {
                 });
             }
 
-            if (Product.hasOrderReferences(id)) {
+            if (Product.hasBlockingOrderReferences(id)) {
                 return res.status(409).json({
                     success: false,
-                    message: 'No puedes eliminar un producto que ya forma parte de pedidos. Desactivalo para quitarlo del catalogo.'
+                    message: 'No puedes eliminar un producto que forma parte de pedidos activos o entregados. Desactívalo para quitarlo del catálogo.'
                 });
             }
 
@@ -253,6 +254,16 @@ class ProductController {
             });
         } catch (error) {
             console.error('Error eliminando producto:', error);
+            const errorMessage = String(error && error.message ? error.message : '');
+            if (
+                errorMessage.includes('FOREIGN KEY constraint failed') ||
+                errorMessage.includes('SQLITE_CONSTRAINT_FOREIGNKEY')
+            ) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'No se pudo eliminar el producto porque todavía tiene referencias en pedidos guardados. Para permitir este borrado habría que limpiar o migrar ese historial primero.'
+                });
+            }
             res.status(500).json({
                 success: false,
                 message: 'Error interno del servidor'

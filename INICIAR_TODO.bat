@@ -1,97 +1,83 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
-title GolazoStore - Desarrollo
+setlocal EnableExtensions
+title GolazoStore - Desarrollo Local
 color 0B
 
 set "ROOT=%~dp0"
-set "BACKEND_DIR=%ROOT%backend"
-set "FRONTEND_DIR=%ROOT%"
+if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+set "BACKEND_DIR=%ROOT%\backend"
 set "BACKEND_PORT=3000"
 set "FRONTEND_PORT=8000"
 set "FRONTEND_URL=http://localhost:%FRONTEND_PORT%/frontend/home.html"
-set "BACKEND_START=cd /d ""%BACKEND_DIR%"" && node ..\scripts\dev-backend.js"
-set "FRONTEND_START=cd /d ""%FRONTEND_DIR%"" && node scripts\serve-frontend.js"
 
 echo.
-echo  ==============================================
-echo      GOLAZOSTORE - DESARROLLO LOCAL
-echo  ==============================================
+echo ==============================================
+echo   GOLAZOSTORE - ENTORNO LOCAL
+echo ==============================================
 echo.
-echo  Punto de entrada oficial:
-echo   - Backend:  http://localhost:%BACKEND_PORT%
-echo   - Frontend: %FRONTEND_URL%
+echo Backend:  http://localhost:%BACKEND_PORT%
+echo Frontend: %FRONTEND_URL%
 echo.
 
-call :kill_port %BACKEND_PORT% Backend
-call :kill_port %FRONTEND_PORT% Frontend
+call :stop_port %BACKEND_PORT% Backend
+if errorlevel 1 goto :fail
 
-echo  [1/4] Levantando backend...
-start "GolazoStore Backend" cmd /k "%BACKEND_START%"
+call :stop_port %FRONTEND_PORT% Frontend
+if errorlevel 1 goto :fail
 
-echo  [2/4] Levantando frontend...
-start "GolazoStore Frontend" cmd /k "%FRONTEND_START%"
+echo [1/4] Levantando backend...
+start "GolazoStore Backend" cmd /k "cd /d ""%BACKEND_DIR%"" && node ..\scripts\dev-backend.js"
 
-echo  [3/4] Validando backend en puerto %BACKEND_PORT%...
-call :wait_for_port %BACKEND_PORT% 15
+echo [2/4] Levantando frontend...
+start "GolazoStore Frontend" cmd /k "cd /d ""%ROOT%"" && node scripts\serve-frontend.js"
+
+echo [3/4] Esperando backend en puerto %BACKEND_PORT%...
+call :wait_for_port %BACKEND_PORT% 20
 if errorlevel 1 (
-    echo  [ERROR] El backend no quedo escuchando en %BACKEND_PORT%.
-    echo  Revisa la ventana "GolazoStore Backend".
-    goto :end
+    echo [ERROR] El backend no quedo disponible en %BACKEND_PORT%.
+    goto :fail
 )
 
-echo  [4/4] Validando frontend en puerto %FRONTEND_PORT%...
-call :wait_for_port %FRONTEND_PORT% 15
+echo [4/4] Esperando frontend en puerto %FRONTEND_PORT%...
+call :wait_for_port %FRONTEND_PORT% 20
 if errorlevel 1 (
-    echo  [ERROR] El frontend no quedo escuchando en %FRONTEND_PORT%.
-    echo  Revisa la ventana "GolazoStore Frontend".
-    goto :end
+    echo [ERROR] El frontend no quedo disponible en %FRONTEND_PORT%.
+    goto :fail
 )
 
 echo.
-echo  [OK] Backend y frontend levantados correctamente.
-echo  - Backend reinicia solo cuando cambias codigo backend.
-echo  - Frontend recarga solo cuando cambias archivos en frontend.
-echo.
-start "" explorer "%FRONTEND_URL%"
+echo [OK] Entorno local levantado.
+echo Abriendo navegador...
+start "" "%FRONTEND_URL%"
+goto :end
 
-:end
-echo  Cierra las ventanas de backend/frontend para detener el entorno.
-echo.
-pause
-goto :eof
-
-:kill_port
+:stop_port
 set "TARGET_PORT=%~1"
 set "TARGET_NAME=%~2"
-set "FOUND_PID="
-set "SEEN_PIDS= "
-
-for /f "tokens=5" %%P in ('netstat -ano ^| findstr /r /c:":%TARGET_PORT% .*LISTENING"') do (
-    set "PID=%%P"
-    echo !SEEN_PIDS! | findstr /c:" !PID! " >nul
-    if errorlevel 1 (
-        set "SEEN_PIDS=!SEEN_PIDS!!PID! "
-        set "FOUND_PID=1"
-        echo  [INFO] Cerrando proceso !PID! que ocupaba %TARGET_NAME% ^(puerto %TARGET_PORT%^)^...
-        taskkill /PID !PID! /F >nul 2>&1
-    )
-)
-
-if not defined FOUND_PID (
-    echo  [INFO] %TARGET_NAME% libre en puerto %TARGET_PORT%.
-)
-exit /b 0
+echo [INFO] Liberando %TARGET_NAME% en puerto %TARGET_PORT% si existe...
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$conns = Get-NetTCPConnection -State Listen -LocalPort %TARGET_PORT% -ErrorAction SilentlyContinue; " ^
+    "if (-not $conns) { exit 0 }; " ^
+    "$procIds = $conns | Select-Object -ExpandProperty OwningProcess -Unique; " ^
+    "foreach ($procId in $procIds) { try { Stop-Process -Id $procId -Force -ErrorAction Stop; Write-Host ('  Proceso detenido: ' + $procId) } catch { Write-Host ('  No se pudo detener PID ' + $procId + ': ' + $_.Exception.Message); exit 1 } }"
+exit /b %errorlevel%
 
 :wait_for_port
 set "WAIT_PORT=%~1"
-set /a "WAIT_TRIES=%~2"
+set "WAIT_SECONDS=%~2"
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$deadline = (Get-Date).AddSeconds(%WAIT_SECONDS%); " ^
+    "while ((Get-Date) -lt $deadline) { " ^
+    "  if (Get-NetTCPConnection -State Listen -LocalPort %WAIT_PORT% -ErrorAction SilentlyContinue) { exit 0 }; " ^
+    "  Start-Sleep -Milliseconds 500; " ^
+    "} " ^
+    "exit 1"
+exit /b %errorlevel%
 
-:wait_loop
-netstat -ano | findstr /r /c:":%WAIT_PORT% .*LISTENING" >nul
-if not errorlevel 1 exit /b 0
+:fail
+echo.
+echo Revisa las ventanas "GolazoStore Backend" y "GolazoStore Frontend".
 
-set /a "WAIT_TRIES-=1"
-if %WAIT_TRIES% LEQ 0 exit /b 1
-
-timeout /t 1 /nobreak >nul
-goto :wait_loop
+:end
+echo.
+pause

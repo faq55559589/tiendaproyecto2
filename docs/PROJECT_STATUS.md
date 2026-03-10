@@ -1,6 +1,51 @@
 # Estado Actual del Proyecto
 
-Fecha de referencia: 2026-03-08
+Fecha de referencia: 2026-03-10
+
+## Cambios recientes (2026-03-10) - Pulido UI/UX y operacion real
+
+- Se aplico una ronda amplia de pulido visual y de copy en frontend:
+  - `home`
+  - `catalogo`
+  - `producto`
+  - `contacto`
+  - `carrito`
+  - `checkout`
+  - `confirmacion`
+  - `navbar`
+  - `footer`
+- Se corrigieron textos tecnicos o poco comerciales para llevar la tienda a un tono mas real.
+- Se alinearon mensajes y ayudas con la operacion actual:
+  - envios dentro de Montevideo
+  - coordinacion por Instagram
+  - encargos por consulta
+  - envio sin tarifa fija
+- Se dejo Mercado Pago comunicado como mejora futura en frontend:
+  - checkout
+  - panel admin de pedidos
+- Se dio una pasada adicional a `mi perfil` y `mis pedidos`:
+  - mejor contexto de cuenta
+  - historial con estados mas legibles
+  - CTA de seguimiento para pedidos pendientes por Instagram
+- Se hizo una limpieza final de UX en pedidos:
+  - `mis-pedidos` y `admin-orders` sin textos rotos
+  - cards de pedidos mas claras
+  - feedback del carrito mas compacto y cerrable
+- Se unifico el formateo de telefonos para Uruguay en registro, perfil y checkout.
+- Se corrigio el bug de destacados en home:
+  - un script inline reescribia el `body` y dejaba la seccion cargando aunque la API respondiera.
+- Se corrigieron URLs viejas de imagenes que seguian apuntando a `localhost`.
+- Se limpio el panel admin:
+  - textos con acentos corregidos
+  - ayudas de imagenes mas claras
+  - explicacion mas precisa de la regla de borrado
+- Se actualizo la regla de borrado de productos:
+  - si el producto solo aparece en pedidos cancelados o expirados, se puede borrar
+  - si aparece en pedidos activos o entregados, sigue bloqueado
+- Se documento esta ronda de cambios en:
+  - `docs/tecnico/CAMBIOS_UI_UX_2026-03-10.md`
+
+Fecha de referencia anterior: 2026-03-08
 
 ## Cambios recientes (2026-03-08) - Preparacion deploy Railway + Vercel
 

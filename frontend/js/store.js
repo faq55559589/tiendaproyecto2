@@ -39,6 +39,26 @@
         }
     }
 
+    function formatUyPhone(value) {
+        let digits = String(value || '').replace(/\D/g, '');
+        if (!digits) return '';
+
+        if (digits.startsWith('598')) {
+            digits = digits.slice(3);
+        }
+
+        if (digits.startsWith('0')) {
+            digits = digits.slice(1);
+        }
+
+        digits = digits.slice(0, 8);
+        if (!digits) return '';
+
+        if (digits.length <= 2) return `+598 ${digits}`.trim();
+        if (digits.length <= 5) return `+598 ${digits.slice(0, 2)} ${digits.slice(2)}`.trim();
+        return `+598 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`.trim();
+    }
+
     const runtimeConfig = readRuntimeConfig();
     const apiOrigin = getApiOrigin(runtimeConfig.apiBase);
 
@@ -136,8 +156,6 @@
     const GolazoStore = {
         config: {
             apiBase: runtimeConfig.apiBase,
-            freeShippingThreshold: 12000,
-            shippingCost: 1200,
             instagramUsername: 'golazofutstore_'
         },
         paths: {
@@ -162,20 +180,25 @@
         },
         formatPaymentMethod(value) {
             const method = String(value || '').toLowerCase();
-            if (method === 'mercado_pago') return 'Mercado Pago';
-            if (method === 'instagram') return 'Instagram / Coordinación manual';
+            if (method === 'mercado_pago') return 'Mercado Pago (proximamente)';
+            if (method === 'instagram') return 'Instagram / Coordinacion manual';
             return value || 'No definido';
         },
         getInstagramChatUrl() {
             return `https://ig.me/m/${this.config.instagramUsername}`;
         },
+        getInstagramProfileUrl() {
+            const username = String(this.config.instagramUsername || '').replace(/^@+/, '').trim();
+            return username ? `https://www.instagram.com/${username}/` : 'https://www.instagram.com/';
+        },
+        formatUyPhone,
         buildInstagramOrderMessage({ order, customer, summary }) {
             const lines = [
                 'Hola, quiero coordinar mi pedido de GolazoStore.',
                 `Pedido: #${order.id}`,
                 `Nombre: ${customer.name || '-'}`,
                 `Email: ${customer.email || '-'}`,
-                `Teléfono: ${customer.phone || '-'}`,
+                `Telefono: ${customer.phone || '-'}`,
                 `Entrega: ${[customer.address, customer.city].filter(Boolean).join(', ') || '-'}`,
                 `Total: ${this.formatPrice(summary.total)}`
             ];
@@ -203,7 +226,7 @@
         async api(path, options = {}, requireAuth = false) {
             const token = getToken();
             if (requireAuth && !token) {
-                throw new Error('Debes iniciar sesión para continuar');
+                throw new Error('Debes iniciar sesion para continuar');
             }
 
             const headers = {
@@ -313,9 +336,16 @@
             summary() {
                 const items = this.all();
                 const subtotal = items.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
-                const shipping = subtotal === 0 ? 0 : (subtotal >= GolazoStore.config.freeShippingThreshold ? 0 : GolazoStore.config.shippingCost);
-                const total = subtotal + shipping;
-                return { items, subtotal, shipping, total, count: this.count() };
+                const shipping = null;
+                const total = subtotal;
+                return {
+                    items,
+                    subtotal,
+                    shipping,
+                    shippingLabel: subtotal > 0 ? 'A coordinar' : '-',
+                    total,
+                    count: this.count()
+                };
             }
         },
         orders: {
@@ -356,9 +386,9 @@
             async create(payload) {
                 const customer = payload.customer || {};
                 const address = [customer.address, customer.city].filter(Boolean).join(', ');
-                const paymentMethod = customer.paymentMethod === 'instagram' ? 'instagram' : 'mercado_pago';
-                const contactChannel = paymentMethod === 'instagram' ? 'instagram' : 'mercado_pago';
-                const paymentStatus = paymentMethod === 'instagram' ? 'pending_contact' : 'pending_payment';
+                const paymentMethod = 'instagram';
+                const contactChannel = 'instagram';
+                const paymentStatus = 'pending_contact';
 
                 const data = await GolazoStore.api('/orders', {
                     method: 'POST',
@@ -401,13 +431,27 @@
                 }
 
                 const toast = document.createElement('div');
-                toast.className = `alert alert-${variant} shadow-sm mb-2`;
-                toast.innerHTML = message;
+                toast.className = `alert alert-${variant} alert-dismissible fade show shadow-sm mb-2 golazo-toast`;
+                toast.setAttribute('role', 'alert');
+                toast.innerHTML = `
+                    <div class="golazo-toast__content">${message}</div>
+                    <button type="button" class="btn-close" aria-label="Cerrar"></button>
+                `;
                 container.appendChild(toast);
 
+                const closeButton = toast.querySelector('.btn-close');
+                const removeToast = () => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 180);
+                };
+
+                closeButton?.addEventListener('click', removeToast);
+
                 setTimeout(() => {
-                    toast.remove();
-                }, 3000);
+                    removeToast();
+                }, 3800);
             },
             bindSearchForms() {
                 document.querySelectorAll('form[role="search"]').forEach((form) => {
@@ -436,3 +480,5 @@
 
     window.GolazoStore = GolazoStore;
 })();
+
+

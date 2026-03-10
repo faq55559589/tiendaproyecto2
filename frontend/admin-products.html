@@ -25,13 +25,13 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
                     <div>
-                        <p class="eyebrow mb-2">Gestion</p>
+                        <p class="eyebrow mb-2">Gestión</p>
                         <h1 class="mb-1">Panel de productos</h1>
-                        <p class="text-ui-muted mb-0">Crea productos con una o varias imagenes, stock y especificaciones desde tu cuenta admin.</p>
+                        <p class="text-ui-muted mb-0">Crea, edita y organiza tus productos con imágenes, stock, talles y detalles claros.</p>
                     </div>
                     <div class="d-flex gap-2 flex-wrap">
                         <a href="admin-orders.html" class="btn btn-outline-brand">Ver pedidos</a>
-                        <a href="catalogo.html" class="btn btn-outline-brand">Ver catalogo</a>
+                        <a href="catalogo.html" class="btn btn-outline-brand">Ver catálogo</a>
                     </div>
                 </div>
 
@@ -52,8 +52,8 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Descripcion</label>
-                                        <textarea class="form-control" name="description" rows="3" placeholder="Describe tela, temporada, club, detalles de envio, etc."></textarea>
+                                        <label class="form-label">Descripción</label>
+                                        <textarea class="form-control" name="description" rows="3" placeholder="Describe club, temporada, detalles de la camiseta y cualquier dato útil para el cliente."></textarea>
                                     </div>
 
                                     <div class="row">
@@ -69,7 +69,7 @@
 
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Categoria</label>
+                                        <label class="form-label">Categoría</label>
                                             <select class="form-select" name="category_id">
                                                 <option value="1">Retro</option>
                                                 <option value="2">Actuales</option>
@@ -86,13 +86,13 @@
                                     <div class="mb-3">
                                         <label class="form-label">Especificaciones</label>
                                         <textarea class="form-control" name="specifications" rows="4" placeholder='Texto libre o JSON, por ejemplo: {"Material":"Polyester","Temporada":"2025"}'></textarea>
-                                        <div class="form-text">Acepta texto libre o JSON valido.</div>
+                                        <div class="form-text">Acepta texto libre o JSON válido.</div>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Imagenes del producto</label>
+                                        <label class="form-label">Imágenes del producto</label>
                                         <input type="file" class="form-control" name="images" accept="image/*" multiple required>
-                                        <div class="form-text" id="imageHelpText">Puedes subir una o varias imagenes. Formatos permitidos: JPG, PNG, WEBP.</div>
+                                        <div class="form-text" id="imageHelpText">Puedes subir una o varias imágenes. Formatos permitidos: JPG, PNG, WEBP.</div>
                                     </div>
 
                                     <div class="mb-3 d-none" id="selectedImagesWrap">
@@ -102,7 +102,7 @@
                                     </div>
 
                                     <div class="mb-3 d-none" id="currentImageWrap">
-                                        <label class="form-label">Galeria actual</label>
+                                        <label class="form-label">Galería actual</label>
                                         <div class="small text-muted mb-2" id="currentImageCount"></div>
                                         <div class="d-flex flex-wrap gap-2" id="currentImagePreviewList"></div>
                                     </div>
@@ -133,7 +133,7 @@
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                                         <div>
                                             <h3 class="h6 mb-1">Vista del panel</h3>
-                                            <p class="text-ui-muted small mb-0">Filtra por estado comercial. Los productos vendidos se conservan y se desactivan.</p>
+                                            <p class="text-ui-muted small mb-0">Filtra por estado comercial. Los productos con historial se conservan y pueden dejarse inactivos.</p>
                                         </div>
                                         <span class="badge badge-soft-neutral px-3 py-2" id="productsSummaryBadge">0 productos</span>
                                     </div>
@@ -173,7 +173,7 @@
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-success text-white">
-                <strong class="me-auto">Exito</strong>
+                <strong class="me-auto">Éxito</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body bg-white">
