@@ -9,6 +9,39 @@
         };
     }
 
+    function getApiOrigin(apiBase) {
+        try {
+            return new URL(apiBase).origin;
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function normalizeAssetUrl(rawUrl, apiOrigin) {
+        const value = String(rawUrl || '').trim();
+        if (!value) return '';
+
+        if (value.startsWith('data:') || value.startsWith('blob:')) {
+            return value;
+        }
+
+        try {
+            const parsed = new URL(value);
+            const isLegacyLocalhost = ['localhost', '127.0.0.1'].includes(parsed.hostname);
+            if (isLegacyLocalhost && apiOrigin) {
+                return `${apiOrigin}${parsed.pathname}`;
+            }
+            return parsed.toString();
+        } catch (error) {
+            if (!apiOrigin) return value;
+            if (value.startsWith('/')) return `${apiOrigin}${value}`;
+            return `${apiOrigin}/${value.replace(/^\/+/, '')}`;
+        }
+    }
+
+    const runtimeConfig = readRuntimeConfig();
+    const apiOrigin = getApiOrigin(runtimeConfig.apiBase);
+
     const STORAGE_KEYS = {
         cart: 'cartItems',
         checkout: 'golazoCheckoutDraft'
@@ -49,7 +82,7 @@
         }
 
         const normalized = values
-            .map((item) => String(item || '').trim())
+            .map((item) => normalizeAssetUrl(item, apiOrigin))
             .filter(Boolean)
             .filter((url, index, array) => array.indexOf(url) === index);
 
@@ -73,7 +106,7 @@
         const sizes = Array.isArray(product.sizes)
             ? product.sizes
             : safeParse(product.sizes, []);
-        const primaryImage = String(product.image_url || '').trim() || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen';
+        const primaryImage = normalizeAssetUrl(product.image_url, apiOrigin) || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen';
         const normalizedImageUrls = normalizeImageUrls(product.image_urls, primaryImage);
 
         return {
@@ -102,7 +135,7 @@
 
     const GolazoStore = {
         config: {
-            apiBase: readRuntimeConfig().apiBase,
+            apiBase: runtimeConfig.apiBase,
             freeShippingThreshold: 12000,
             shippingCost: 1200,
             instagramUsername: 'golazofutstore_'
@@ -209,7 +242,7 @@
                     quantity: Number(item.quantity || 1),
                     size: item.size || 'M',
                     stock: Number(item.stock || 0),
-                    image: item.image_url || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen'
+                    image: normalizeAssetUrl(item.image_url, apiOrigin) || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen'
                 }));
             },
             async refresh() {
@@ -291,7 +324,7 @@
                     id: item.id,
                     product_id: item.product_id,
                     name: item.name,
-                    image: item.image_url || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen',
+                    image: normalizeAssetUrl(item.image_url, apiOrigin) || 'https://placehold.co/600x750/E8E8E8/111111?text=Sin+Imagen',
                     quantity: Number(item.quantity || 0),
                     size: item.size || 'M',
                     price: Number(item.price || 0)
