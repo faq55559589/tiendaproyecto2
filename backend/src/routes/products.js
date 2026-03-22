@@ -2,12 +2,23 @@ const express = require('express');
 const ProductController = require('../controllers/productController');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const upload = require('../middleware/upload');
+const { validateUploadedImages, removeFiles } = upload;
 
 const router = express.Router();
 
 function handleProductUpload(req, res, next) {
     upload.array('images', 8)(req, res, (error) => {
         if (!error) {
+            const validation = validateUploadedImages(req.files || []);
+            if (!validation.valid) {
+                removeFiles(req.files || []);
+                res.status(400).json({
+                    success: false,
+                    message: validation.message
+                });
+                return;
+            }
+
             next();
             return;
         }
@@ -21,6 +32,7 @@ function handleProductUpload(req, res, next) {
             message = error.message;
         }
 
+        removeFiles(req.files || []);
         res.status(400).json({
             success: false,
             message

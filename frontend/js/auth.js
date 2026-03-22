@@ -1,5 +1,3 @@
-const API_URL = `${GolazoStore.config.apiBase}`;
-
 function getCurrentUser() {
     try {
         return JSON.parse(localStorage.getItem('user') || 'null');
@@ -43,6 +41,7 @@ function logout(options = {}) {
 }
 
 async function authFetch(endpoint, options = {}) {
+    const API_URL = GolazoStore.getApiBase();
     const token = getToken();
     const hasJsonBody = !(options.body instanceof FormData);
     const response = await fetch(`${API_URL}${endpoint}`, {

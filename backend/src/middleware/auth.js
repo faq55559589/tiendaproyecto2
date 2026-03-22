@@ -36,6 +36,28 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
+const attachOptionalUser = async (req, _res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        next();
+        return;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+        if (user) {
+            req.user = user;
+        }
+    } catch (error) {
+        // Public route: invalid token should not block anonymous access.
+    }
+
+    next();
+};
+
 const requireRole = (...allowedRoles) => {
     return (req, res, next) => {
         const role = req.user && req.user.role ? req.user.role : 'user';
@@ -49,4 +71,4 @@ const requireRole = (...allowedRoles) => {
     };
 };
 
-module.exports = { authenticateToken, requireRole };
+module.exports = { authenticateToken, attachOptionalUser, requireRole };

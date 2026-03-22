@@ -27,7 +27,7 @@
                     <div class="col-lg-3">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body text-center">
-                                <i class="fas fa-user-circle fa-4x icon-accent mb-3"></i>
+                                <div id="profileAvatarWrap" class="mb-3"></div>
                                 <h2 class="h5" id="profileName">Cargando...</h2>
                                 <p class="text-ui-muted small mb-0" id="profileEmail"></p>
                             </div>
@@ -53,6 +53,18 @@
                                 </div>
 
                                 <form id="profileForm" class="row g-3">
+                                    <div class="col-12">
+                                        <div class="surface-note p-3 profile-avatar-panel">
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                <div id="profileAvatarPreview"></div>
+                                                <div class="flex-grow-1">
+                                                    <label for="avatar" class="form-label mb-1">Foto de perfil</label>
+                                                    <input type="file" class="form-control" id="avatar" name="avatar" accept="image/png,image/jpeg,image/webp">
+                                                    <div class="form-text">Sube una imagen JPG, PNG o WEBP de hasta 5 MB.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <label for="firstName" class="form-label">Nombre</label>
                                         <input type="text" class="form-control" id="firstName" required>

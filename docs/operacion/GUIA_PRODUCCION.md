@@ -59,9 +59,10 @@ INSTAGRAM_ORDER_EXPIRATION_HOURS=12
 Reglas:
 
 - `JWT_SECRET` no puede ser corto ni reciclado.
-- `FRONTEND_URL` tiene que apuntar a la URL publica real.
+- `FRONTEND_URL` y `BACKEND_URL` tienen que apuntar a URLs publicas reales.
+- en produccion, `FRONTEND_URL`, `BACKEND_URL` y cada origen de `CORS_ORIGINS` deben usar `https` y no pueden apuntar a `localhost`.
 - `CORS_ORIGINS` tiene que contener solo dominios reales.
-- si el email es obligatorio, SMTP tiene que funcionar de verdad.
+- si el email es obligatorio, tiene que existir un proveedor real configurado: `BREVO_API_KEY` o `SMTP_*` o `EMAIL_USER/EMAIL_PASS`.
 
 ## 3. Definir URLs publicas finales
 
@@ -81,6 +82,7 @@ Si esto no queda bien:
 
 - los usuarios no van a poder verificar email
 - los links de recuperacion pueden quedar apuntando a localhost
+- las URLs de imagenes subidas pueden quedar apuntando a localhost
 
 ## 4. Hacer backup antes de tocar datos reales
 

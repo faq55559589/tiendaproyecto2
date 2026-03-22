@@ -6,7 +6,11 @@ const rootDir = path.resolve(__dirname, '..');
 const backendDir = path.join(rootDir, 'backend');
 const watchedPath = backendDir;
 const ignoredSegments = ['node_modules', '.git', 'uploads'];
-const ignoredExtensions = ['.db', '.db-shm', '.db-wal', '.log'];
+const ignoredExtensions = ['.db', '.log'];
+const ignoredFilePatterns = [
+    /(^|\/)[^/]+\.sqlite(?:-wal|-shm|-journal)?$/i,
+    /(^|\/)[^/]+\.db(?:-wal|-shm|-journal)?$/i
+];
 
 let backendProcess = null;
 let restartTimer = null;
@@ -21,6 +25,7 @@ function shouldIgnore(filename) {
     const normalized = String(filename || '').replace(/\\/g, '/');
     if (!normalized) return true;
     if (ignoredSegments.some((segment) => normalized.includes(segment))) return true;
+    if (ignoredFilePatterns.some((pattern) => pattern.test(normalized))) return true;
     return ignoredExtensions.some((extension) => normalized.endsWith(extension));
 }
 

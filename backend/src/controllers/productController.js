@@ -1,24 +1,65 @@
 const Product = require('../models/Product');
+const { getBackendUrl } = require('../config/env');
+
+function safeParseJson(value, fallback) {
+    try {
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function normalizeText(value) {
+    return String(value || '').trim();
+}
 
 class ProductController {
     static getUploadedImageUrls(req) {
-        const baseUrl = process.env.BACKEND_URL || 'http://localhost:3000';
-        return (req.files || []).map((file) => `${baseUrl}/${file.filename}`);
+        const baseUrl = getBackendUrl();
+        return (req.files || []).map((file) => `${baseUrl}/uploads/${file.filename}`);
     }
 
     static parseImageUrls(rawValue) {
         if (!rawValue) return [];
         if (Array.isArray(rawValue)) {
-            return rawValue.map((item) => String(item || '').trim()).filter(Boolean);
+            return rawValue.map((item) => normalizeText(item)).filter(Boolean);
         }
 
-        try {
-            const parsedValue = JSON.parse(rawValue);
+        if (typeof rawValue === 'string') {
+            const trimmed = rawValue.trim();
+            if (!trimmed) return [];
+
+            const parsedValue = safeParseJson(trimmed, null);
             if (Array.isArray(parsedValue)) {
-                return parsedValue.map((item) => String(item || '').trim()).filter(Boolean);
+                return parsedValue.map((item) => normalizeText(item)).filter(Boolean);
             }
-        } catch (error) {
-            return String(rawValue)
+
+            return trimmed
+                .split(',')
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+
+        return [];
+    }
+
+    static parseSizes(rawValue) {
+        if (Array.isArray(rawValue)) {
+            return rawValue.map((item) => normalizeText(item)).filter(Boolean);
+        }
+
+        if (typeof rawValue === 'string') {
+            const trimmed = rawValue.trim();
+            if (!trimmed) {
+                return [];
+            }
+
+            const parsedValue = safeParseJson(trimmed, null);
+            if (Array.isArray(parsedValue)) {
+                return parsedValue.map((item) => normalizeText(item)).filter(Boolean);
+            }
+
+            return trimmed
                 .split(',')
                 .map((item) => item.trim())
                 .filter(Boolean);
@@ -28,7 +69,7 @@ class ProductController {
     }
 
     static normalizeImageUrls(imageUrls) {
-        return [...new Set((imageUrls || []).map((item) => String(item || '').trim()).filter(Boolean))];
+        return [...new Set((imageUrls || []).map((item) => normalizeText(item)).filter(Boolean))];
     }
 
     static formatProduct(product) {
@@ -39,7 +80,7 @@ class ProductController {
 
         return {
             ...product,
-            sizes: JSON.parse(product.sizes || '[]'),
+            sizes: ProductController.parseSizes(product.sizes),
             is_active: Number(product.is_active ?? 1) === 1,
             has_order_references: Number(product.has_order_references || 0) === 1,
             has_blocking_order_references: Number(product.has_blocking_order_references || 0) === 1,
@@ -48,14 +89,50 @@ class ProductController {
         };
     }
 
-    // Obtener todos los productos
+    static validateProductPayload(body) {
+        const name = normalizeText(body.name);
+        const price = Number(body.price);
+        const stock = Number(body.stock);
+        const categoryIdRaw = normalizeText(body.category_id);
+        const categoryId = categoryIdRaw ? Number(categoryIdRaw) : null;
+        const sizes = ProductController.parseSizes(body.sizes);
+
+        if (!name) {
+            return { valid: false, message: 'El nombre del producto es obligatorio' };
+        }
+
+        if (!Number.isFinite(price) || price < 0) {
+            return { valid: false, message: 'El precio del producto es invalido' };
+        }
+
+        if (!Number.isInteger(stock) || stock < 0) {
+            return { valid: false, message: 'El stock del producto es invalido' };
+        }
+
+        if (categoryIdRaw && (!Number.isInteger(categoryId) || categoryId < 1)) {
+            return { valid: false, message: 'La categoria del producto es invalida' };
+        }
+
+        return {
+            valid: true,
+            payload: {
+                name,
+                description: normalizeText(body.description),
+                price,
+                stock,
+                sizes: sizes.length ? sizes : ['M'],
+                category_id: categoryId,
+                specifications: normalizeText(body.specifications) || null
+            }
+        };
+    }
+
     static getAll(req, res) {
         try {
             const products = Product.getAll();
-            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
             res.json({
                 success: true,
-                products: formattedProducts
+                products: products.map((product) => ProductController.formatProduct(product))
             });
         } catch (error) {
             console.error('Error obteniendo productos:', error);
@@ -69,10 +146,9 @@ class ProductController {
     static getAllAdmin(req, res) {
         try {
             const products = Product.getAllAdmin();
-            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
             res.json({
                 success: true,
-                products: formattedProducts
+                products: products.map((product) => ProductController.formatProduct(product))
             });
         } catch (error) {
             console.error('Error obteniendo productos admin:', error);
@@ -83,17 +159,16 @@ class ProductController {
         }
     }
 
-    // Obtener producto por ID
     static getById(req, res) {
         try {
-            const { id } = req.params;
-            const product = Product.getById(id);
+            const product = Product.getById(req.params.id);
             if (!product) {
                 return res.status(404).json({
                     success: false,
                     message: 'Producto no encontrado'
                 });
             }
+
             res.json({
                 success: true,
                 product: ProductController.formatProduct(product)
@@ -107,22 +182,21 @@ class ProductController {
         }
     }
 
-    // Buscar productos
     static search(req, res) {
         try {
-            const { q } = req.query;
-            if (!q) {
+            const query = normalizeText(req.query.q);
+            if (!query) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Término de búsqueda requerido'
+                    message: 'Termino de busqueda requerido'
                 });
             }
-            const products = Product.search(q);
-            const formattedProducts = products.map((product) => ProductController.formatProduct(product));
+
+            const products = Product.search(query);
             res.json({
                 success: true,
-                products: formattedProducts,
-                searchTerm: q
+                products: products.map((product) => ProductController.formatProduct(product)),
+                searchTerm: query
             });
         } catch (error) {
             console.error('Error buscando productos:', error);
@@ -133,33 +207,35 @@ class ProductController {
         }
     }
 
-    // Crear producto (admin)
     static create(req, res) {
         try {
-            const { name, description, price, stock, sizes, category_id, specifications } = req.body;
+            const body = req.body || {};
+            const validation = ProductController.validateProductPayload(body);
+            if (!validation.valid) {
+                return res.status(400).json({
+                    success: false,
+                    message: validation.message
+                });
+            }
+
             const uploadedImageUrls = ProductController.getUploadedImageUrls(req);
             const imageUrls = ProductController.normalizeImageUrls(
                 uploadedImageUrls.length
                     ? uploadedImageUrls
                     : [
-                        ...ProductController.parseImageUrls(req.body.image_urls),
-                        ...(req.body.image_url ? [req.body.image_url] : [])
+                        ...ProductController.parseImageUrls(body.image_urls),
+                        ...(body.image_url ? [body.image_url] : [])
                     ]
             );
             const image_url = imageUrls[0] || null;
 
             const productId = Product.create({
-                name,
-                description,
-                price,
+                ...validation.payload,
                 image_url,
                 image_urls: imageUrls,
-                is_active: true,
-                stock,
-                sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
-                category_id,
-                specifications
+                is_active: true
             });
+
             res.status(201).json({
                 success: true,
                 message: 'Producto creado exitosamente',
@@ -175,12 +251,10 @@ class ProductController {
         }
     }
 
-    // Actualizar producto (admin)
-    static async update(req, res) {
+    static update(req, res) {
         try {
-            const { id } = req.params;
-            const existingProduct = Product.getByIdAdmin(id);
-
+            const body = req.body || {};
+            const existingProduct = Product.getByIdAdmin(req.params.id);
             if (!existingProduct) {
                 return res.status(404).json({
                     success: false,
@@ -188,33 +262,34 @@ class ProductController {
                 });
             }
 
-            const { name, description, price, image_url, stock, sizes, category_id, specifications } = req.body;
+            const validation = ProductController.validateProductPayload(body);
+            if (!validation.valid) {
+                return res.status(400).json({
+                    success: false,
+                    message: validation.message
+                });
+            }
+
             const existingImageUrls = ProductController.normalizeImageUrls([
                 ...ProductController.parseImageUrls(existingProduct.image_urls),
                 ...(existingProduct.image_url ? [existingProduct.image_url] : [])
             ]);
             const uploadedImageUrls = ProductController.getUploadedImageUrls(req);
-            const hasImageUrlsField = Object.prototype.hasOwnProperty.call(req.body, 'image_urls');
-            const isActive = Object.prototype.hasOwnProperty.call(req.body, 'is_active')
-                ? String(req.body.is_active) === 'true' || String(req.body.is_active) === '1'
-                : Number(existingProduct.is_active ?? 1) === 1;
-            const requestedImageUrls = ProductController.parseImageUrls(req.body.image_urls);
+            const hasImageUrlsField = Object.prototype.hasOwnProperty.call(body, 'image_urls');
+            const requestedImageUrls = ProductController.parseImageUrls(body.image_urls);
             const baseImageUrls = hasImageUrlsField ? requestedImageUrls : existingImageUrls;
             const nextImageUrls = ProductController.normalizeImageUrls([...baseImageUrls, ...uploadedImageUrls]);
-            const finalImageUrl = nextImageUrls[0] || null;
+            const isActive = Object.prototype.hasOwnProperty.call(body, 'is_active')
+                ? ['true', '1'].includes(String(body.is_active).toLowerCase())
+                : Number(existingProduct.is_active ?? 1) === 1;
 
-            await Product.update(id, {
-                name,
-                description,
-                price,
-                image_url: finalImageUrl,
+            Product.update(req.params.id, {
+                ...validation.payload,
+                image_url: nextImageUrls[0] || null,
                 image_urls: nextImageUrls,
-                is_active: isActive,
-                stock,
-                sizes: typeof sizes === 'string' ? JSON.parse(sizes || '[]') : sizes,
-                category_id,
-                specifications
+                is_active: isActive
             });
+
             res.json({
                 success: true,
                 message: 'Producto actualizado exitosamente'
@@ -228,11 +303,9 @@ class ProductController {
         }
     }
 
-    // Eliminar producto (admin)
-    static async delete(req, res) {
+    static delete(req, res) {
         try {
-            const { id } = req.params;
-            const existingProduct = Product.getByIdAdmin(id);
+            const existingProduct = Product.getByIdAdmin(req.params.id);
             if (!existingProduct) {
                 return res.status(404).json({
                     success: false,
@@ -240,14 +313,14 @@ class ProductController {
                 });
             }
 
-            if (Product.hasBlockingOrderReferences(id)) {
+            if (Product.hasBlockingOrderReferences(req.params.id)) {
                 return res.status(409).json({
                     success: false,
-                    message: 'No puedes eliminar un producto que forma parte de pedidos activos o entregados. Desactívalo para quitarlo del catálogo.'
+                    message: 'No puedes eliminar un producto que forma parte de pedidos activos o entregados. Desactivalo para quitarlo del catalogo.'
                 });
             }
 
-            await Product.delete(id);
+            Product.delete(req.params.id);
             res.json({
                 success: true,
                 message: 'Producto eliminado exitosamente'
@@ -261,9 +334,10 @@ class ProductController {
             ) {
                 return res.status(409).json({
                     success: false,
-                    message: 'No se pudo eliminar el producto porque todavía tiene referencias en pedidos guardados. Para permitir este borrado habría que limpiar o migrar ese historial primero.'
+                    message: 'No se pudo eliminar el producto porque todavia tiene referencias en pedidos guardados. Para permitir este borrado habria que limpiar o migrar ese historial primero.'
                 });
             }
+
             res.status(500).json({
                 success: false,
                 message: 'Error interno del servidor'

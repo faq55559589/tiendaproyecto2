@@ -42,13 +42,24 @@ function setupBackToTop() {
         document.body.appendChild(button);
     }
 
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 320) {
-            button.classList.add('show');
-        } else {
-            button.classList.remove('show');
+    let ticking = false;
+    let isVisible = false;
+    const toggleButton = () => {
+        const shouldShow = window.scrollY > 320;
+        if (shouldShow !== isVisible) {
+            button.classList.toggle('show', shouldShow);
+            isVisible = shouldShow;
         }
-    });
+        ticking = false;
+    };
+
+    window.addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(toggleButton);
+    }, { passive: true });
+
+    toggleButton();
 
     button.addEventListener('click', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });

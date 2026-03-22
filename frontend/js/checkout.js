@@ -26,7 +26,20 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
         checkoutNotice.classList.remove('d-none');
-        checkoutNotice.innerHTML = `<i class="fas fa-circle-exclamation me-2"></i>${message}`;
+        checkoutNotice.innerHTML = `<i class="fas fa-circle-exclamation me-2"></i>${GolazoStore.escapeHtml(message)}`;
+    }
+
+    function setSubmitState(button, isLoading, label) {
+        if (!button) return;
+
+        if (!button.dataset.originalLabel) {
+            button.dataset.originalLabel = button.innerHTML;
+        }
+
+        button.disabled = isLoading;
+        button.innerHTML = isLoading
+            ? `<i class="fas fa-spinner fa-spin me-2"></i>${GolazoStore.escapeHtml(label || 'Procesando')}`
+            : button.dataset.originalLabel;
     }
 
     setLoading(true);
@@ -61,7 +74,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     Object.entries(draft).forEach(([key, value]) => {
         const input = document.getElementById(key);
-        if (input && !input.value) {
+        const shouldPopulate = input && (!input.value || input.tagName === 'SELECT');
+        if (shouldPopulate) {
             input.value = input.type === 'tel' ? GolazoStore.formatUyPhone(value) : value;
         }
     });
@@ -79,9 +93,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     form?.addEventListener('submit', async function (event) {
         event.preventDefault();
         const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Confirmando';
+        const selectedPaymentMethod = paymentMethodInput?.value || 'instagram';
+        setSubmitState(
+            submitBtn,
+            true,
+            selectedPaymentMethod === 'mercado_pago' ? 'Iniciando pago' : 'Confirmando'
+        );
 
         try {
             const formData = Object.fromEntries(new FormData(form).entries());
@@ -102,6 +119,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                     paymentMethod: formData.paymentMethod || 'instagram'
                 }
             });
+
+            sessionStorage.setItem('lastOrderId', String(order.id));
+            GolazoStore.cart.saveCache([]);
 
             if (order.paymentMethod === 'instagram') {
                 const instagramMessage = GolazoStore.buildInstagramOrderMessage({
@@ -124,16 +144,29 @@ document.addEventListener('DOMContentLoaded', async function () {
                 sessionStorage.removeItem('instagramChatUrl');
                 sessionStorage.removeItem('instagramOrderMessage');
                 sessionStorage.removeItem('openInstagramAfterCheckout');
+
+                const preferenceResult = await GolazoStore.orders.createMercadoPagoPreference(order.id);
+                const checkoutUrl = preferenceResult.preference.init_point || preferenceResult.preference.sandbox_init_point;
+                if (!checkoutUrl) {
+                    throw new Error('No se pudo obtener la URL de pago de Mercado Pago');
+                }
+
+                GolazoStore.checkoutDraft.clear();
+                window.location.href = checkoutUrl;
+                return;
             }
 
             GolazoStore.checkoutDraft.clear();
-            GolazoStore.cart.saveCache([]);
-            sessionStorage.setItem('lastOrderId', String(order.id));
             window.location.href = GolazoStore.paths.confirmation();
         } catch (error) {
+            if (selectedPaymentMethod === 'mercado_pago' && sessionStorage.getItem('lastOrderId')) {
+                sessionStorage.setItem('mercadoPagoCheckoutError', error.message || 'No se pudo iniciar el pago online.');
+                window.location.href = GolazoStore.paths.confirmation();
+                return;
+            }
+
             GolazoStore.ui.toast(error.message || 'No se pudo confirmar el pedido.', 'danger');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
+            setSubmitState(submitBtn, false);
         }
     });
 
@@ -141,25 +174,28 @@ document.addEventListener('DOMContentLoaded', async function () {
         summaryWrap.innerHTML = `
             ${data.items.map((item) => `
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <img src="${item.image}" alt="${item.name}" width="56" height="56" class="rounded" style="object-fit: cover;">
+                    <img src="${GolazoStore.escapeAttr(item.image)}" alt="${GolazoStore.escapeHtml(item.name)}" width="56" height="56" class="rounded" style="object-fit: cover;">
                     <div class="flex-grow-1">
-                        <div class="fw-semibold">${item.name}</div>
-                        <small class="text-ui-muted">Talle ${item.size} · Cantidad ${item.quantity}</small>
+                        <div class="fw-semibold">${GolazoStore.escapeHtml(item.name)}</div>
+                        <small class="text-ui-muted">Talle ${GolazoStore.escapeHtml(item.size)} | Cantidad ${item.quantity}</small>
                     </div>
                     <strong>${GolazoStore.formatPrice(item.price * item.quantity)}</strong>
                 </div>
             `).join('')}
             <hr>
             <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>${GolazoStore.formatPrice(data.subtotal)}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Envío</span><strong>${data.shippingLabel || 'A coordinar'}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Envio</span><strong>${data.shippingLabel || 'A coordinar'}</strong></div>
             <div class="d-flex justify-content-between"><span>Total</span><strong class="text-price-accent fs-4">${GolazoStore.formatPrice(data.total)}</strong></div>
         `;
     }
 
     function syncPaymentMethodHelp() {
         if (!paymentMethodHelp || !paymentMethodInput) return;
-        paymentMethodHelp.textContent = 'Hoy estamos coordinando los pedidos por Instagram. Mercado Pago queda reservado para una próxima versión.';
+        if (paymentMethodInput.value === 'mercado_pago') {
+            paymentMethodHelp.textContent = 'Te redirigiremos a Mercado Pago para completar el pago online. La orden queda asociada a tu cuenta y luego veras el estado actualizado.';
+            return;
+        }
+
+        paymentMethodHelp.textContent = 'Tu pedido se reserva y luego seguimos la coordinacion manual por Instagram con el numero de pedido ya generado.';
     }
 });
-
-

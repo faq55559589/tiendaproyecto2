@@ -36,7 +36,8 @@ const liveReloadScript = `
 </script>`;
 
 function resolvePath(urlPath) {
-    const cleanPath = decodeURIComponent((urlPath || '/').split('?')[0]);
+    const rawPath = decodeURIComponent((urlPath || '/').split('?')[0]);
+    const cleanPath = rawPath.replace(/\/[^/]+\.html\/([^/]+\.html)$/i, '/$1');
     const requested = cleanPath === '/' ? '/index.html' : cleanPath;
     const fullPath = path.normalize(path.join(rootDir, requested));
 

@@ -1,4 +1,4 @@
-const API_URL = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
+const API_URL = window.GolazoStore?.config?.apiBase || null;
 
 document.addEventListener('DOMContentLoaded', function () {
     const recoveryForm = document.getElementById('recoveryForm');
@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const formAlert = document.getElementById('formAlert');
     const tryAgainBtn = document.getElementById('tryAgainBtn');
     const sentToEmail = document.getElementById('sentToEmail');
+
+    if (!API_URL) {
+        showFormAlert('Falta configurar la API del frontend.', 'danger');
+        submitBtn?.setAttribute('disabled', 'disabled');
+        return;
+    }
 
     recoveryForm?.addEventListener('submit', async function (event) {
         event.preventDefault();

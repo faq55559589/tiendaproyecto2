@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const API_BASE = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
+    const API_BASE = window.GolazoStore?.config?.apiBase || null;
     const loginForm = document.getElementById('loginForm');
     const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 
     if (localStorage.getItem('token') && localStorage.getItem('user')) {
         window.location.href = 'home.html';
+        return;
+    }
+
+    if (!API_BASE) {
+        GolazoStore.ui.toast('Falta configurar la API del frontend.', 'danger');
+        loginForm?.querySelector('button[type="submit"]')?.setAttribute('disabled', 'disabled');
         return;
     }
 

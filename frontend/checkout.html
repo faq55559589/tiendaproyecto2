@@ -22,13 +22,13 @@
             </div>
         </nav>
 
-        <section class="py-5 checkout-section">
+        <section class="py-5 checkout-section checkout-stage">
             <div class="container">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 checkout-stage__hero">
                     <div>
                         <p class="eyebrow mb-2">Paso 2 de 3</p>
                         <h1 class="mb-1">Finalizar compra</h1>
-                        <p class="text-ui-muted mb-0">Confirma tus datos y elige cómo quieres coordinar tu pedido.</p>
+                        <p class="text-ui-muted mb-0">Confirma tus datos y elige como quieres completar o coordinar tu pedido.</p>
                     </div>
                     <a href="carrito.html" class="btn btn-outline-brand">Volver al carrito</a>
                 </div>
@@ -45,13 +45,13 @@
                 <div id="checkoutEmpty" class="empty-state text-center py-5 d-none">
                     <i class="fas fa-bag-shopping fa-4x text-ui-muted mb-3"></i>
                     <h2 class="h3">No hay productos para checkout</h2>
-                    <a href="catalogo.html" class="btn btn-danger mt-3">Ir al catálogo</a>
+                    <a href="catalogo.html" class="btn btn-danger mt-3">Ir al catalogo</a>
                 </div>
 
                 <div class="row g-4" id="checkoutContent">
                     <div class="col-lg-7">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body p-4">
+                        <div class="card border-0 shadow-sm checkout-stage__card">
+                            <div class="card-body p-4 p-lg-5">
                                 <form id="checkoutForm" class="row g-3">
                                     <div class="col-md-6">
                                         <label for="customerName" class="form-label">Nombre completo</label>
@@ -62,28 +62,28 @@
                                         <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="customerPhone" class="form-label">Teléfono</label>
+                                        <label for="customerPhone" class="form-label">Telefono</label>
                                         <input type="tel" class="form-control" id="customerPhone" name="customerPhone" placeholder="+598 99 123 456" inputmode="numeric" maxlength="15" autocomplete="tel" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="customerCity" class="form-label">Zona / Barrio</label>
-                                        <input type="text" class="form-control" id="customerCity" name="customerCity" placeholder="Ej. Centro, Pocitos, Cordón" required>
+                                        <input type="text" class="form-control" id="customerCity" name="customerCity" placeholder="Ej. Centro, Pocitos, Cordon" required>
                                     </div>
                                     <div class="col-12">
-                                        <label for="customerAddress" class="form-label">Dirección de entrega</label>
+                                        <label for="customerAddress" class="form-label">Direccion de entrega</label>
                                         <input type="text" class="form-control" id="customerAddress" name="customerAddress" required>
                                     </div>
                                     <div class="col-12">
-                                        <label for="paymentMethod" class="form-label">Método de pago</label>
+                                        <label for="paymentMethod" class="form-label">Metodo de pago</label>
                                         <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                                            <option value="instagram" selected>Instagram / Coordinación manual</option>
-                                            <option value="mercado_pago" disabled>Mercado Pago (próximamente)</option>
+                                            <option value="instagram" selected>Instagram / Coordinacion manual</option>
+                                            <option value="mercado_pago">Mercado Pago</option>
                                         </select>
-                                        <div class="form-text" id="paymentMethodHelp">Hoy estamos coordinando los pedidos por Instagram. Mercado Pago queda reservado para una próxima versión.</div>
+                                        <div class="form-text" id="paymentMethodHelp">Hoy puedes elegir entre coordinacion manual por Instagram o iniciar el pago online con Mercado Pago.</div>
                                     </div>
                                     <div class="col-12">
                                         <label for="customerNotes" class="form-label">Observaciones</label>
-                                        <textarea class="form-control" id="customerNotes" name="customerNotes" rows="4" placeholder="Referencia para la entrega, horario o camiseta que estás buscando."></textarea>
+                                        <textarea class="form-control" id="customerNotes" name="customerNotes" rows="4" placeholder="Referencia para la entrega, horario o camiseta que estas buscando."></textarea>
                                     </div>
                                     <div class="col-12 d-grid d-md-flex justify-content-md-end">
                                         <button type="submit" class="btn btn-danger btn-lg">Confirmar pedido</button>
@@ -93,11 +93,11 @@
                         </div>
                     </div>
                     <div class="col-lg-5">
-                        <div class="card border-0 shadow-sm sticky-lg-top" style="top: 96px;">
-                            <div class="card-body p-4">
+                        <div class="card border-0 shadow-sm sticky-lg-top checkout-stage__summary-card" style="top: 96px;">
+                            <div class="card-body p-4 p-lg-5">
                                 <h2 class="h5 mb-4">Resumen final</h2>
                                 <div class="surface-note p-3 mb-4 small">
-                                    Entregas coordinadas dentro de Montevideo. Si buscas un modelo específico, puedes dejarlo en observaciones.
+                                    Entregas coordinadas dentro de Montevideo. Si buscas un modelo especifico, puedes dejarlo en observaciones.
                                 </div>
                                 <div id="checkoutSummary"></div>
                             </div>
@@ -117,4 +117,3 @@
     <script src="js/checkout.js"></script>
 </body>
 </html>
-

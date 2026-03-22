@@ -1,18 +1,54 @@
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
+const { uploadsDir } = require('../config/paths');
 const {
     sendWelcomeEmail,
     sendVerificationEmail,
     sendPasswordResetEmail
 } = require('../utils/emailService');
-const { getJwtSecret } = require('../config/env');
+const { getJwtSecret, getBackendUrl } = require('../config/env');
 
 const JWT_SECRET = getJwtSecret();
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 
 class AuthController {
+    static getUploadedAvatarUrl(req) {
+        if (!req.file) return null;
+        return `${getBackendUrl()}/uploads/${req.file.filename}`;
+    }
+
+    static removePreviousAvatar(previousUrl) {
+        const rawValue = String(previousUrl || '').trim();
+        if (!rawValue) return;
+
+        let fileName = '';
+        try {
+            const parsed = new URL(rawValue);
+            if (parsed.pathname.startsWith('/uploads/')) {
+                fileName = path.basename(parsed.pathname);
+            }
+        } catch (error) {
+            if (rawValue.startsWith('/uploads/')) {
+                fileName = path.basename(rawValue);
+            }
+        }
+
+        if (!fileName) return;
+
+        const absolutePath = path.join(uploadsDir, fileName);
+        if (!fs.existsSync(absolutePath)) return;
+
+        try {
+            fs.unlinkSync(absolutePath);
+        } catch (error) {
+            // Best effort cleanup. Profile update should not fail after DB success.
+        }
+    }
+
     static async register(req, res) {
         try {
             const errors = validationResult(req);
@@ -33,13 +69,13 @@ class AuthController {
                 });
             }
 
-            await User.create({
+            const userId = await User.create({
                 email,
                 password,
                 first_name,
                 last_name,
                 phone,
-                newsletter: newsletter || false
+                newsletter: newsletter === true || newsletter === 'true' || newsletter === 1 || newsletter === '1'
             });
 
             const verificationToken = User.generateVerificationToken(email);
@@ -48,6 +84,7 @@ class AuthController {
                 await sendVerificationEmail(email, first_name, verificationToken);
             } catch (mailError) {
                 console.error('Error enviando email de verificacion:', mailError.message);
+                User.deleteById(userId);
                 return res.status(500).json({
                     success: false,
                     message: 'Registro creado, pero no pudimos enviar el email de verificacion. Configura SMTP y solicita reenvio.'
@@ -118,7 +155,9 @@ class AuthController {
                     email: user.email,
                     first_name: user.first_name,
                     last_name: user.last_name,
-                    role: user.role
+                    role: user.role,
+                    is_verified: Number(user.is_verified) === 1,
+                    avatar_url: user.avatar_url || null
                 }
             });
         } catch (error) {
@@ -148,17 +187,27 @@ class AuthController {
     static updateProfile(req, res) {
         try {
             const { first_name, last_name, phone, newsletter } = req.body;
+            const nextAvatarUrl = AuthController.getUploadedAvatarUrl(req);
+            const previousAvatarUrl = req.user && req.user.avatar_url ? req.user.avatar_url : null;
 
             User.update(req.user.id, {
                 first_name,
                 last_name,
                 phone,
-                newsletter
+                newsletter,
+                avatar_url: nextAvatarUrl
             });
+
+            if (nextAvatarUrl && previousAvatarUrl && previousAvatarUrl !== nextAvatarUrl) {
+                AuthController.removePreviousAvatar(previousAvatarUrl);
+            }
+
+            const updatedUser = User.findById(req.user.id);
 
             return res.json({
                 success: true,
-                message: 'Perfil actualizado exitosamente'
+                message: 'Perfil actualizado exitosamente',
+                user: updatedUser
             });
         } catch (error) {
             console.error('Error actualizando perfil:', error);
@@ -262,7 +311,11 @@ class AuthController {
             }
 
             if (result.user) {
-                await sendWelcomeEmail(result.user.email, result.user.first_name);
+                try {
+                    await sendWelcomeEmail(result.user.email, result.user.first_name);
+                } catch (mailError) {
+                    console.warn('No se pudo enviar email de bienvenida:', mailError.message);
+                }
             }
 
             return res.json({

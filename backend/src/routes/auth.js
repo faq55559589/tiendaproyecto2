@@ -3,6 +3,8 @@ const { body } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const AuthController = require('../controllers/authController');
 const { authenticateToken } = require('../middleware/auth');
+const upload = require('../middleware/upload');
+const { validateUploadedImages, removeFiles } = upload;
 
 const router = express.Router();
 
@@ -56,10 +58,45 @@ const loginValidation = [
     body('password').notEmpty()
 ];
 
+function handleAvatarUpload(req, res, next) {
+    upload.single('avatar')(req, res, (error) => {
+        if (!error) {
+            const files = req.file ? [req.file] : [];
+            const validation = validateUploadedImages(files);
+            if (!validation.valid) {
+                removeFiles(files);
+                res.status(400).json({
+                    success: false,
+                    message: validation.message
+                });
+                return;
+            }
+
+            next();
+            return;
+        }
+
+        let message = 'No se pudo procesar la foto de perfil';
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            message = 'La foto de perfil debe pesar menos de 5 MB';
+        } else if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+            message = 'Se envio un archivo en un formato no esperado';
+        } else if (error.message) {
+            message = error.message;
+        }
+
+        removeFiles(req.file ? [req.file] : []);
+        res.status(400).json({
+            success: false,
+            message
+        });
+    });
+}
+
 router.post('/register', registerLimiter, registerValidation, AuthController.register);
 router.post('/login', loginLimiter, loginValidation, AuthController.login);
 router.get('/profile', authenticateToken, AuthController.getProfile);
-router.put('/profile', authenticateToken, AuthController.updateProfile);
+router.put('/profile', authenticateToken, handleAvatarUpload, AuthController.updateProfile);
 router.post('/forgot-password', forgotPasswordLimiter, AuthController.forgotPassword);
 router.post('/reset-password', AuthController.resetPassword);
 router.post('/verify-email', AuthController.verifyEmail);

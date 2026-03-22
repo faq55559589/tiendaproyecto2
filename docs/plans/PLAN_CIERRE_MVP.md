@@ -6,6 +6,14 @@ Fecha: 2026-03-07
 
 Cerrar el MVP con flujo real de compra, documentacion ordenada y base lista para despliegue.
 
+## Fuente de verdad
+
+- Estado operativo: [docs/PROJECT_STATUS.md](../PROJECT_STATUS.md)
+- Orden de ejecucion: [docs/plans/GUIA_EJECUCION_PLANES.md](./GUIA_EJECUCION_PLANES.md)
+- Guia local: [docs/operacion/GUIA_SETUP_LOCAL.md](../operacion/GUIA_SETUP_LOCAL.md)
+
+Este plan absorbe el resto de iniciativas del cierre MVP, incluido el trabajo de historial/borrado de productos, como frentes internos del mismo roadmap.
+
 ## Estado actual resumido
 
 - Backend real funcionando con `auth`, `products`, `cart`, `orders`, `admin`.
@@ -82,3 +90,5 @@ Cerrar el MVP con flujo real de compra, documentacion ordenada y base lista para
 - [ ] Dominio publico + `FRONTEND_URL` real configurado.
 - [ ] CORS ajustado a dominios reales.
 - [ ] Backups y checklist minimo de operacion definidos.
+- [ ] Hardening de frontend, uploads y secretos revisado.
+- [ ] Guia de lectura y setup local actualizadas para soporte continuo.

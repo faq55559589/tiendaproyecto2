@@ -29,9 +29,9 @@
             </div>
         </nav>
 
-        <section class="catalog-section py-5">
+        <section class="catalog-section py-5 catalog-stage">
             <div class="container">
-                <div class="catalog-intro d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                <div class="catalog-intro catalog-stage__hero d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
                     <div>
                         <p class="eyebrow mb-2">Tienda</p>
                         <h1 class="mb-2" id="catalogTitle">Catalogo completo</h1>
@@ -50,6 +50,30 @@
                 <div id="searchResults" class="alert surface-note alert-dismissible fade show" style="display:none;" role="alert">
                     <i class="fas fa-search me-2"></i>Busqueda activa: <strong id="searchTerm"></strong>
                     <button type="button" class="btn-close" aria-label="Close" onclick="clearSearch()"></button>
+                </div>
+
+                <div class="catalog-stage__highlights row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="surface-note h-100 p-3 catalog-stage__highlight">
+                            <div class="small text-ui-muted mb-1">Curaduria</div>
+                            <strong class="d-block mb-1">Clubes, selecciones y retro</strong>
+                            <span class="small text-ui-muted">Catalogo compacto, lectura rapida y fichas pensadas para decidir sin ruido.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="surface-note h-100 p-3 catalog-stage__highlight">
+                            <div class="small text-ui-muted mb-1">Compra directa</div>
+                            <strong class="d-block mb-1">Stock y talles visibles</strong>
+                            <span class="small text-ui-muted">Menos pasos antes de entrar a la ficha y avanzar al carrito.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="surface-note h-100 p-3 catalog-stage__highlight">
+                            <div class="small text-ui-muted mb-1">Operacion actual</div>
+                            <strong class="d-block mb-1">Coordinacion real por Instagram</strong>
+                            <span class="small text-ui-muted">El recorrido visual acompana el flujo real de compra, sin prometer pasos que no existen.</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row g-4" id="productsContainer">

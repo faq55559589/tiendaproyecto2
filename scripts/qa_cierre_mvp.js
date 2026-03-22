@@ -1,5 +1,11 @@
 /* eslint-disable no-console */
 const path = require('path');
+process.env.NODE_PATH = [
+    path.join(__dirname, '..', 'backend', 'node_modules'),
+    process.env.NODE_PATH || ''
+].filter(Boolean).join(path.delimiter);
+require('module').Module._initPaths();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Database = require('better-sqlite3');
@@ -51,9 +57,9 @@ function upsertUser(db, user) {
     const hash = bcrypt.hashSync(user.password, 10);
     const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(user.email);
     if (existing) {
-        db.prepare(
-            `UPDATE users
-             SET password = ?, first_name = ?, last_name = ?, role = ?, is_verified = 1, verification_token = NULL
+         db.prepare(
+             `UPDATE users
+             SET password = ?, first_name = ?, last_name = ?, role = ?, is_verified = 1, verification_token_hash = NULL
              WHERE email = ?`
         ).run(hash, user.firstName, user.lastName, user.role, user.email);
         return existing.id;
@@ -119,7 +125,7 @@ async function run() {
     const adminToken = adminLogin.body && adminLogin.body.token ? adminLogin.body.token : '';
     addResult('Login admin QA', adminLogin.status === 200 && !!adminToken, `status=${adminLogin.status}`);
 
-    const createProduct = await request(`${API_BASE}/products`, {
+    const createProduct = await request(`${API_BASE}/admin/products`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -143,7 +149,7 @@ async function run() {
     if (productId) createdProductIds.push(productId);
     addResult('Admin crea producto con galeria inicial', createProduct.response.status === 201 && !!productId, `status=${createProduct.response.status}, productId=${productId}`);
 
-    const updateProduct = await request(`${API_BASE}/products/${productId}`, {
+    const updateProduct = await request(`${API_BASE}/admin/products/${productId}`, {
         method: 'PUT',
         headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -219,7 +225,7 @@ async function run() {
     const myOrdersCount = myOrders.body && Array.isArray(myOrders.body.orders) ? myOrders.body.orders.length : 0;
     addResult('Mis pedidos responde con historial', myOrders.response.status === 200 && myOrdersCount > 0, `orders=${myOrdersCount}`);
 
-    const deleteProduct = await request(`${API_BASE}/products/${productId}`, {
+    const deleteProduct = await request(`${API_BASE}/admin/products/${productId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${adminToken}` }
     });

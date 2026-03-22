@@ -24,6 +24,12 @@ Archivo:
 
 Esta es la base que puedes abrir comodamente con `DB Browser for SQLite`.
 
+Importante:
+
+- no confundirse con `backend/database.sqlite`
+- ese archivo no es la base activa del backend actual y puede quedar desfasado o vacio
+- la base real del proyecto hoy es `backend/database/golazostore.db`
+
 ### Base real de produccion
 
 En Railway, la base no vive en el repo. Vive en el volume montado en:
@@ -73,6 +79,12 @@ Cuando termines:
 
 - si hiciste cambios, usar `Write Changes`
 - cerrar la base si vas a levantar backend o correr scripts inmediatamente
+
+Si VS Code o una extension te muestra pocos datos o una base vacia:
+
+- confirma que abriste `backend/database/golazostore.db`
+- no `backend/database.sqlite`
+- recuerda que el backend usa modo `WAL`, asi que conviene cerrar el backend antes de inspeccionar visualmente si la extension no refresca bien los cambios
 
 ## 4. Que tareas conviene hacer con script en vez de a mano
 

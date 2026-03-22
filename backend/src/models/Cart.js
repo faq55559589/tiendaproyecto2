@@ -1,6 +1,11 @@
 const db = require('../config/database');
 
 class Cart {
+    static normalizeSize(size) {
+        const normalized = String(size || '').trim();
+        return normalized || 'M';
+    }
+
     static getByUser(userId) {
         const query = `
             SELECT
@@ -21,25 +26,28 @@ class Cart {
     }
 
     static findItem(userId, productId, size) {
+        const normalizedSize = this.normalizeSize(size);
         const query = `
             SELECT *
             FROM cart_items
             WHERE user_id = ? AND product_id = ? AND size = ?
             LIMIT 1
         `;
-        return db.prepare(query).get(userId, productId, size);
+        return db.prepare(query).get(userId, productId, normalizedSize);
     }
 
     static addOrIncrement(userId, productId, size, quantity) {
-        const existing = this.findItem(userId, productId, size);
-        if (existing) {
-            db.prepare('UPDATE cart_items SET quantity = quantity + ? WHERE id = ?').run(quantity, existing.id);
-            return existing.id;
-        }
+        const normalizedSize = this.normalizeSize(size);
         const result = db
-            .prepare('INSERT INTO cart_items (user_id, product_id, quantity, size) VALUES (?, ?, ?, ?)')
-            .run(userId, productId, quantity, size);
-        return result.lastInsertRowid;
+            .prepare(`
+                INSERT INTO cart_items (user_id, product_id, quantity, size)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(user_id, product_id, size)
+                DO UPDATE SET quantity = quantity + excluded.quantity
+                RETURNING id
+            `)
+            .get(userId, productId, quantity, normalizedSize);
+        return result ? result.id : null;
     }
 
     static updateQuantity(userId, itemId, quantity) {

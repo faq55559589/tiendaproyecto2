@@ -5,7 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 const { runMigrations } = require('./src/config/migrations');
 const { startOrderExpirationJob } = require('./src/services/orderExpirationService');
-const { getAllowedOrigins, getJwtSecret } = require('./src/config/env');
+const { getAllowedOrigins, getJwtSecret, assertProductionConfig } = require('./src/config/env');
 const { uploadsDir, ensureDir } = require('./src/config/paths');
 
 const app = express();
@@ -14,6 +14,7 @@ const allowedOrigins = getAllowedOrigins();
 
 // Force JWT validation at startup so production never runs with weak defaults.
 getJwtSecret();
+assertProductionConfig();
 
 // Railway forwards client IPs through a proxy/load balancer.
 app.set('trust proxy', 1);
@@ -45,7 +46,15 @@ app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(express.json());
 ensureDir(uploadsDir);
-app.use(express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir, {
+    dotfiles: 'deny',
+    index: false,
+    immutable: true,
+    maxAge: '1d',
+    setHeaders: (res) => {
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+    }
+}));
 runMigrations();
 const expirationJob = startOrderExpirationJob();
 
@@ -55,6 +64,7 @@ app.use('/api/products', require('./src/routes/products'));
 app.use('/api/cart', require('./src/routes/cart'));
 app.use('/api/orders', require('./src/routes/orders'));
 app.use('/api/admin', require('./src/routes/admin'));
+app.use('/api/reviews', require('./src/routes/reviews'));
 
 // Ruta de health check
 app.get('/api/health', (req, res) => {

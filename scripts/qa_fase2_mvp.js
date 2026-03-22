@@ -1,5 +1,11 @@
 /* eslint-disable no-console */
 const path = require('path');
+process.env.NODE_PATH = [
+    path.join(__dirname, '..', 'backend', 'node_modules'),
+    process.env.NODE_PATH || ''
+].filter(Boolean).join(path.delimiter);
+require('module').Module._initPaths();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Database = require('better-sqlite3');
@@ -53,7 +59,7 @@ function upsertUser(db, user) {
     if (existing) {
         db.prepare(
             `UPDATE users
-             SET password = ?, first_name = ?, last_name = ?, role = ?, is_verified = 1, verification_token = NULL
+             SET password = ?, first_name = ?, last_name = ?, role = ?, is_verified = 1, verification_token_hash = NULL
              WHERE email = ?`
         ).run(hash, user.firstName, user.lastName, user.role, user.email);
         return existing.id;
@@ -235,7 +241,7 @@ async function run() {
     );
     const adminToken = adminLogin.body && adminLogin.body.token ? adminLogin.body.token : '';
 
-    const nonAdminCreateProduct = await request(`${API_BASE}/products`, {
+    const nonAdminCreateProduct = await request(`${API_BASE}/admin/products`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${userToken}`,
@@ -257,7 +263,7 @@ async function run() {
         `status=${nonAdminCreateProduct.response.status}`
     );
 
-    const adminCreateProduct = await request(`${API_BASE}/products`, {
+    const adminCreateProduct = await request(`${API_BASE}/admin/products`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -281,7 +287,7 @@ async function run() {
         `status=${adminCreateProduct.response.status}, productId=${adminProductId}`
     );
 
-    const adminUpdateProduct = await request(`${API_BASE}/products/${adminProductId}`, {
+    const adminUpdateProduct = await request(`${API_BASE}/admin/products/${adminProductId}`, {
         method: 'PUT',
         headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -321,7 +327,7 @@ async function run() {
         `status=${nonAdminOrders.response.status}`
     );
 
-    const adminDeleteProduct = await request(`${API_BASE}/products/${adminProductId}`, {
+    const adminDeleteProduct = await request(`${API_BASE}/admin/products/${adminProductId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${adminToken}` }
     });
@@ -332,7 +338,7 @@ async function run() {
     );
 
     // Caso "producto sin stock" (esperado por plan de QA)
-    const stockZeroCreate = await request(`${API_BASE}/products`, {
+    const stockZeroCreate = await request(`${API_BASE}/admin/products`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -368,7 +374,7 @@ async function run() {
     );
 
     for (const id of createdProductIds) {
-        await request(`${API_BASE}/products/${id}`, {
+        await request(`${API_BASE}/admin/products/${id}`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${adminToken}` }
         });

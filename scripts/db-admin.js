@@ -1,7 +1,22 @@
 const path = require('path');
-const Database = require('better-sqlite3');
+const { createRequire } = require('module');
 
-const DB_PATH = path.join(__dirname, '..', 'backend', 'database', 'golazostore.db');
+const backendDir = path.join(__dirname, '..', 'backend');
+const backendRequire = createRequire(path.join(__dirname, '..', 'backend', 'package.json'));
+const dotenv = backendRequire('dotenv');
+
+dotenv.config({ path: path.join(backendDir, '.env') });
+
+if (String(process.env.SQLITE_DB_PATH || '').trim() && !path.isAbsolute(process.env.SQLITE_DB_PATH)) {
+    process.env.SQLITE_DB_PATH = path.resolve(backendDir, process.env.SQLITE_DB_PATH);
+}
+
+if (String(process.env.UPLOADS_DIR || '').trim() && !path.isAbsolute(process.env.UPLOADS_DIR)) {
+    process.env.UPLOADS_DIR = path.resolve(backendDir, process.env.UPLOADS_DIR);
+}
+
+const Database = backendRequire('better-sqlite3');
+const { dbPath: DB_PATH } = require(path.join(__dirname, '..', 'backend', 'src', 'config', 'paths'));
 const db = new Database(DB_PATH, { readonly: false });
 db.pragma('foreign_keys = ON');
 

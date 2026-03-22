@@ -26,14 +26,20 @@
         if (!header) return;
         const user = getUser();
         const isAdmin = Boolean(user && user.role === 'admin');
+        const displayName = user ? GolazoStore.escapeHtml(user.first_name || 'Mi cuenta') : '';
+        const avatarMarkup = user ? GolazoStore.renderAvatarMarkup(user, {
+            className: 'nav-user-avatar',
+            size: 38,
+            alt: `Avatar de ${user.first_name || 'usuario'}`
+        }) : '';
         const adminPrimaryLink = isAdmin
-            ? `<a class="nav-link ${(isActive('admin-products.html') || isActive('admin-orders.html')) ? 'active' : ''}" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved"></i> Admin</a>`
+            ? `<a class="nav-link ${(isActive('admin-products.html') || isActive('admin-orders.html') || isActive('admin-users.html')) ? 'active' : ''}" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shield-halved"></i> Admin</a>`
             : '';
         const userMenu = isLoggedIn() && user
             ? `
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle me-2"></i>${user.first_name || 'Mi cuenta'}
+                        <span class="me-2 d-inline-flex">${avatarMarkup}</span>${displayName}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                         <li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.profile()}"><i class="fas fa-user icon-accent"></i><span>Mi perfil</span></a></li>
@@ -41,6 +47,7 @@
                         <li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.cart()}"><i class="fas fa-cart-shopping icon-accent"></i><span>Carrito</span></a></li>
                         ${isAdmin ? `<li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.adminProducts()}"><i class="fas fa-shirt icon-accent"></i><span>Admin productos</span></a></li>` : ''}
                         ${isAdmin ? `<li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.adminOrders()}"><i class="fas fa-receipt icon-accent"></i><span>Admin pedidos</span></a></li>` : ''}
+                        ${isAdmin ? `<li><a class="dropdown-item account-menu-link" href="${GolazoStore.paths.adminUsers()}"><i class="fas fa-users icon-accent"></i><span>Admin usuarios</span></a></li>` : ''}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger account-menu-link" href="#" data-auth-logout><i class="fas fa-sign-out-alt"></i><span>Cerrar sesión</span></a></li>
                     </ul>
@@ -58,7 +65,7 @@
                         <img src="assets/images/logo.png" alt="Golazo FutStore" height="48" class="me-2">
                         <span class="fw-bold brand-wordmark">Golazo FutStore</span>
                     </a>
-                    <button class="btn btn-outline-brand d-none d-lg-inline-flex me-3 categories-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
+                    <button class="btn btn-outline-brand me-2 me-lg-3 categories-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategories">
                         <i class="fas fa-bars"></i>Categorías
                     </button>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -144,11 +151,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
+                    <div class="mb-3">
+                        <div class="small text-uppercase text-ui-muted fw-semibold mb-2">Categorias</div>
+                        <div class="d-grid gap-2">
+                            <a href="${GolazoStore.paths.catalog()}" class="btn btn-outline-brand btn-sm text-start offcanvas-category-link">Todas las camisetas</a>
+                            <a href="${GolazoStore.paths.catalog('Retro')}" class="btn btn-outline-brand btn-sm text-start offcanvas-category-link">Retro</a>
+                            <a href="${GolazoStore.paths.catalog('Actuales')}" class="btn btn-outline-brand btn-sm text-start offcanvas-category-link">Actuales</a>
+                            <a href="${GolazoStore.paths.catalog('Selecciones')}" class="btn btn-outline-brand btn-sm text-start offcanvas-category-link">Selecciones</a>
+                            <a href="${GolazoStore.paths.catalog('Clubes')}" class="btn btn-outline-brand btn-sm text-start offcanvas-category-link">Clubes</a>
+                        </div>
+                    </div>
                     <ul class="list-group list-group-flush offcanvas-categories-list">
-                        <li class="list-group-item"><a href="${GolazoStore.paths.catalog()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-shirt"></i><span>Todas las camisetas</span></a></li>
                         <li class="list-group-item"><a href="${GolazoStore.paths.cart()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-cart-shopping"></i><span>Mi carrito</span></a></li>
                         ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminProducts()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-shirt"></i><span>Admin productos</span></a></li>` : ''}
                         ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminOrders()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-receipt"></i><span>Admin pedidos</span></a></li>` : ''}
+                        ${getUser() && getUser().role === 'admin' ? `<li class="list-group-item"><a href="${GolazoStore.paths.adminUsers()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-users"></i><span>Admin usuarios</span></a></li>` : ''}
                         <li class="list-group-item"><a href="${GolazoStore.getInstagramProfileUrl()}" class="text-decoration-none text-dark offcanvas-category-link" target="_blank" rel="noreferrer"><i class="fab fa-instagram"></i><span>Instagram</span></a></li>
                         <li class="list-group-item"><a href="${GolazoStore.paths.contact()}" class="text-decoration-none text-dark offcanvas-category-link"><i class="fas fa-headset"></i><span>Hablar con soporte</span></a></li>
                     </ul>

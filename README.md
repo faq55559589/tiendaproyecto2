@@ -2,31 +2,24 @@
 
 Tienda online de camisetas de futbol con frontend web y backend Node.js + SQLite.
 
-## Estado actual
+## Fuente de verdad
 
-- Flujo MVP operativo con backend real:
-  - catalogo,
-  - detalle de producto,
-  - carrito,
-  - checkout,
-  - confirmacion,
-  - mis pedidos.
-- Autenticacion JWT con verificacion de email.
-- Endpoints admin protegidos por rol.
+- Estado actual: [docs/PROJECT_STATUS.md](./docs/PROJECT_STATUS.md)
+- Trabajo actual: [docs/current-work.md](./docs/current-work.md)
+- Decisiones vigentes: [docs/decisions.md](./docs/decisions.md)
+- Roles permanentes: [AGENTS.md](./AGENTS.md)
+- Plan maestro: [docs/plans/PLAN_CIERRE_MVP.md](./docs/plans/PLAN_CIERRE_MVP.md)
+- Orden de ejecucion: [docs/plans/GUIA_EJECUCION_PLANES.md](./docs/plans/GUIA_EJECUCION_PLANES.md)
+- Setup local real: [docs/operacion/GUIA_SETUP_LOCAL.md](./docs/operacion/GUIA_SETUP_LOCAL.md)
+- Guia de lectura del codebase: [docs/tecnico/GUIA_LECTURA_CODEBASE.md](./docs/tecnico/GUIA_LECTURA_CODEBASE.md)
+- Inventario de scripts: [docs/operacion/GUIA_SCRIPTS.md](./docs/operacion/GUIA_SCRIPTS.md)
 
 ## Estructura principal
 
 - `backend/`: API, autenticacion, carrito, pedidos, admin, SQLite.
 - `frontend/`: paginas HTML, JS por pantalla, estilos y assets.
-- `docs/`: documentacion activa (estado, plan vigente, tecnico y operacion).
+- `docs/`: documentacion activa y operativa.
 - `scripts/`: utilidades de prueba y mantenimiento.
-
-Ver detalle en:
-- [Documentacion central](./docs/README.md)
-- [Estado actual](./docs/PROJECT_STATUS.md)
-- [Guia de ejecucion de planes](./docs/plans/GUIA_EJECUCION_PLANES.md)
-- [Guia general de produccion](./docs/operacion/GUIA_PRODUCCION.md)
-- [Guia deploy Vercel + Railway](./docs/operacion/GUIA_DEPLOY_VERCEL_RAILWAY.md)
 
 ## Levantar en local
 
@@ -41,6 +34,11 @@ Ese script:
 - levanta backend y frontend en ventanas separadas
 - valida que ambos puertos queden activos
 - abre `http://localhost:8000/frontend/home.html` solo si el arranque fue correcto
+
+Si todavia no tienes Node instalado, sigue primero la guia de setup:
+
+- [Setup local real](./docs/operacion/GUIA_SETUP_LOCAL.md)
+- En PowerShell de Windows, si `npm` falla por Execution Policy, usa `npm.cmd`.
 
 ## Backend
 
@@ -66,7 +64,7 @@ Backend con autorestart:
 
 ```powershell
 cd backend
-npm run dev
+npm.cmd run dev
 ```
 
 Frontend con live reload:
@@ -84,12 +82,25 @@ O todo junto con el flujo oficial:
 
 Notas:
 - cambios de `frontend/` se reflejan al guardar y recargar automaticamente
-- cambios de backend reinician Node automaticamente con el watcher local de `npm run dev`
+- cambios de backend reinician Node automaticamente con el watcher local de `npm.cmd run dev`
 - si cambias dependencias o `.env`, conviene reiniciar el proceso manualmente
 - si habia procesos viejos de Node ocupando `3000` o `8000`, el BAT los cierra y relanza limpio
 
 ## Cambios recientes relevantes
 
+- Agentes y contexto:
+  - `AGENTS.md` define roles permanentes para repartir trabajo sin depender de hilos temporales
+- Hardening de produccion:
+  - `backend/src/config/env.js` ahora bloquea `localhost` y `http` en URLs criticas de produccion
+  - `EMAIL_REQUIRED=true` exige proveedor de email real configurado
+- Entorno local:
+  - en PowerShell de Windows puede hacer falta `npm.cmd`
+  - `qa:backend` y `/api/health` ya se validaron en este entorno
+- Consistencia de pedidos:
+  - al confirmar un pedido manual, `payment_status` pasa a `confirmed`
+  - al entregar un pedido manual, `payment_status` pasa a `delivered`
+- UX final de compra:
+  - `mis-pedidos` y `confirmacion` muestran estado del pedido y estado de pago por separado
 - Entorno local normalizado:
   - `INICIAR_TODO.bat` como entrada oficial en Windows
   - `scripts/dev-backend.js` para autorestart compatible con este entorno
@@ -127,13 +138,13 @@ Notas:
 Crear backup:
 
 ```powershell
-npm run ops:backup
+npm.cmd run ops:backup
 ```
 
 Restore:
 
 ```powershell
-npm run ops:restore -- backups/local-state-AAAA-MM-DD_HH-mm-ss
+npm.cmd run ops:restore -- backups/local-state-AAAA-MM-DD_HH-mm-ss
 ```
 
 Referencia operativa:
@@ -162,6 +173,10 @@ INSTAGRAM_ORDER_EXPIRATION_HOURS=12
 BACKEND_URL=http://localhost:3000
 SQLITE_DB_PATH=
 UPLOADS_DIR=
+MP_ACCESS_TOKEN=
+MP_PUBLIC_KEY=
+MP_WEBHOOK_TOKEN=
+MP_ORDER_EXPIRATION_MINUTES=30
 ```
 
 Notas:
@@ -169,6 +184,8 @@ Notas:
 - `CORS_ORIGINS` debe contener dominios reales en staging/produccion (separados por coma).
 - En desarrollo, si `CORS_ORIGINS` no esta definida, se usan origenes localhost por defecto.
 - `INSTAGRAM_ORDER_EXPIRATION_HOURS` define cuantas horas se reserva un pedido manual antes de expirar automaticamente.
+- `MP_ACCESS_TOKEN`, `MP_PUBLIC_KEY` y `MP_WEBHOOK_TOKEN` habilitan la integracion de Mercado Pago.
+- `MP_ORDER_EXPIRATION_MINUTES` define cuantos minutos se reserva una orden online pendiente antes de expirar y liberar stock.
 - `BACKEND_URL` se usa para construir URLs absolutas de imagenes subidas.
 - `SQLITE_DB_PATH` y `UPLOADS_DIR` permiten mover almacenamiento a rutas persistentes en deploy.
 
@@ -188,7 +205,9 @@ window.GOLAZOSTORE_CONFIG = {
 
 Antes de produccion, cambia `apiBase` a la URL publica real del backend.
 
-## Planes de trabajo
+## Documentacion util
 
-- [Plan cierre MVP](./docs/plans/PLAN_CIERRE_MVP.md)
-- [Guia de ejecucion](./docs/plans/GUIA_EJECUCION_PLANES.md)
+- [Documentacion central](./docs/README.md)
+- [Guia Mercado Pago sandbox local](./docs/operacion/GUIA_MERCADO_PAGO_SANDBOX_LOCAL.md)
+- [Guia general de produccion](./docs/operacion/GUIA_PRODUCCION.md)
+- [Guia deploy Vercel + Railway](./docs/operacion/GUIA_DEPLOY_VERCEL_RAILWAY.md)

@@ -1,11 +1,16 @@
 (function () {
+    function normalizeApiBase(value) {
+        const cleaned = String(value || '').trim().replace(/\/+$/, '');
+        return cleaned || null;
+    }
+
     function readRuntimeConfig() {
         const fromWindow = window.GOLAZOSTORE_CONFIG && typeof window.GOLAZOSTORE_CONFIG === 'object'
             ? window.GOLAZOSTORE_CONFIG
             : {};
         const fromMeta = document.querySelector('meta[name="golazo-api-base"]')?.content || '';
         return {
-            apiBase: String(fromWindow.apiBase || fromMeta || 'https://api.golazofutstore.com/api').replace(/\/+$/, '')
+            apiBase: normalizeApiBase(fromWindow.apiBase || fromMeta)
         };
     }
 
@@ -59,6 +64,31 @@
         return `+598 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`.trim();
     }
 
+    function getUserInitials(user) {
+        const first = String(user?.first_name || '').trim();
+        const last = String(user?.last_name || '').trim();
+        const initials = `${first.charAt(0)}${last.charAt(0)}`.trim().toUpperCase();
+        return initials || 'GS';
+    }
+
+    function getAvatarUrl(user) {
+        return normalizeAssetUrl(user?.avatar_url, apiOrigin) || '';
+    }
+
+    function renderAvatarMarkup(user, options = {}) {
+        const avatarUrl = getAvatarUrl(user);
+        const initials = escapeHtml(getUserInitials(user));
+        const alt = escapeAttr(options.alt || `Avatar de ${user?.first_name || 'usuario'}`);
+        const className = escapeAttr(options.className || 'user-avatar');
+        const size = Number(options.size || 40);
+
+        if (avatarUrl) {
+            return `<img src="${escapeAttr(avatarUrl)}" alt="${alt}" class="${className}" width="${size}" height="${size}">`;
+        }
+
+        return `<span class="${className} user-avatar user-avatar--fallback" aria-label="${alt}">${initials}</span>`;
+    }
+
     const runtimeConfig = readRuntimeConfig();
     const apiOrigin = getApiOrigin(runtimeConfig.apiBase);
 
@@ -79,6 +109,19 @@
         } catch (error) {
             return fallback;
         }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(value) {
+        return escapeHtml(value).replace(/`/g, '&#96;');
     }
 
     function normalizeImageUrls(rawValue, primaryImage) {
@@ -158,6 +201,13 @@
             apiBase: runtimeConfig.apiBase,
             instagramUsername: 'golazofutstore_'
         },
+        getApiBase() {
+            if (!this.config.apiBase) {
+                throw new Error('Configuracion de API faltante. Define window.GOLAZOSTORE_CONFIG.apiBase o meta golazo-api-base.');
+            }
+
+            return this.config.apiBase;
+        },
         paths: {
             currentPage,
             page: pagePath,
@@ -173,14 +223,15 @@
             profile: () => pagePath('perfil.html'),
             orders: () => pagePath('mis-pedidos.html'),
             adminProducts: () => pagePath('admin-products.html'),
-            adminOrders: () => pagePath('admin-orders.html')
+            adminOrders: () => pagePath('admin-orders.html'),
+            adminUsers: () => pagePath('admin-users.html')
         },
         formatPrice(value) {
             return currency.format(Number(value || 0));
         },
         formatPaymentMethod(value) {
             const method = String(value || '').toLowerCase();
-            if (method === 'mercado_pago') return 'Mercado Pago (proximamente)';
+            if (method === 'mercado_pago') return 'Mercado Pago';
             if (method === 'instagram') return 'Instagram / Coordinacion manual';
             return value || 'No definido';
         },
@@ -223,7 +274,14 @@
             if (category.includes('club')) return 'Clubes';
             return product.category_name || 'Camisetas';
         },
+        normalizeAssetUrl(value) {
+            return normalizeAssetUrl(value, apiOrigin);
+        },
+        getAvatarUrl,
+        getUserInitials,
+        renderAvatarMarkup,
         async api(path, options = {}, requireAuth = false) {
+            const apiBase = this.getApiBase();
             const token = getToken();
             if (requireAuth && !token) {
                 throw new Error('Debes iniciar sesion para continuar');
@@ -235,7 +293,7 @@
                 ...(token ? { Authorization: `Bearer ${token}` } : {})
             };
 
-            return fetchJson(`${this.config.apiBase}${path}`, {
+            return fetchJson(`${apiBase}${path}`, {
                 ...options,
                 headers
             });
@@ -368,6 +426,9 @@
                     total: Number(order.total_amount || order.total || 0),
                     paymentMethod: order.payment_method || 'instagram',
                     paymentStatus: order.payment_status || (order.payment_method === 'mercado_pago' ? 'pending_payment' : 'pending_contact'),
+                    externalPaymentId: order.external_payment_id || '',
+                    externalReference: order.external_reference || '',
+                    paymentPreferenceId: order.payment_preference_id || '',
                     shippingAddress: order.shipping_address || '-',
                     customerName: order.customer_name || '-',
                     customerPhone: order.customer_phone || '-',
@@ -386,9 +447,9 @@
             async create(payload) {
                 const customer = payload.customer || {};
                 const address = [customer.address, customer.city].filter(Boolean).join(', ');
-                const paymentMethod = 'instagram';
-                const contactChannel = 'instagram';
-                const paymentStatus = 'pending_contact';
+                const paymentMethod = customer.paymentMethod === 'mercado_pago' ? 'mercado_pago' : 'instagram';
+                const contactChannel = paymentMethod === 'mercado_pago' ? 'mercado_pago' : 'instagram';
+                const paymentStatus = paymentMethod === 'mercado_pago' ? 'pending_payment' : 'pending_contact';
 
                 const data = await GolazoStore.api('/orders', {
                     method: 'POST',
@@ -404,6 +465,16 @@
                 }, true);
 
                 return this.normalize(data.order || {});
+            },
+            async createMercadoPagoPreference(orderId) {
+                const data = await GolazoStore.api(`/orders/${orderId}/mercado-pago-preference`, {
+                    method: 'POST'
+                }, true);
+
+                return {
+                    order: this.normalize(data.order || {}),
+                    preference: data.preference || {}
+                };
             }
         },
         checkoutDraft: {
@@ -434,7 +505,7 @@
                 toast.className = `alert alert-${variant} alert-dismissible fade show shadow-sm mb-2 golazo-toast`;
                 toast.setAttribute('role', 'alert');
                 toast.innerHTML = `
-                    <div class="golazo-toast__content">${message}</div>
+                    <div class="golazo-toast__content">${escapeHtml(message)}</div>
                     <button type="button" class="btn-close" aria-label="Cerrar"></button>
                 `;
                 container.appendChild(toast);
@@ -478,6 +549,8 @@
         }
     };
 
+    GolazoStore.escapeHtml = escapeHtml;
+    GolazoStore.escapeAttr = escapeAttr;
     window.GolazoStore = GolazoStore;
 })();
 

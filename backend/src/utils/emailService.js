@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
+const { getFrontendUrl, hasEmailProviderConfig } = require('../config/env');
 
-const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:8000/frontend').replace(/\/+$/, '');
+const FRONTEND_URL = getFrontendUrl();
 const EMAIL_FROM = process.env.EMAIL_FROM || process.env.EMAIL_USER;
 const EMAIL_REQUIRED = String(process.env.EMAIL_REQUIRED || 'false').toLowerCase() === 'true';
 const GMAIL_EMAIL = (process.env.EMAIL_USER || '').trim();
@@ -31,6 +32,10 @@ function createTransporter() {
             host: process.env.SMTP_HOST,
             port: Number(process.env.SMTP_PORT),
             secure: String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true',
+            family: 4,
+            connectionTimeout: 5000,
+            greetingTimeout: 5000,
+            socketTimeout: 10000,
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
@@ -43,6 +48,10 @@ function createTransporter() {
             host: 'smtp.gmail.com',
             port: 465,
             secure: true,
+            family: 4,
+            connectionTimeout: 5000,
+            greetingTimeout: 5000,
+            socketTimeout: 10000,
             auth: {
                 user: GMAIL_EMAIL,
                 pass: GMAIL_APP_PASSWORD
@@ -67,6 +76,10 @@ if (hasBrevoApiConfig()) {
     });
 } else {
     console.warn('Email no configurado: define BREVO_API_KEY o SMTP_* o EMAIL_USER/EMAIL_PASS');
+}
+
+if (EMAIL_REQUIRED && !hasEmailProviderConfig()) {
+    throw new Error('EMAIL_REQUIRED=true pero no hay proveedor de email configurado');
 }
 
 async function sendWithBrevoApi({ to, subject, html }) {

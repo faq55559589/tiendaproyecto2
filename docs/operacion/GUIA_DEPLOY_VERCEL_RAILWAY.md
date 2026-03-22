@@ -29,6 +29,7 @@ Y estas variables conectadas entre si:
 - `frontend/js/store.js` apuntando al backend publico
 - `backend/.env` con `FRONTEND_URL` publico
 - `backend/.env` con `CORS_ORIGINS` publico
+- `backend/.env` con `BACKEND_URL` publico real, sin localhost
 
 ## 1. Crear backup antes de empezar
 
@@ -166,7 +167,8 @@ Notas:
 - `JWT_SECRET` tiene que ser unico.
 - `FRONTEND_URL` tiene que ser la URL real del frontend.
 - `CORS_ORIGINS` solo debe incluir dominios reales.
-- `BACKEND_URL` se usa para construir URLs absolutas de imagenes.
+- `FRONTEND_URL`, `BACKEND_URL` y `CORS_ORIGINS` deben usar `https` en produccion.
+- `BACKEND_URL` se usa para construir URLs absolutas de imagenes y no puede quedar en localhost.
 
 ## 8. Verificar que Railway exponga el backend
 

@@ -77,7 +77,6 @@
     }
 
     function renderProducts(products) {
-        productsContainer.innerHTML = '';
         if (!products.length) {
             productsContainer.innerHTML = `
                 <div class="col-12">
@@ -92,22 +91,28 @@
             return;
         }
 
-        products.forEach((product) => {
+        productsContainer.innerHTML = products.map((product) => {
             const stockText = product.stock > 0 ? `Stock ${product.stock}` : 'Sin stock';
             const disabled = product.stock > 0 ? '' : 'disabled';
-            productsContainer.insertAdjacentHTML('beforeend', `
+            const urgencyText = product.stock > 0 && product.stock <= 3 ? 'Quedan pocas unidades' : 'Lista para sumar al carrito';
+            return `
                 <div class="col-lg-4 col-md-6">
-                    <article class="card product-card h-100 border-0 shadow-sm">
+                    <article class="card product-card product-card--catalog h-100 border-0 shadow-sm">
                         <a href="${GolazoStore.paths.product(product.id)}" class="position-relative d-block overflow-hidden">
-                            <img src="${product.image_url}" class="card-img-top" alt="${product.name}">
+                            <img src="${GolazoStore.escapeAttr(product.image_url)}" class="card-img-top" alt="${GolazoStore.escapeHtml(product.name)}">
                         </a>
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
-                                <span class="badge badge-soft-brand">${GolazoStore.getCategoryLabel(product)}</span>
+                                <span class="badge badge-soft-brand">${GolazoStore.escapeHtml(GolazoStore.getCategoryLabel(product))}</span>
                                 <span class="badge ${product.stock > 0 ? 'badge-soft-neutral' : 'badge-soft-danger'}">${stockText}</span>
                             </div>
-                            <h3 class="h5 mb-2">${product.name}</h3>
-                            <p class="text-ui-muted small flex-grow-1">${(product.description || 'Producto de fútbol sin descripción adicional.').slice(0, 140)}</p>
+                            <h3 class="h5 mb-2">${GolazoStore.escapeHtml(product.name)}</h3>
+                            <p class="text-ui-muted small flex-grow-1">${GolazoStore.escapeHtml((product.description || 'Producto de futbol sin descripcion adicional.').slice(0, 140))}</p>
+                            <div class="product-card__footer-meta d-flex justify-content-between align-items-center small text-ui-muted mb-3">
+                                <span><i class="fas fa-shirt me-2"></i>${GolazoStore.escapeHtml((product.sizes || []).slice(0, 3).join(' / ') || 'Talles variados')}</span>
+                                <span><i class="fas fa-bolt me-2"></i>${product.stock > 0 ? 'Disponible' : 'Consultar'}</span>
+                            </div>
+                            <div class="small ${product.stock > 0 && product.stock <= 3 ? 'text-price-accent fw-semibold' : 'text-ui-muted'} mb-3">${urgencyText}</div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <strong class="text-price-accent fs-5">${GolazoStore.formatPrice(product.price)}</strong>
                                 <div class="d-flex gap-2">
@@ -118,8 +123,8 @@
                         </div>
                     </article>
                 </div>
-            `);
-        });
+            `;
+        }).join('');
     }
 
     window.clearSearch = function () {

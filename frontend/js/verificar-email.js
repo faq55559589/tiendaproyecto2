@@ -6,14 +6,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    const API_URL = window.GolazoStore?.config?.apiBase || null;
 
     if (!token) {
         showError('No se encontró el token de verificación.');
         return;
     }
 
+    if (!API_URL) {
+        showError('Falta configurar la API del frontend.');
+        return;
+    }
+
     try {
-        const API_URL = window.GolazoStore?.config?.apiBase || 'https://api.golazofutstore.com/api';
         const response = await fetch(`${API_URL}/auth/verify-email`, {
             method: 'POST',
             headers: {

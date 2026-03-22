@@ -8,6 +8,7 @@
     "preview": "INICIAR_TODO.bat",
     "dev": "node scripts/serve-frontend.js",
     "frontend:dev": "node scripts/serve-frontend.js",
+    "local:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-local.ps1",
     "ops:backup": "node scripts/backup-local-state.js",
     "ops:restore": "node scripts/restore-local-state.js",
     "db:summary": "node scripts/db-admin.js summary",
@@ -15,7 +16,7 @@
     "db:products": "node scripts/db-admin.js products",
     "db:orders": "node scripts/db-admin.js orders",
     "backend:init": "cd backend && npm init -y",
-    "backend:install": "cd backend && npm install express cors helmet morgan dotenv bcryptjs jsonwebtoken better-sqlite3 multer express-validator nodemon",
+    "backend:install": "npm --prefix backend install",
     "backend:dev": "cd backend && npm run dev",
     "docs": "echo 'Documentación disponible en la carpeta docs/'"
   },
@@ -47,7 +48,6 @@
     "live-server": "^1.2.2"
   },
   "workspaces": [
-    "frontend",
     "backend"
   ],
   "directories": {

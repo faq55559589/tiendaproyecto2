@@ -1,5 +1,36 @@
 const db = require('../config/database');
 
+function normalizeArrayInput(value, fallback = []) {
+    if (Array.isArray(value)) {
+        return value.map((item) => String(item || '').trim()).filter(Boolean);
+    }
+
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return fallback;
+        }
+
+        try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) {
+                return parsed.map((item) => String(item || '').trim()).filter(Boolean);
+            }
+        } catch (error) {
+            return trimmed
+                .split(',')
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+    }
+
+    if (value === null || typeof value === 'undefined') {
+        return fallback;
+    }
+
+    return [String(value).trim()].filter(Boolean);
+}
+
 class Product {
     static getAll() {
         const query = `
@@ -108,10 +139,10 @@ class Product {
             description,
             price,
             image_url,
-            JSON.stringify(image_urls || []),
+            JSON.stringify(normalizeArrayInput(image_urls, [])),
             Number(is_active !== false),
             stock,
-            JSON.stringify(sizes || []),
+            JSON.stringify(normalizeArrayInput(sizes, [])),
             category_id,
             specifications || null
         );
@@ -132,10 +163,10 @@ class Product {
             description,
             price,
             image_url,
-            JSON.stringify(image_urls || []),
+            JSON.stringify(normalizeArrayInput(image_urls, [])),
             Number(is_active !== false),
             stock,
-            JSON.stringify(sizes || []),
+            JSON.stringify(normalizeArrayInput(sizes, [])),
             category_id,
             specifications || null,
             id
